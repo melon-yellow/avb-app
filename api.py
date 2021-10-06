@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 import mysql.connector
 from io import StringIO
+from flask import Response
 import classification as clas
 from EscalaTurno import getEscala
 
@@ -38,7 +39,7 @@ homerico.Login('CH1200', 'bhn860')
 #################################################################################################################################################
 
 # Declare Api
-api = misc.api().host('127.0.0.1').port(3000)
+api = misc.api().host('0.0.0.0').port(3000)
 
 #################################################################################################################################################
 
@@ -260,17 +261,14 @@ def get_trim(cod):
 
 def get_meta_util_trf():
     try:
-        mydb12 = mysql.connector.connect(host='192.168.17.61', user='Jayron', passwd='123456', port='3306', database='iba_i')
+        mydb12 = mysql.connector.connect(host='192.168.61.1', user='Jayron', passwd='123456', port='3306', database='iba_i')
         query = open('sql/trf_util_shift.sql').read()
+        df = pd.read_sql(query, mydb12)
 
-        try:
-            df = pd.read_sql(query, mydb12)
-            mydb12.close()
+        try: mydb12.close()
+        except: pass
 
-        except Exception as e:
-            mydb12.close()
-
-    except Exception as e: pass
+    except: return
 
     df['_0h'] = df._date.apply(lambda row : getEscala(dia = row)[0][0])
     df['_8h'] = df._date.apply(lambda row : getEscala(dia = row)[1][0])
@@ -325,12 +323,14 @@ def get_meta_util_trf():
 
 def get_meta_custo_trf():
     try:
-        dbCusto = mysql.connector.connect(host='192.168.17.61', user='jayron', passwd='123123', port='1517', database='lam')
+        dbCusto = mysql.connector.connect(host='192.168.61.1', user='jayron', passwd='123123', port='1517', database='lam')
         queryC = 'SELECT * FROM wf_sap WHERE YEAR(data_msg)=2021;'
         dfC = pd.read_sql(queryC, dbCusto)
     except:
-        dbCusto.close()
-        print('Erro na conexão')
+        try: dbCusto.close()
+        except: pass
+        print('Erro na conexão sql')
+        return
 
     hoje = datetime.date.today()
     #hoje = datetime.datetime.now()
@@ -383,12 +383,14 @@ def get_meta_custo_trf():
 
 def get_meta_5S_trf():
     try:
-        db5S = mysql.connector.connect(host='192.168.17.61', user='jayron', passwd='123123', port='1517', database='lam')
+        db5S = mysql.connector.connect(host='192.168.61.1', user='jayron', passwd='123123', port='1517', database='lam')
         query5S = 'SELECT * FROM metas WHERE YEAR(data_msg)=2021 and nome_meta = "5S";'
         dfC = pd.read_sql(query5S, db5S)
     except:
-        db5S.close()
-        print('Erro na conexão')
+        try: db5S.close()
+        except: pass
+        print('Erro na conexão sql')
+        return
 
     hoje = datetime.date.today()
     #hoje = datetime.datetime.now()
@@ -440,12 +442,14 @@ def get_meta_5S_trf():
 
 def get_meta_suca_trf():
     try:
-        dbsuca = mysql.connector.connect(host='192.168.17.61', user='jayron', passwd='123123', port='1517', database='lam')
+        dbSuca = mysql.connector.connect(host='192.168.61.1', user='jayron', passwd='123123', port='1517', database='lam')
         querysuca = 'SELECT * FROM metas WHERE YEAR(data_msg)=2021 and nome_meta = "sucateamento";'
-        dfC = pd.read_sql(querysuca, dbsuca)
+        dfC = pd.read_sql(querysuca, dbSuca)
     except:
-        dbsuca.close()
-        print('Erro na conexão')
+        try: dbSuca.close()
+        except: pass
+        print('Erro na conexão sql')
+        return
 
     hoje = datetime.date.today()
     #hoje = datetime.datetime.now()
@@ -580,12 +584,10 @@ def get_pda(tagname):
 
 def util():
     r = dict()
-    gets = get_pda([
-        'Modules.2 CTR_2.Analog.TIME_PLC_CTR',
-        'Modules.2 CTR_2.Analog.TIME_UTIL_MILL'
-    ])
-    time = gets[0].get('value')
-    util = gets[1].get('value')
+    default = [None, None]
+    gets = misc.json.load(open('util.json', 'r'))
+    time = gets.get('mill', default)[0]
+    util = gets.get('mill', default)[1]
     c = time != None and util != None
     r['UTIL'] = util / (time if time > 0 else 1) if c else None
     r['TEMPO_PARADO'] = ((time - util) / 60) if c else None
@@ -595,19 +597,13 @@ def util():
 
 def util_trf():
     # Open File
-    gets = get_pda([
-        'Modules.12 MILL_2.Analog.TIME_PLC_MIL',
-        'Modules.12 MILL_2.Analog.TREFILA_01_UTIL_TIME',
-        'Modules.12 MILL_2.Analog.TREFILA_02_UTIL_TIME',
-        'Modules.12 MILL_2.Analog.TREFILA_03_UTIL_TIME',
-        'Modules.12 MILL_2.Analog.TREFILA_04_UTIL_TIME',
-        'Modules.12 MILL_2.Analog.TREFILA_05_UTIL_TIME'
-    ])
-    time = gets[0].get('value')
+    default = [None, None, None, None, None, None]
+    gets = misc.json.load(open('util.json', 'r'))
+    time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):
         r = dict()
-        util = gets[mq].get('value')
+        util = gets.get('trf', default)[mq]
         c = time != None and util != None
         r['UTIL'] = util / (time if time > 0 else 1) if c else None
         r['TEMPO_PARADO'] = ((time - util) / 60) if c else None
@@ -698,12 +694,10 @@ def producao_lista(lista):
     dados.pop(0)
     d = list()
     for item in dados:
-        if len(item) != 2: dados.pop(dados.index(item))
+        if len(item) != 3: dados.pop(dados.index(item))
     for item in dados:
         date = '{}{}'.format(item[0][:2].zfill(2), ultimo_dia[2:])
-        d.append(
-            dict(data=date, peso=num(item[1], True))
-        )
+        d.append(dict(data=date, peso=num(item[2], True)))
     return d
 
 #################################################################################################################################################
@@ -820,30 +814,35 @@ def _metas_lam_frio(req):
         'RENDIMENTO METÁLICO':2963,
         'PRODUÇÃO POR MÁQUINA':2988
     }
-    # util trf dia
-    ut = util_trf()
-    ut = [
-        ut['m01']['UTIL'],
-        ut['m02']['UTIL'],
-        ut['m03']['UTIL'],
-        ut['m04']['UTIL'],
-        ut['m05']['UTIL']
-    ]
-    util = get_meta_util_trf()
-    gen_util = dict(dia=((sum(ut) * 100) / 4))
-    util['utilizacao'].update(gen_util)
-    # custo trf
-    custo_trf = get_meta_custo_trf()
-    # sucateamento trf
-    suca_trf = get_meta_suca_trf()
-    # 5S
-    m5s_trf = get_meta_5S_trf()
     # get metas
     registros = relatorio_gerencial('16', registros)
-    registros.update(util)
-    registros.update(custo_trf)
-    registros.update(suca_trf)
-    registros.update(m5s_trf)
+
+    # custo trf
+    try: registros.update(get_meta_custo_trf())
+    except Exception as e: print(e)
+    # sucateamento trf
+    try: registros.update(get_meta_suca_trf())
+    except: pass
+    # 5S
+    try: registros.update(get_meta_5S_trf())
+    except: pass
+
+    try: # util trf dia
+        ut = util_trf()
+        ut = [
+            ut['m01']['UTIL'],
+            ut['m02']['UTIL'],
+            ut['m03']['UTIL'],
+            ut['m04']['UTIL'],
+            ut['m05']['UTIL']
+        ]
+        # util trf
+        util = get_meta_util_trf()
+        gen_util = dict(dia=((sum(ut) * 100) / 4))
+        util['utilizacao'].update(gen_util)
+        registros.update(util)
+    except: pass
+    # return data
     return registros
 
 #################################################################################################################################################
@@ -855,34 +854,72 @@ def _prod_lam_frio(req):
 
 #################################################################################################################################################
 
-@api.add('/api/furnace/')
-def db_orcl(req):
-    con = cx_Oracle.connect('gusaapp/gusaapp@10.20.6.66/orcl')
-    cur = con.cursor()
-    cur.execute(query_orcl)
-    r = [dict((cur.description[i][0], value)
-        for i, value in enumerate(row)) for row in cur.fetchall()]
-    r = r[0] if len(r) > 0 else dict()
-    cur.connection.close()
-    x = util()
-    r['UTIL'] = x.get('UTIL')
-    r['TEMPO_PARADO'] = x.get('TEMPO_PARADO')
-    r['timestamp'] = datetime.datetime.today().strftime('%d/%m/%y %H:%M:%S')
+query_orcl = open('sql/query_orcl.sql').read()
+query_mssql = open('sql/query_mssql.sql').read()
+
+#################################################################################################################################################
+
+def db_orcl():
+    r = None
+    try:
+        con = cx_Oracle.connect('gusaapp/gusaapp@10.20.6.66/orcl')
+        cur = con.cursor()
+        cur.execute(query_orcl)
+        r = [dict((cur.description[i][0], value)
+            for i, value in enumerate(row)) for row in cur.fetchall()]
+        r = r[0] if len(r) > 0 else dict()
+        cur.connection.close()
+    except: r = None
     return r
 
 #################################################################################################################################################
 
 def db_mssql():
-    conn = pyodbc.connect('DSN=iba;UID=sa;PWD=avb2020')
+    r = None
+    try:
+        conn = pyodbc.connect('DSN=iba;UID=sa;PWD=avb2020')
+        cur = conn.cursor()
+        cur.execute(query_mssql)
+        r = [dict((cur.description[i][0], value)
+            for i, value in enumerate(row)) for row in cur.fetchall()]
+        r = r[0] if len(r) > 0 else dict()
+        pname = r.get('CTR_PRODUCT_NAME')
+        pname = pname.strip() if isinstance(pname, str) else None
+        if pname != None: r['CTR_PRODUCT_NAME'] = pname
+        cur.connection.close()
+    except: r = None
+    return r
+
+#################################################################################################################################################
+
+@api.add('/api/l2/')
+def api_l2(req):
+    produto = db_mssql.__callable__(None).get('CTR_PRODUCT_NAME')
+    query_mssql2 = open('sql/query_mssql2.sql').read().format(produto)
+    conn = pyodbc.connect('DSN=L2_SERVER;UID=sa;PWD=avb2020')
     cur = conn.cursor()
-    cur.execute(query_mssql)
+    cur.execute(query_mssql2)
     r = [dict((cur.description[i][0], value)
         for i, value in enumerate(row)) for row in cur.fetchall()]
     r = r[0] if len(r) > 0 else dict()
-    pname = r.get('CTR_PRODUCT_NAME')
-    pname = pname.strip() if isinstance(pname, str) else None
-    if pname != None: r['CTR_PRODUCT_NAME'] = pname
     cur.connection.close()
+    return r
+
+#################################################################################################################################################
+
+@api.add('/api/mill/')
+def api_mill(req):
+    return db_mssql()
+
+#################################################################################################################################################
+
+@api.add('/api/furnace/')
+def api_furnace(req):
+    r = db_orcl()
+    x = util()
+    r['UTIL'] = x.get('UTIL')
+    r['TEMPO_PARADO'] = x.get('TEMPO_PARADO')
+    r['timestamp'] = misc.datetime.datetime.today().strftime('%d/%m/%y %H:%M:%S')
     return r
 
 #################################################################################################################################################
@@ -924,33 +961,78 @@ def aci_rendimento(req):
 
 #################################################################################################################################################
 
-@api.add('/api/mill/')
-def _db_mssql(req):
-    return db_mssql()
-
-#################################################################################################################################################
-
-@api.add('/api/l2/')
-def db_mssql2(req):
-    produto = db_mssql().get('CTR_PRODUCT_NAME')
-    query_mssql2 = open('sql/query_mssql2.sql').read().format(produto)
-    conn = pyodbc.connect('DSN=L2_SERVER;UID=sa;PWD=avb2020')
-    cur = conn.cursor()
-    cur.execute(query_mssql2)
-    r = [dict((cur.description[i][0], value)
-        for i, value in enumerate(row)) for row in cur.fetchall()]
-    r = r[0] if len(r) > 0 else dict()
-    cur.connection.close()
-    return r
-
-#################################################################################################################################################
-
 @api.add('/questions/', methods=['POST'])
 def questions(req):
     print('data from client: {}'.format(req))
     dictToReturn = analisa(req)
     print('data to client: {}'.format(dictToReturn['answer']))
     return dictToReturn
+
+#################################################################################################################################################
+
+@api.add('/set_util/')
+def set_util(req):
+    misc.json.dump(req, open('util.json', 'w'))
+    return dict(done=True)
+
+set_util.user('iba').password('sqwenjwe34#')
+
+#################################################################################################################################################
+
+@api.add('/api/util_csv/')
+def trf_util_csv():
+    try:
+        mydb12 = mysql.connector.connect(host='192.168.61.1', user='Jayron', passwd='123456', port='3306', database='iba_i')
+        query = open('sql/trf_util_shift.sql').read()
+
+        try:
+            df = pd.read_sql(query, mydb12)
+            mydb12.close()
+
+        except Exception as e:
+            mydb12.close()
+
+    except Exception as e: pass
+
+    meses = {'1':[1,2,3],'2':[4,5,6],'3':[7,8,9],'4':[10,11,12]}
+    df['_0h'] = df._date.apply(lambda row : getEscala(dia = row)[0][0])
+    df['_8h'] = df._date.apply(lambda row : getEscala(dia = row)[1][0])
+    df['_16h'] = df._date.apply(lambda row : getEscala(dia = row)[2][0])
+    df['_date'] = df['_date'].astype('str')
+    dz = df
+    hoje = datetime.date.today()
+    #hoje = datetime.datetime.now()
+    #hoje = datetime.date(2021,2,23)
+    Trimestre = str((hoje.month-1)//3+1)
+    Tmeses = meses.get(Trimestre)
+    mon = list()
+    mes = hoje.month
+    #mes = datetime.date(2021,3,23).month
+
+    bn = df[df['_date']>=datetime.date(hoje.year,Tmeses[0],1).strftime("%Y-%m-%d")]
+    bn = bn[bn['_date']<=datetime.date(hoje.year,hoje.month,hoje.day).strftime("%Y-%m-%d")]
+    bn = bn.filter(['_date', 'M1','M2','M3', 'M4', 'M5', '_0h', '_8h','_16h'])
+    bn = bn.drop(['M1'], axis=1)
+    bn['Global'] = (bn['M2']+bn['M3']+bn['M4']+bn['M5']) / 4
+
+    return bn.to_csv()
+
+#################################################################################################################################################
+
+@api.add('/api/util_csv_dia')
+def trf_util_csv_dia(req):
+    textcsv = ''
+    try:
+        mydb = mysql.connector.connect(host='192.168.61.1', user='Jayron', passwd='123456', port='3306', database='iba_i')
+        try:
+            query = open('sql/trf_util_day.sql').read()
+            df = pd.read_sql(query, mydb)
+            textcsv = df.to_csv()
+        except: pass
+        mydb.close()
+    except: pass
+
+    return textcsv
 
 #################################################################################################################################################
 
