@@ -8,6 +8,7 @@ import train
 import pyodbc
 import ctypes
 import datetime
+import requests
 import cx_Oracle
 import numpy as np
 import pandas as pd
@@ -16,15 +17,7 @@ from io import StringIO
 from flask import Response
 import classification as clas
 from EscalaTurno import getEscala
-
-#################################################################################################################################################
-
-# Import Miscellaneous
-sys.path.append('E:/python/misc')
-from miscellaneous import Miscellaneous
-
-# Instance Misc
-misc = Miscellaneous()
+import py_misc
 
 #################################################################################################################################################
 
@@ -39,7 +32,7 @@ homerico.Login('CH1200', 'bhn860')
 #################################################################################################################################################
 
 # Declare Api
-api = misc.api().host('0.0.0.0').port(3000)
+api = py_misc.API().host('0.0.0.0').port(3000)
 
 #################################################################################################################################################
 
@@ -568,12 +561,12 @@ def get_pda(tagname):
         ): return dict(error='tagname missing')
 
     try: # Request PDA Server
-        res = misc.requests.post(
+        res = requests.post(
             'http://localhost:3001/api/pda/',
             json=dict(tagname=tagname),
             auth=('client', '123456')
         )
-        res = misc.json.loads(res.text)
+        res = json.loads(res.text)
     except: # If Server Not Responding
         res = dict(value=None, name=None, status='server down')
 
@@ -585,7 +578,7 @@ def get_pda(tagname):
 def util():
     r = dict()
     default = [None, None]
-    gets = misc.json.load(open('util.json', 'r'))
+    gets = json.load(open('util.json', 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
@@ -598,7 +591,7 @@ def util():
 def util_trf():
     # Open File
     default = [None, None, None, None, None, None]
-    gets = misc.json.load(open('util.json', 'r'))
+    gets = json.load(open('util.json', 'r'))
     time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):
@@ -919,7 +912,7 @@ def api_furnace(req):
     x = util()
     r['UTIL'] = x.get('UTIL')
     r['TEMPO_PARADO'] = x.get('TEMPO_PARADO')
-    r['timestamp'] = misc.datetime.datetime.today().strftime('%d/%m/%y %H:%M:%S')
+    r['timestamp'] = py_misc.datetime.datetime.today().strftime('%d/%m/%y %H:%M:%S')
     return r
 
 #################################################################################################################################################
@@ -972,7 +965,7 @@ def questions(req):
 
 @api.add('/set_util/')
 def set_util(req):
-    misc.json.dump(req, open('util.json', 'w'))
+    json.dump(req, open('util.json', 'w'))
     return dict(done=True)
 
 set_util.user('iba').password('sqwenjwe34#')
@@ -1040,6 +1033,6 @@ def trf_util_csv_dia(req):
 api.start()
 
 # keep main thread alive
-misc.keepalive()
+py_misc.keepalive()
 
 #################################################################################################################################################
