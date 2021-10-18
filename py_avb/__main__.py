@@ -595,7 +595,7 @@ def get_pda(tagname):
 def util():
     r = dict()
     default = [None, None]
-    gets = json.load(open(file_dir + '{}\\util.json', 'r'))
+    gets = json.load(open(file_dir + '\\util.json', 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
@@ -608,7 +608,7 @@ def util():
 def util_trf():
     # Open File
     default = [None, None, None, None, None, None]
-    gets = json.load(open(file_dir + '{}\\util.json', 'r'))
+    gets = json.load(open(file_dir + '\\util.json', 'r'))
     time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):
@@ -977,7 +977,7 @@ def questions(req):
 
 @api.add('/set_util/')
 def set_util(req):
-    json.dump(req, open(file_dir + '{}\\util.json', 'w'))
+    json.dump(req, open(file_dir + '\\util.json', 'w'))
     return dict(done=True)
 
 set_util.user('iba').password('sqwenjwe34#')
