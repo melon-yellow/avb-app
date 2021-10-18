@@ -1,29 +1,41 @@
+
+#################################################################################################################################################
+
 # -*- coding: utf-8 -*-
 import re
+import os
 import sys
 import json
 import time
 import copy
-import train
 import pyodbc
 import ctypes
 import datetime
 import requests
+import nlp.train
 import cx_Oracle
 import numpy as np
 import pandas as pd
 import mysql.connector
 from io import StringIO
 from flask import Response
-import classification as clas
-from EscalaTurno import getEscala
-import py_misc
+import nlp.classification as clas
+from escala_turno import getEscala
 
 #################################################################################################################################################
 
+# Import Miscellaneous
+import py_misc
+
 # Import Homerico
-sys.path.append('E:/python/homerico')
 import homerico
+
+#################################################################################################################################################
+
+# Gets Actual File Directory
+file_dir = os.path.dirname(__file__)
+
+#################################################################################################################################################
 
 # Setup Connection
 homerico.Validar('homerico.avb')
@@ -33,6 +45,13 @@ homerico.Login('CH1200', 'bhn860')
 
 # Declare Api
 api = py_misc.API().host('0.0.0.0').port(3000)
+
+#################################################################################################################################################
+
+# Reads SQL Files
+query_orcl = open(file_dir + '\sql\query_orcl.sql').read()
+query_mssql = open(file_dir + '\sql\query_mssql.sql').read()
+query_ultil = open(file_dir + '\sql\query_ultil.sql').read()
 
 #################################################################################################################################################
 
@@ -507,9 +526,7 @@ meta_json = {
 
 produto = ''
 
-query_orcl = open('sql/query_orcl.sql').read()
-query_mssql = open('sql/query_mssql.sql').read()
-query_ultil = open('sql/query_ultil.sql').read()
+#################################################################################################################################################
 
 def query(conn, string):
     try:
@@ -578,7 +595,7 @@ def get_pda(tagname):
 def util():
     r = dict()
     default = [None, None]
-    gets = json.load(open('util.json', 'r'))
+    gets = json.load(open(file_dir + '{}\\util.json', 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
@@ -591,7 +608,7 @@ def util():
 def util_trf():
     # Open File
     default = [None, None, None, None, None, None]
-    gets = json.load(open('util.json', 'r'))
+    gets = json.load(open(file_dir + '{}\\util.json', 'r'))
     time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):
@@ -847,11 +864,6 @@ def _prod_lam_frio(req):
 
 #################################################################################################################################################
 
-query_orcl = open('sql/query_orcl.sql').read()
-query_mssql = open('sql/query_mssql.sql').read()
-
-#################################################################################################################################################
-
 def db_orcl():
     r = None
     try:
@@ -965,7 +977,7 @@ def questions(req):
 
 @api.add('/set_util/')
 def set_util(req):
-    json.dump(req, open('util.json', 'w'))
+    json.dump(req, open(file_dir + '{}\\util.json', 'w'))
     return dict(done=True)
 
 set_util.user('iba').password('sqwenjwe34#')

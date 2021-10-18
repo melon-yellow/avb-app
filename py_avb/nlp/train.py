@@ -1,14 +1,27 @@
-import nltk 
+
+#################################################################################################################################################
+
+import os
 import re
 import yaml
+import nltk
 from nltk.stem import RSLPStemmer
+
+#################################################################################################################################################
 
 stemmer = RSLPStemmer()
 expression = '[!-@[-`{-¿ÆÐÑ×ØÝ-ßä-æëðñö-øý-ÿ]'
 
+#################################################################################################################################################
+
+# Gets Actual File Directory
+file_dir = os.path.dirname(__file__)
+
+#################################################################################################################################################
+
 #Carrega o Corpus Words
 def LoadMemory():
-    fileW = open("words.nlp", 'r')
+    fileW = open(file_dir + '\words.nlp', 'r')
     words = fileW.read()
     fileW.close()
     words = yaml.load(words)
@@ -16,20 +29,20 @@ def LoadMemory():
 
 #Carrega as frases que foram treinadas
 def LoadExamples():
-    fileE = open("examples.nlp", 'r')
+    fileE = open(file_dir + '\examples.nlp', 'r')
     examples = yaml.load(fileE.read())
     fileE.close()
     return examples
 
 #Salva a corpus words
 def SaveMemory(w):
-    fileW = open("words.nlp", 'w')
+    fileW = open(file_dir + '\words.nlp', 'w')
     fileW.write(str(w))
     fileW.close()
 
 #Salva as novas frases treinadas
 def SaveExample(example):
-    fileE = open("examples.nlp", 'a')
+    fileE = open(file_dir + '\examples.nlp', 'a')
     #yaml.dump(example, fileE)#
     fileE.write(example + "\n")
     fileE.close()
@@ -43,7 +56,7 @@ def Examples():
     training_data.append({"class":"produção", "sentence":"enviar qual produção mandar dizer falar quanto"})
     training_data.append({"class":"hoje", "sentence":"agora nesse momento instante da hora hoje hoje"})
     training_data.append({"class":"ontem", "sentence":"dia de ontem ontem"})
-        
+
     Learning(training_data)
 
 #Função responsavel por treinar a frase
@@ -71,5 +84,7 @@ def Learning(training_data):
                 corpus_words[class_name][word] = 1
             else:
                 corpus_words[class_name][word] += 1
-    
+
     SaveMemory(corpus_words)
+
+#################################################################################################################################################
