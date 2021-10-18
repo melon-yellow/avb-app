@@ -24,13 +24,13 @@ def LoadMemory():
     fileW = open(file_dir + '\words.nlp', 'r')
     words = fileW.read()
     fileW.close()
-    words = yaml.load(words)
+    words = yaml.safe_load(words)
     return words
 
 #Carrega as frases que foram treinadas
 def LoadExamples():
     fileE = open(file_dir + '\examples.nlp', 'r')
-    examples = yaml.load(fileE.read())
+    examples = yaml.safe_load(fileE.read())
     fileE.close()
     return examples
 

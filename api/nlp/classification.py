@@ -22,7 +22,7 @@ file_dir = os.path.dirname(__file__)
 #Carrega o Corpus Words
 def LoadMemory():
     words = open(file_dir + '\words.nlp', 'r').read()
-    words = yaml.load(words)
+    words = yaml.safe_load(words)
     #print(type(words))
     return words
 
