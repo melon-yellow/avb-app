@@ -27,7 +27,7 @@ filedir = py_misc.__schema__()
 def readUtil():
     # Open File
     default = [None, None, None, None, None, None]
-    gets = py_misc.json.load(open(filedir + '\\util.json', 'r'))
+    gets = py_misc.json.load(open('util.json', 'r'))
     time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):
@@ -57,7 +57,7 @@ def __load__(api: py_misc.API):
     @api.route('/api/trf/')
     def api_trf(req: Request, res: Response):
         date = py_misc.datetime.datetime.today().strftime('%d/%m/%Y')
-        csv_str = homerico.src.RelatorioLista(date, date, 50)
+        csv_str = homerico.__dll__.RelatorioLista(date, date, 50)
         csv_file = io.StringIO(csv_str)
         df = pandas.read_csv(csv_file, sep=';')
         try:
@@ -136,7 +136,7 @@ def __load__(api: py_misc.API):
     def prod_lam_frio(req: Request, res: Response):
         dados = homerico.get.ProducaoLista(2361)
         return dados
-    
+
     #################################################################################################################################################
 
     @api.route('/api/util_csv/')
