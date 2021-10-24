@@ -21,6 +21,11 @@ def __load__(api: py_misc.API):
 
     @api.route('/api/turma/')
     def turma_turno(req: Request, res: Response):
-        return turno.escala.get()
+        data = turno.escala.get()
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
 #################################################################################################################################################

@@ -21,9 +21,11 @@ def __load__(api: py_misc.API):
 
     @api.route('/questions/', methods=['POST'])
     def questions(req: Request, res: Response):
-        print('data from client: {}'.format(req.json))
         data = nlp.read.message(req.json.get('question'))
-        print('data to client: {}'.format(data.get('answer')))
-        return data
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
 #################################################################################################################################################

@@ -38,7 +38,7 @@ def readUtil():
         r['TEMPO_PARADO'] = ((time - util) / 60) if c else None
         return r
     # Return Util Dictionary
-    return dict(
+    data = dict(
         m01 = parse_util(1),
         m02 = parse_util(2),
         m03 = parse_util(3),
@@ -89,7 +89,11 @@ def __load__(api: py_misc.API):
         dt['t05'] = ut['m05']['TEMPO_PARADO']
         dt['s'] = ut['SEC']
         # return json
-        return dt
+        return res(
+            py_misc.json.dumps(dt),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
@@ -128,14 +132,22 @@ def __load__(api: py_misc.API):
             registros.update(util)
         except: pass
         # return data
-        return registros
+        return res(
+            py_misc.json.dumps(registros),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
     @api.route('/api/prod_lam_frio/')
     def prod_lam_frio(req: Request, res: Response):
-        dados = homerico.get.ProducaoLista(2361)
-        return dados
+        data = homerico.get.ProducaoLista(2361)
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
