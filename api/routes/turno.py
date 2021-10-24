@@ -5,20 +5,17 @@
 import py_misc
 
 # modules
-from . import avbot
-from . import aciaria
-from . import laminador
-from . import trefila
-from . import turno
+from .. import turno
 
 #################################################################################################################################################
 
-# Load Modules
+# Load Routes
 def __load__(api: py_misc.API):
-    avbot.__load__(api)
-    aciaria.__load__(api)
-    laminador.__load__(api)
-    trefila.__load__(api)
-    turno.__load__(api)
+
+    #################################################################################################################################################
+
+    @api.route('/api/turma/')
+    def turma_turno(req, res):
+        return turno.escala.get()
 
 #################################################################################################################################################

@@ -1,13 +1,28 @@
-from collections import deque
-import datetime
 
-def getEscala(sample = {'2021-04-02':['B','C','C','C']},dia = datetime.date.today()):
+#################################################################################################################################################
+
+import py_misc
+from collections import deque
+
+#################################################################################################################################################
+
+# Get Escala
+def get(
+    dia = py_misc.datetime.date.today(),
+    sample = { '2021-04-02': ['B','C','C','C'] }
+):
     t = []
-    std = ['D','D','D','A','A','B','B','C','C','C','D','D','A','A','B','B','B','C','C','D','D','A','A','A','B','B','C','C']
+    std = [
+        'D','D','D','A','A','B','B','C','C','C',
+        'D','D','A','A','B','B','B','C','C','D',
+        'D','A','A','A','B','B','C','C'
+    ]
     dy = deque(std)
     dx = std.copy()
-    d0 = datetime.datetime.strptime(list(sample.keys())[0], '%Y-%m-%d').date()
-    #d1 = datetime.datetime.strptime(dia, '%Y-%m-%d').date()
+    d0 = py_misc.datetime.datetime.strptime(
+        list(sample.keys())[0],
+        '%Y-%m-%d'
+    ).date()
     d1 = dia
     delta = d1 - d0
     days = delta.days
@@ -37,4 +52,4 @@ def getEscala(sample = {'2021-04-02':['B','C','C','C']},dia = datetime.date.toda
 
     return (t)
 
-#print(getEscala())
+#################################################################################################################################################

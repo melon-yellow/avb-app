@@ -1,0 +1,3 @@
+SELECT TOP(1) CTR_PRODUCT_NAME
+FROM [iba_db].[dbo].[VIEW_IBA_DAT]
+ORDER BY _TimeStamp DESC
