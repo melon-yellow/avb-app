@@ -24,7 +24,7 @@ filedir = py_misc.__schema__()
 def readUtil():
     r = dict()
     default = [None, None]
-    gets = py_misc.json.load(open('util.json', 'r'))
+    gets = py_misc.json.load(open('api/util.json', 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
@@ -109,7 +109,7 @@ def __load__(api: py_misc.API):
 
     @api.route('/set_util/')
     def set_util(req: Request, res: Response):
-        py_misc.json.dump(req.json, open('util.json', 'w'))
+        py_misc.json.dump(req.json, open('api/util.json', 'w'))
         return res(
             py_misc.json.dumps({ 'done': True }),
             mimetype='application/json',

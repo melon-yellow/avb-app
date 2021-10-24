@@ -2,17 +2,24 @@
 #################################################################################################################################################
 
 # Imports
+import py_misc
 import pyodbc
+
+#################################################################################################################################################
+
+fileDir = py_misc.__schema__()
+product_sql = py_misc.os.path.join(fileDir, '..\\sql\\iba.mssql.product.sql')
+rfa_sql = py_misc.os.path.join(fileDir, '..\\sql\\iba.mssql.rfa.sql')
+rfa_lim_sql = py_misc.os.path.join(fileDir, '..\\sql\\iba.mssql.rfaLim.sql')
 
 #################################################################################################################################################
 
 def product():
     r = None
     try:
-        sql = open('sql/iba.mssql.product.sql').read()
         conn = pyodbc.connect('DSN=iba;UID=sa;PWD=avb2020')
         cur = conn.cursor()
-        cur.execute(sql)
+        cur.execute(open(product_sql).read())
         r = [dict((cur.description[i][0], value)
             for i, value in enumerate(row)) for row in cur.fetchall()]
         r = r[0] if len(r) > 0 else {}
@@ -28,10 +35,9 @@ def product():
 def rfa():
     r = None
     try:
-        sql = open('sql/iba.mssql.rfa.sql').read()
         conn = pyodbc.connect('DSN=iba;UID=sa;PWD=avb2020')
         cur = conn.cursor()
-        cur.execute(sql)
+        cur.execute(open(rfa_sql).read())
         r = [dict((cur.description[i][0], value)
             for i, value in enumerate(row)) for row in cur.fetchall()]
         r = r[0] if len(r) > 0 else {}
@@ -46,10 +52,9 @@ def rfa():
 
 def rfaLim():
     produto = product().get('CTR_PRODUCT_NAME')
-    sql = open('sql/iba.mssql.rfaLim.sql').read().format(produto)
     conn = pyodbc.connect('DSN=L2_SERVER;UID=sa;PWD=avb2020')
     cur = conn.cursor()
-    cur.execute(sql)
+    cur.execute(open(rfa_lim_sql).read().format(produto))
     r = [dict((cur.description[i][0], value)
         for i, value in enumerate(row)) for row in cur.fetchall()]
     r = r[0] if len(r) > 0 else dict()
