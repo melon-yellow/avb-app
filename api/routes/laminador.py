@@ -24,7 +24,7 @@ filedir = py_misc.__schema__()
 def readUtil():
     r = dict()
     default = [None, None]
-    gets = py_misc.json.load(open(filedir + '\\util.json', 'r'))
+    gets = py_misc.json.load(open('util.json', 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
