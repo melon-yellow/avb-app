@@ -87,7 +87,7 @@ def __load__(api: py_misc.API):
 
     @api.route('/set_util/')
     def set_util(req: Request, res: Response):
-        py_misc.json.dump(req.json, open(filedir + '\\util.json', 'w'))
+        py_misc.json.dump(req.json, open('util.json', 'w'))
         return dict(done=True)
 
     set_util.user('iba').password('sqwenjwe34#')
