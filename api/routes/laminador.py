@@ -68,7 +68,7 @@ def __load__(api: py_misc.API):
     #################################################################################################################################################
 
     @api.route('/api/furnace/')
-    def furl2_gusaapp(req, res):
+    def fur_gusaapp(req, res):
         r = furl2.oracle.gusaapp()
         x = readUtil()
         r.update({
