@@ -16,7 +16,7 @@ Response = py_misc.flask.Response
 
 # Load Routes
 def __load__(api: py_misc.API):
-    
+
     #################################################################################################################################################
 
     @api.route('/api/aci_rendimento/')
@@ -47,11 +47,16 @@ def __load__(api: py_misc.API):
                 ): raise Exception('?')
             carga_solida = float(carg_s[1][2].replace(',', '.'))
         except: pass
-
-        # Return data
-        return dict(
+        # Set Data
+        data = dict(
             rendimento = rendimento,
             carga_solida = carga_solida
+        )
+        # Return data
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
         )
 
 #################################################################################################################################################

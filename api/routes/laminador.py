@@ -49,46 +49,72 @@ def __load__(api: py_misc.API):
             'SUCATEAMENTO':1350
             }
         registros = homerico.get.RelatorioGerencialTrim(10, registros)
-        return registros
+        return res(
+            py_misc.json.dumps(registros),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
     @api.route('/api/prod_lam_quente/')
     def prod_lam_quente(req: Request, res: Response):
-        dados = homerico.get.ProducaoLista(1269)
-        return dados
+        data = homerico.get.ProducaoLista(1269)
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
     @api.route('/api/l2/')
     def mill_rfa(req: Request, res: Response):
-        return iba.mssql.rfaLim()
+        data = iba.mssql.rfaLim()
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
     @api.route('/api/mill/')
     def api_mill(req: Request, res: Response):
-        return iba.mssql.rfa()
+        data = iba.mssql.rfa()
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
     @api.route('/api/furnace/')
     def fur_gusaapp(req: Request, res: Response):
-        r = furl2.oracle.gusaapp()
-        x = readUtil()
-        r.update({
-            'UTIL': x.get('UTIL'),
-            'TEMPO_PARADO': x.get('TEMPO_PARADO'),
+        data = furl2.oracle.gusaapp()
+        util = readUtil()
+        data.update({
+            'UTIL': util.get('UTIL'),
+            'TEMPO_PARADO': util.get('TEMPO_PARADO'),
             'timestamp': py_misc.datetime.datetime().strftime('%d/%m/%y %H:%M:%S')
         })
-        return r
+        return res(
+            py_misc.json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
     @api.route('/set_util/')
     def set_util(req: Request, res: Response):
         py_misc.json.dump(req.json, open('util.json', 'w'))
-        return dict(done=True)
+        return res(
+            py_misc.json.dumps({ 'done': True }),
+            mimetype='application/json',
+            status=200
+        )
 
     set_util.user('iba').password('sqwenjwe34#')
 

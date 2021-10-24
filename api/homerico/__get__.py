@@ -49,17 +49,17 @@ def LastDayOfMonth(date: py_misc.datetime.datetime):
 
 # Homerico-Get
 class HomericoGet:
-    
+
     # Init Homerico-Get
     def __init__(self, src: __dll__):
         self.__dll__ = src
-        
+
     #################################################################################################################################################
 
     # Get LAst Day Of Month
     def LastDayOfMonth(self, date: py_misc.datetime.datetime):
         return LastDayOfMonth(date)
-    
+
     #################################################################################################################################################
 
     # relatorio gerencial parser
@@ -117,7 +117,7 @@ class HomericoGet:
                 py_misc.datetime.date(timed.year, i, 1)
             ).day
             if i == timed.month: last_day = timed.day
-            _date = py_misc.timedime.date(timed.year, i, last_day).strftime('%d/%m/%Y')
+            _date = py_misc.datetime.date(timed.year, i, last_day).strftime('%d/%m/%Y')
             e = self.RelatorioGerencialReport(rel, registros, _date)
             for item in relatorio:
                 mes = 'mes{}'.format(i-qt+3)

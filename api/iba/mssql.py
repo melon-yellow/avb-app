@@ -9,7 +9,7 @@ import pyodbc
 def product():
     r = None
     try:
-        sql = open('../sql/iba.mssql.product.sql').read()
+        sql = open('sql/iba.mssql.product.sql').read()
         conn = pyodbc.connect('DSN=iba;UID=sa;PWD=avb2020')
         cur = conn.cursor()
         cur.execute(sql)
@@ -28,7 +28,7 @@ def product():
 def rfa():
     r = None
     try:
-        sql = open('../sql/iba.mssql.rfa.sql').read()
+        sql = open('sql/iba.mssql.rfa.sql').read()
         conn = pyodbc.connect('DSN=iba;UID=sa;PWD=avb2020')
         cur = conn.cursor()
         cur.execute(sql)
@@ -46,7 +46,7 @@ def rfa():
 
 def rfaLim():
     produto = product().get('CTR_PRODUCT_NAME')
-    sql = open('../sql/iba.mssql.rfaLim.sql').read().format(produto)
+    sql = open('sql/iba.mssql.rfaLim.sql').read().format(produto)
     conn = pyodbc.connect('DSN=L2_SERVER;UID=sa;PWD=avb2020')
     cur = conn.cursor()
     cur.execute(sql)
