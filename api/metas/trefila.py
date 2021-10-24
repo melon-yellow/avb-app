@@ -1,11 +1,28 @@
-meses = {'1':[1,2,3],'2':[4,5,6],'3':[7,8,9],'4':[10,11,12]}
+
+#################################################################################################################################################
+
+# Imports
+import datetime
+import mysql.connector
+import pandas
+import io
+
+# Modules
+from .. import turno
+from .. import homerico
+
+#################################################################################################################################################
+
 mes_nome = {
     1:'Jan', 2:'Fev', 3:'Mar', 4:'Abr',
     5:'Mai', 6:'Jun', 7:'Jul', 8:'Ago',
-    9:'Set',10:'Out',11:'Nov',12:'Dez'
+    9:'Set', 10:'Out', 11:'Nov', 12:'Dez'
 }
+meses = {'1':[1,2,3],'2':[4,5,6],'3':[7,8,9],'4':[10,11,12]}
 
-def get_trim(cod):
+#################################################################################################################################################
+
+def Trim(cod):
     now = datetime.datetime.now()
     qt = str((now.month-1)//3+1)
     m = meses.get(qt)
@@ -17,38 +34,45 @@ def get_trim(cod):
         elif i == mes:
             try:
                 data = datetime.date(me.year,i,me.day).strftime('%d/%m/%Y')
-                homerico_csv = homerico.RelatorioGerencialRegistro(data, cod)
-                csv_file = StringIO(homerico_csv)
-                df = pd.read_csv(csv_file, sep=';')
+                homerico_csv = homerico.get.RelatorioGerencialRegistro(data, cod)
+                csv_file = io.StringIO(homerico_csv)
+                df = pandas.read_csv(csv_file, sep=';')
                 mon.append(df['acumulado'].values[0])
             except: mon.append(None)
         else:
             try:
-                data = datetime.date(me.year,i,last_day_of_month(datetime.date(me.year,i,1)).day).strftime('%d/%m/%Y')
+                data = datetime.date(me.year,i, homerico.get.LastDayOfMonth(datetime.date(me.year,i,1)).day).strftime('%d/%m/%Y')
                 homerico_csv = homerico.RelatorioGerencialRegistro(data, cod)
-                csv_file = StringIO(homerico_csv)
-                df = pd.read_csv(csv_file, sep=';')
+                csv_file = io.StringIO(homerico_csv)
+                df = pandas.read_csv(csv_file, sep=';')
                 mon.append(df['acumulado'].values[0])
             except: mon.append(None)
     lista = list()
     for i in m: lista.append(mes_nome[i])
-    meta_json['meses'] = lista
     return(mon)
 
-def get_meta_util_trf():
+#################################################################################################################################################
+
+def Utilizacao():
     try:
-        mydb12 = mysql.connector.connect(host='192.168.61.1', user='Jayron', passwd='123456', port='3306', database='iba_i')
+        mydb12 = mysql.connector.connect(
+            host='192.168.61.1',
+            user='Jayron',
+            passwd='123456',
+            port='3306',
+            database='iba_i'
+        )
         query = open('sql/trf_util_shift.sql').read()
-        df = pd.read_sql(query, mydb12)
+        df = pandas.read_sql(query, mydb12)
 
         try: mydb12.close()
         except: pass
 
     except: return
 
-    df['_0h'] = df._date.apply(lambda row : getEscala(dia = row)[0][0])
-    df['_8h'] = df._date.apply(lambda row : getEscala(dia = row)[1][0])
-    df['_16h'] = df._date.apply(lambda row : getEscala(dia = row)[2][0])
+    df['_0h'] = df._date.apply(lambda row : turno.escala.get(dia = row)[0][0])
+    df['_8h'] = df._date.apply(lambda row : turno.escala.get(dia = row)[1][0])
+    df['_16h'] = df._date.apply(lambda row : turno.escala.get(dia = row)[2][0])
     df['_date'] = df['_date'].astype('str')
     dz = df
     hoje = datetime.date.today()
@@ -77,8 +101,8 @@ def get_meta_util_trf():
             except: mon.append(None)
         else:
             try:
-                dz = df[df['_date']>=datetime.date(hoje.year,m,1).strftime('%Y-%m-%d')]
-                dz = dz[dz['_date']<=datetime.date(hoje.year,m,last_day_of_month(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
+                dz = df[df['_date']>=datetime.date(hoje.year, m, 1).strftime('%Y-%m-%d')]
+                dz = dz[dz['_date']<=datetime.date(hoje.year, m, homerico.get.LastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
                 dz = dz.filter(['_date', 'M1','M2','M3', 'M4', 'M5', '_0h', '_8h','_16h'])
                 dz = dz.drop(['M1'], axis=1)
                 dz = dz.mean()
@@ -97,11 +121,19 @@ def get_meta_util_trf():
 
     return(util_json)
 
-def get_meta_custo_trf():
+#################################################################################################################################################
+
+def Custo():
     try:
-        dbCusto = mysql.connector.connect(host='192.168.61.1', user='jayron', passwd='123123', port='1517', database='lam')
+        dbCusto = mysql.connector.connect(
+            host='127.0.0.1',
+            user='jayron',
+            passwd='123123',
+            port='1517',
+            database='lam'
+        )
         queryC = 'SELECT * FROM wf_sap WHERE YEAR(data_msg)=2021;'
-        dfC = pd.read_sql(queryC, dbCusto)
+        dfC = pandas.read_sql(queryC, dbCusto)
     except:
         try: dbCusto.close()
         except: pass
@@ -141,7 +173,7 @@ def get_meta_custo_trf():
         else:
             try:
                 dz = dfC[dfC['DATA_MSG']>=datetime.date(hoje.year,m,1).strftime('%Y-%m-%d')]
-                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year,m,last_day_of_month(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
+                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year,m, homerico.get.LastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
                 dz = dz['VALOR'].sum()
                 mon.append(dz)
             except: mon.append(None)
@@ -157,11 +189,19 @@ def get_meta_custo_trf():
 
     return(custo_json)
 
-def get_meta_5S_trf():
+#################################################################################################################################################
+
+def S5():
     try:
-        db5S = mysql.connector.connect(host='192.168.61.1', user='jayron', passwd='123123', port='1517', database='lam')
+        db5S = mysql.connector.connect(
+            host='127.0.0.1',
+            user='jayron',
+            passwd='123123',
+            port='1517',
+            database='lam'
+        )
         query5S = 'SELECT * FROM metas WHERE YEAR(data_msg)=2021 and nome_meta = "5S";'
-        dfC = pd.read_sql(query5S, db5S)
+        dfC = pandas.read_sql(query5S, db5S)
     except:
         try: db5S.close()
         except: pass
@@ -199,8 +239,8 @@ def get_meta_5S_trf():
             except: mon.append(None)
         else:
             try:
-                dz = dfC[dfC['DATA_MSG']>=datetime.date(hoje.year,m,1).strftime('%Y-%m-%d')]
-                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year,m,last_day_of_month(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
+                dz = dfC[dfC['DATA_MSG']>=datetime.date(hoje.year, m, 1).strftime('%Y-%m-%d')]
+                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year, m, homerico.get.LastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
                 dz = dz['VALOR'].sum()
                 mon.append(dz)
             except: mon.append(None)
@@ -216,11 +256,19 @@ def get_meta_5S_trf():
 
     return(M5S_json)
 
-def get_meta_suca_trf():
+#################################################################################################################################################
+
+def Sucata():
     try:
-        dbSuca = mysql.connector.connect(host='192.168.61.1', user='jayron', passwd='123123', port='1517', database='lam')
+        dbSuca = mysql.connector.connect(
+            host='127.0.0.1',
+            user='jayron',
+            passwd='123123', 
+            port='1517',
+            database='lam'
+        )
         querysuca = 'SELECT * FROM metas WHERE YEAR(data_msg)=2021 and nome_meta = "sucateamento";'
-        dfC = pd.read_sql(querysuca, dbSuca)
+        dfC = pandas.read_sql(querysuca, dbSuca)
     except:
         try: dbSuca.close()
         except: pass
@@ -258,8 +306,8 @@ def get_meta_suca_trf():
             except: mon.append(None)
         else:
             try:
-                dz = dfC[dfC['DATA_MSG']>=datetime.date(hoje.year,m,1).strftime('%Y-%m-%d')]
-                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year,m,last_day_of_month(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
+                dz = dfC[dfC['DATA_MSG']>=datetime.date(hoje.year, m, 1).strftime('%Y-%m-%d')]
+                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year, m, homerico.get.LastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
                 dz = dz['VALOR'].sum()
                 mon.append(dz)
             except: mon.append(None)
@@ -275,17 +323,4 @@ def get_meta_suca_trf():
 
     return(sucata_json)
 
-
-registros = {'ACIDENTE CPT':1333,'PROD LAMINADO':1336,'REND. METALICO':1338,'BLBP':1444,'SUCATEAMENTO':1350}
-values = {'dia':0,'meta':'N/A'}
-
-meta_json = {
-    'ACIDENTE CPT':{'meta':'','dia':0,'acumulado':0,'mes1':0,'mes2':0,'mes3':0},
-    'PROD LAMINADO':{'meta':'','dia':0,'acumulado':0,'mes1':0,'mes2':0,'mes3':0},
-    'REND. METALICO':{'meta':'','dia':0,'acumulado':0,'mes1':0,'mes2':0,'mes3':0},
-    'BLBP':{'meta':'','dia':0,'acumulado':0,'mes1':0,'mes2':0,'mes3':0},
-    'SUCATEAMENTO':{'meta':'','dia':0,'acumulado':0,'mes1':0,'mes2':0,'mes3':0},
-    'meses':0
-}
-
-produto = ''
+#################################################################################################################################################

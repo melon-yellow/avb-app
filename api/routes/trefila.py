@@ -3,12 +3,19 @@
 
 # Imports
 import py_misc
+import mysql.connector
 import pandas
 import io
 
 # modules
 from .. import turno
 from .. import homerico
+from .. import metas
+
+#################################################################################################################################################
+
+Request = py_misc.flask.request
+Response = py_misc.flask.Response
 
 #################################################################################################################################################
 
@@ -48,7 +55,7 @@ def __load__(api: py_misc.API):
     #################################################################################################################################################
 
     @api.route('/api/trf/')
-    def api_trf(req, res):
+    def api_trf(req: Request, res: Response):
         date = py_misc.datetime.datetime.today().strftime('%d/%m/%Y')
         csv_str = homerico.src.RelatorioLista(date, date, 50)
         csv_file = io.StringIO(csv_str)
@@ -87,7 +94,7 @@ def __load__(api: py_misc.API):
     #################################################################################################################################################
 
     @api.route('/api/metas_lam_frio/')
-    def metas_lam_frio(req, res):
+    def metas_lam_frio(req: Request, res: Response):
         registros = {
             'PRODUÇÃO':2962,
             'PRODUÇÃO HORÁRIA':2966,
@@ -96,17 +103,15 @@ def __load__(api: py_misc.API):
         }
         # get metas
         registros = homerico.get.RelatorioGerencialTrim(16, registros)
-
         # custo trf
-        try: registros.update(get_meta_custo_trf())
+        try: registros.update(metas.trefila.Custo())
         except Exception as e: print(e)
         # sucateamento trf
-        try: registros.update(get_meta_suca_trf())
+        try: registros.update(metas.trefila.Sucata())
         except: pass
         # 5S
-        try: registros.update(get_meta_5S_trf())
+        try: registros.update(metas.trefila.S5())
         except: pass
-
         try: # util trf dia
             ut = readUtil()
             ut = [
@@ -117,7 +122,7 @@ def __load__(api: py_misc.API):
                 ut['m05']['UTIL']
             ]
             # util trf
-            util = get_meta_util_trf()
+            util = metas.trefila.Utilizacao()
             gen_util = dict(dia=((sum(ut) * 100) / 4))
             util['utilizacao'].update(gen_util)
             registros.update(util)
@@ -128,28 +133,30 @@ def __load__(api: py_misc.API):
     #################################################################################################################################################
 
     @api.route('/api/prod_lam_frio/')
-    def prod_lam_frio(req, res):
+    def prod_lam_frio(req: Request, res: Response):
         dados = homerico.get.ProducaoLista(2361)
         return dados
     
     #################################################################################################################################################
 
     @api.route('/api/util_csv/')
-    def trf_util_csv():
+    def trf_util_csv(req: Request, res: Response):
+        df = None
         try:
-            mydb12 = mysql.connector.connect(
+            mydb = mysql.connector.connect(
                 host='127.0.0.1',
                 user='Jayron',
                 passwd='123456',
                 port='3306',
                 database='iba_i'
             )
-            query = open('sql/trf_util_shift.sql').read()
-            try: df = pandas.read_sql(query, mydb12)
+            try:
+                sql = open('../sql/trefila.util.sql').read()
+                df = pandas.read_sql(sql, mydb)
             except: pass
-            mydb12.close()
+            mydb.close()
         except: pass
-
+        if df == None: return
         # Processing
         meses = {'1':[1,2,3],'2':[4,5,6],'3':[7,8,9],'4':[10,11,12]}
         df['_0h'] = df._date.apply(lambda row : turno.escala.get(dia = row)[0][0])
@@ -162,22 +169,26 @@ def __load__(api: py_misc.API):
         #hoje = datetime.date(2021,2,23)
         Trimestre = str((hoje.month-1)//3+1)
         Tmeses = meses.get(Trimestre)
-        mon = list()
-        mes = hoje.month
         #mes = datetime.date(2021,3,23).month
-        bn = df[df['_date'] >= py_misc.datetime.date(hoje.year,Tmeses[0],1).strftime("%Y-%m-%d")]
-        bn = bn[bn['_date'] <= py_misc.datetime.date(hoje.year,hoje.month,hoje.day).strftime("%Y-%m-%d")]
-        bn = bn.filter(['_date', 'M1','M2','M3', 'M4', 'M5', '_0h', '_8h','_16h'])
+        bn = df[df['_date'] >= py_misc.datetime.date(hoje.year, Tmeses[0], 1).strftime("%Y-%m-%d")]
+        bn = bn[bn['_date'] <= hoje.strftime("%Y-%m-%d")]
+        bn = bn.filter(['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h'])
         bn = bn.drop(['M1'], axis=1)
         bn['Global'] = (bn['M2']+bn['M3']+bn['M4']+bn['M5']) / 4
         # Retrun Data
-        return bn.to_csv()
+        return res(
+            bn.to_csv(),
+            mimetype = "text/csv",
+            headers = {
+                "Content-disposition": "attachment; filename=utilizacao.csv"
+            }
+        )
 
     #################################################################################################################################################
 
     @api.route('/api/util_csv_dia')
-    def trf_util_csv_dia(req):
-        csv = ''
+    def trf_util_csv_dia(req: Request, res: Response):
+        csv = None
         try:
             mydb = mysql.connector.connect(
                 host='127.0.0.1',
@@ -187,13 +198,20 @@ def __load__(api: py_misc.API):
                 database='iba_i'
             )
             try:
-                query = open('sql/trf_util_day.sql').read()
-                csv = pandas.read_sql(query, mydb).to_csv()
+                sql = open('sql/trf_util_day.sql').read()
+                csv = pandas.read_sql(sql, mydb).to_csv()
             except: pass
             mydb.close()
         except: pass
-
-        return csv
+        if csv == None: return
+        # Return Data
+        return res(
+            csv,
+            mimetype = "text/csv",
+            headers = {
+                "Content-disposition": "attachment; filename=utilizacao-dia.csv"
+            }
+        )
 
 
 #################################################################################################################################################

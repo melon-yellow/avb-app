@@ -11,6 +11,11 @@ from .. import homerico
 
 #################################################################################################################################################
 
+Request = py_misc.flask.request
+Response = py_misc.flask.Response
+
+#################################################################################################################################################
+
 # Gets Actual File Directory
 filedir = py_misc.__schema__()
 
@@ -35,7 +40,7 @@ def __load__(api: py_misc.API):
     #################################################################################################################################################
 
     @api.route('/api/metas_lam_quente/')
-    def metas_lam_quente(req, res):
+    def metas_lam_quente(req: Request, res: Response):
         registros = {
             'ACIDENTE CPT':1333,
             'PROD LAMINADO':1336,
@@ -49,26 +54,26 @@ def __load__(api: py_misc.API):
     #################################################################################################################################################
 
     @api.route('/api/prod_lam_quente/')
-    def prod_lam_quente(req, res):
+    def prod_lam_quente(req: Request, res: Response):
         dados = homerico.get.ProducaoLista(1269)
         return dados
 
     #################################################################################################################################################
 
     @api.route('/api/l2/')
-    def mill_rfa(req, res):
+    def mill_rfa(req: Request, res: Response):
         return iba.mssql.rfaLim()
 
     #################################################################################################################################################
 
     @api.route('/api/mill/')
-    def api_mill(req, res):
+    def api_mill(req: Request, res: Response):
         return iba.mssql.rfa()
 
     #################################################################################################################################################
 
     @api.route('/api/furnace/')
-    def fur_gusaapp(req, res):
+    def fur_gusaapp(req: Request, res: Response):
         r = furl2.oracle.gusaapp()
         x = readUtil()
         r.update({
