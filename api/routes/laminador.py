@@ -97,7 +97,7 @@ def __load__(api: py_misc.API):
         data.update({
             'UTIL': util.get('UTIL'),
             'TEMPO_PARADO': util.get('TEMPO_PARADO'),
-            'timestamp': py_misc.datetime.datetime().strftime('%d/%m/%y %H:%M:%S')
+            'timestamp': py_misc.datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')
         })
         return res(
             py_misc.json.dumps(data),
