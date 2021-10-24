@@ -50,14 +50,14 @@ def readUtil():
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(api: py_misc.API, h: homerico):
 
     #################################################################################################################################################
 
     @api.route('/api/trf/')
     def api_trf(req: Request, res: Response):
         date = py_misc.datetime.datetime.today().strftime('%d/%m/%Y')
-        csv_str = homerico.__dll__.RelatorioLista(date, date, 50)
+        csv_str = h.__dll__.RelatorioLista(date, date, 50)
         csv_file = io.StringIO(csv_str)
         df = pandas.read_csv(csv_file, sep=';')
         try:
@@ -106,7 +106,7 @@ def __load__(api: py_misc.API):
             'PRODUÇÃO POR MÁQUINA':2988
         }
         # get metas
-        registros = homerico.get.RelatorioGerencialTrim(16, registros)
+        registros = h.get.RelatorioGerencialTrim(16, registros)
         # custo trf
         try: registros.update(metas.trefila.Custo())
         except Exception as e: print(e)
@@ -142,7 +142,7 @@ def __load__(api: py_misc.API):
 
     @api.route('/api/prod_lam_frio/')
     def prod_lam_frio(req: Request, res: Response):
-        data = homerico.get.ProducaoLista(2361)
+        data = h.get.ProducaoLista(2361)
         return res(
             py_misc.json.dumps(data),
             mimetype='application/json',

@@ -35,7 +35,7 @@ def readUtil():
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(api: py_misc.API, h: homerico):
 
     #################################################################################################################################################
 
@@ -48,7 +48,7 @@ def __load__(api: py_misc.API):
             'BLBP':1444,
             'SUCATEAMENTO':1350
             }
-        registros = homerico.get.RelatorioGerencialTrim(10, registros)
+        registros = h.get.RelatorioGerencialTrim(10, registros)
         return res(
             py_misc.json.dumps(registros),
             mimetype='application/json',

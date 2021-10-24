@@ -15,15 +15,15 @@ Response = py_misc.flask.Response
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(api: py_misc.API, h: homerico):
 
     #################################################################################################################################################
 
     @api.route('/api/aci_rendimento/')
     def aci_rendimento(req: Request, res: Response):
         # get api data
-        rend = homerico.get.RelatorioGerencialRegistro(15)
-        carg_s = homerico.get.RelatorioGerencialRegistro(1218)
+        rend = h.get.RelatorioGerencialRegistro(15)
+        carg_s = h.get.RelatorioGerencialRegistro(1218)
 
         rendimento = None
         carga_solida = None
