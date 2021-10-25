@@ -2,15 +2,16 @@
 #################################################################################################################################################
 
 # Imports
-import py_misc
+import os
 import pyodbc
 
 #################################################################################################################################################
 
-fileDir = py_misc.__schema__()
-product_sql = py_misc.os.path.join(fileDir, '..\\sql\\iba.mssql.product.sql')
-rfa_sql = py_misc.os.path.join(fileDir, '..\\sql\\iba.mssql.rfa.sql')
-rfa_lim_sql = py_misc.os.path.join(fileDir, '..\\sql\\iba.mssql.rfaLim.sql')
+# Get File-Paths
+fileDir = os.path.dirname(__file__)
+product_sql = os.path.join(fileDir, '..\\sql\\iba.mssql.product.sql')
+rfa_lim_sql = os.path.join(fileDir, '..\\sql\\iba.mssql.rfa.lim.sql')
+rfa_sql = os.path.join(fileDir, '..\\sql\\iba.mssql.rfa.sql')
 
 #################################################################################################################################################
 
