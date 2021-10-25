@@ -2,6 +2,8 @@
 #################################################################################################################################################
 
 # Imports
+import json
+import flask
 import py_misc
 
 # modules
@@ -9,8 +11,8 @@ from .. import homerico
 
 #################################################################################################################################################
 
-Request = py_misc.flask.request
-Response = py_misc.flask.Response
+Request = flask.request
+Response = flask.Response
 
 #################################################################################################################################################
 
@@ -54,7 +56,7 @@ def __load__(api: py_misc.API):
         )
         # Return data
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )

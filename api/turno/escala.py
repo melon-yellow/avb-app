@@ -1,14 +1,14 @@
 
 #################################################################################################################################################
 
-import py_misc
+import datetime
 from collections import deque
 
 #################################################################################################################################################
 
 # Get Escala
 def get(
-    dia = py_misc.datetime.date.today(),
+    dia = datetime.date.today(),
     sample = { '2021-04-02': ['B','C','C','C'] }
 ):
     t = []
@@ -19,7 +19,7 @@ def get(
     ]
     dy = deque(std)
     dx = std.copy()
-    d0 = py_misc.datetime.datetime.strptime(
+    d0 = datetime.datetime.strptime(
         list(sample.keys())[0],
         '%Y-%m-%d'
     ).date()

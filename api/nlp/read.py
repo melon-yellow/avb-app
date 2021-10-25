@@ -2,9 +2,10 @@
 #################################################################################################################################################
 
 # Imports
-import py_misc
-import pandas
 import io
+import re
+import pandas
+import datetime
 
 # Modules
 from .. import homerico
@@ -19,29 +20,29 @@ def extract(date: str):
     # Iter Over Dates
     for dat in date:
         try:
-            if py_misc.re.search(
+            if re.search(
                 '^([0-9]|0[0-9]|1[0-9]|2[0-9]|3[0-1])(.|-)([0-9]|0[0-9]|1[0-2])(.|-|)20[0-9][0-9]$',
                 dat
             ):
-                date_time_obj = py_misc.datetime.datetime.strptime(dat, '%d/%m/%Y')
+                date_time_obj = datetime.datetime.strptime(dat, '%d/%m/%Y')
                 datas.append(date_time_obj)
                 datas.sort()
-            elif py_misc.re.search(
+            elif re.search(
                 '^([0-9]|0[0-9]|1[0-9]|2[0-9]|3[0-1])(.|-)([0-9]|0[0-9]|1[0-2])(.|-|)[0-9][0-9]$',
                 dat
             ):
-                date_time_obj = py_misc.datetime.datetime.strptime(dat, '%d/%m/%y')
+                date_time_obj = datetime.datetime.strptime(dat, '%d/%m/%y')
                 datas.append(date_time_obj)
                 datas.sort()
-            elif py_misc.re.search(
+            elif re.search(
                 '^([0-9]|0[0-9]|1[0-9]|2[0-9]|3[0-1])(.|-)([0-9]|0[0-9]|1[0-2])$',
                 dat
             ):
-                dat = dat + '/' + py_misc.datetime.datetime.strftime(
-                    py_misc.datetime.datetime.today(),
+                dat = dat + '/' + datetime.datetime.strftime(
+                    datetime.datetime.today(),
                     '%y'
                 )
-                date_time_obj = py_misc.datetime.datetime.strptime(dat, '%d/%m/%y')
+                date_time_obj = datetime.datetime.strptime(dat, '%d/%m/%y')
                 datas.append(date_time_obj)
         # Exception
         except: pass
@@ -61,44 +62,44 @@ def message(txt: str):
         if ('produção' in msg.keys()):
             #tem intervalo?
             if('ontem' in msg.keys() and msg['ontem'] > 1):
-                d = py_misc.datetime.datetime.now() - py_misc.datetime.timedelta(days = 1)
-                d = py_misc.datetime.datetime.strftime(d, '%d/%m/%Y')
+                d = datetime.datetime.now() - datetime.timedelta(days = 1)
+                d = datetime.datetime.strftime(d, '%d/%m/%Y')
                 d = '{} {}'.format(d,d)
                 if('produto' in msg.keys() and 
-                    py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
+                    re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
                 ):
-                    param = py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
+                    param = re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
                     return search(d,param)
                 else:
                     return search(d,'32')
 
             elif ('hoje' in msg.keys() and msg['hoje'] > 1):
-                d = py_misc.datetime.datetime.now()
-                d = py_misc.datetime.datetime.strftime(d, '%d/%m/%Y')
+                d = datetime.datetime.now()
+                d = datetime.datetime.strftime(d, '%d/%m/%Y')
                 d = '{} {}'.format(d,d)
                 if ('produto' in msg.keys() and
-                    py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
+                    re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
                 ):
-                    param = py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
+                    param = re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
                     return search(d,param)
                 else:
                     return search(d,'32')
 
             elif (extract(txt)):
                 if('produto' in msg.keys() and
-                    py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)):
-                    param = py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
+                    re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)):
+                    param = re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
                     return search(txt, param)
                 else:
                     return search(txt,'32')
 
             else:
-                d = py_misc.datetime.datetime.now()
-                d = py_misc.datetime.datetime.strftime(d, '%d/%m/%Y')
+                d = datetime.datetime.now()
+                d = datetime.datetime.strftime(d, '%d/%m/%Y')
                 d = '{} {}'.format(d,d)
                 if('produto' in msg.keys() and 
-                    py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)):
-                    param = py_misc.re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
+                    re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)):
+                    param = re.findall(r'(\d+\.\d+|\d+\,\d+)', txt)
                     return search(d,param)
                 else:
                     return search(d,'32')
@@ -164,7 +165,7 @@ def search(raw_intervalo, parametro):
             delta =1
 
         for d in datas:
-            e.append(py_misc.datetime.datetime.strftime(d, '%d/%m/%Y'))
+            e.append(datetime.datetime.strftime(d, '%d/%m/%Y'))
         datas = e
 
     #if(1):

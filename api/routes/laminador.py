@@ -2,7 +2,10 @@
 #################################################################################################################################################
 
 # Imports
+import json
+import flask
 import py_misc
+import datetime
 
 # modules
 from .. import iba
@@ -11,15 +14,15 @@ from .. import homerico
 
 #################################################################################################################################################
 
-Request = py_misc.flask.request
-Response = py_misc.flask.Response
+Request = flask.request
+Response = flask.Response
 
 #################################################################################################################################################
 
 def readUtil():
     r = dict()
     default = [None, None]
-    gets = py_misc.json.load(open('api/util.json', 'r'))
+    gets = json.load(open('api/util.json', 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
@@ -45,7 +48,7 @@ def __load__(api: py_misc.API):
             }
         data = homerico.get.RelatorioGerencialTrim(10, registros)
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )
@@ -56,7 +59,7 @@ def __load__(api: py_misc.API):
     def prod_lam_quente(req: Request, res: Response):
         data = homerico.get.ProducaoLista(1269)
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )
@@ -67,7 +70,7 @@ def __load__(api: py_misc.API):
     def mill_rfa(req: Request, res: Response):
         data = iba.mssql.rfaLim()
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )
@@ -78,7 +81,7 @@ def __load__(api: py_misc.API):
     def api_mill(req: Request, res: Response):
         data = iba.mssql.rfa()
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )
@@ -92,10 +95,10 @@ def __load__(api: py_misc.API):
         data.update({
             'UTIL': util.get('UTIL'),
             'TEMPO_PARADO': util.get('TEMPO_PARADO'),
-            'timestamp': py_misc.datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')
+            'timestamp': datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')
         })
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )
@@ -104,9 +107,9 @@ def __load__(api: py_misc.API):
 
     @api.route('/set_util/')
     def set_util(req: Request, res: Response):
-        py_misc.json.dump(req.json, open('api/util.json', 'w'))
+        json.dump(req.json, open('api/util.json', 'w'))
         return res(
-            py_misc.json.dumps({ 'done': True }),
+            json.dumps({ 'done': True }),
             mimetype='application/json',
             status=200
         )

@@ -2,9 +2,12 @@
 #################################################################################################################################################
 
 # Imports
-import py_misc
-import pandas
 import io
+import json
+import flask
+import pandas
+import py_misc
+import datetime
 
 # modules
 from .. import turno
@@ -14,15 +17,15 @@ from .. import iba
 
 #################################################################################################################################################
 
-Request = py_misc.flask.request
-Response = py_misc.flask.Response
+Request = flask.request
+Response = flask.Response
 
 #################################################################################################################################################
 
 def readUtil():
     # Open File
     default = [None, None, None, None, None, None]
-    gets = py_misc.json.load(open('api/util.json', 'r'))
+    gets = json.load(open('api/util.json', 'r'))
     time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):
@@ -51,7 +54,7 @@ def __load__(api: py_misc.API):
 
     @api.route('/api/trf/')
     def api_trf(req: Request, res: Response):
-        date = py_misc.datetime.datetime.today().strftime('%d/%m/%Y')
+        date = datetime.datetime.today().strftime('%d/%m/%Y')
         csv_str = homerico.__dll__.RelatorioLista(date, date, '50')
         csv_file = io.StringIO(csv_str)
         df = pandas.read_csv(csv_file, sep=';')
@@ -61,7 +64,7 @@ def __load__(api: py_misc.API):
             df['Peso do Produto'] = df['Peso do Produto'].astype(float)
             df = df.groupby('Maquina').sum()
             df = df['Peso do Produto']
-            df = py_misc.json.loads(df.to_json())
+            df = json.loads(df.to_json())
         except: df = dict()
         dt = dict()
         # get prod data
@@ -85,7 +88,7 @@ def __load__(api: py_misc.API):
         dt['s'] = ut['SEC']
         # return json
         return res(
-            py_misc.json.dumps(dt),
+            json.dumps(dt),
             mimetype='application/json',
             status=200
         )
@@ -128,7 +131,7 @@ def __load__(api: py_misc.API):
         except: pass
         # return data
         return res(
-            py_misc.json.dumps(registros),
+            json.dumps(registros),
             mimetype='application/json',
             status=200
         )
@@ -139,7 +142,7 @@ def __load__(api: py_misc.API):
     def prod_lam_frio(req: Request, res: Response):
         data = homerico.get.ProducaoLista(2361)
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )

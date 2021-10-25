@@ -2,7 +2,8 @@
 #################################################################################################################################################
 
 # Imports
-import py_misc
+import copy
+import datetime
 
 # Modules
 from . import __dll__
@@ -36,11 +37,11 @@ def matrix(
 #################################################################################################################################################
 
 # Get Last Day Of Month
-def LastDayOfMonth(date: py_misc.datetime.datetime):
+def LastDayOfMonth(date: datetime.datetime):
     if date.month == 12: return date.replace(day=31)
     return (
         date.replace(month=date.month+1, day=1) -
-        py_misc.datetime.timedelta(days=1)
+        datetime.timedelta(days=1)
     )
 
 #################################################################################################################################################
@@ -57,7 +58,7 @@ class HomericoGet:
     #################################################################################################################################################
 
     # Get LAst Day Of Month
-    def LastDayOfMonth(self, date: py_misc.datetime.datetime):
+    def LastDayOfMonth(self, date: datetime.datetime):
         return LastDayOfMonth(date)
 
     #################################################################################################################################################
@@ -70,8 +71,8 @@ class HomericoGet:
         date: str = None
     ):
         if date == None:
-            date = py_misc.datetime.date.today().strftime('%d/%m/%Y')
-        _registros = py_misc.copy.deepcopy(registros)
+            date = datetime.date.today().strftime('%d/%m/%Y')
+        _registros = copy.deepcopy(registros)
         # private map function
         def _replace_reg(row):
             if row[0] in list(_registros.values()):
@@ -91,11 +92,11 @@ class HomericoGet:
         null_reg = dict(meta=None, dia=None, acumulado=None)
         for item in list(_registros):
             _registros[item] = (
-                py_misc.copy.deepcopy(null_reg)
+                copy.deepcopy(null_reg)
                 if (type(_registros[item]) != dict)
                 else _registros[item]
             )
-        return py_misc.copy.deepcopy(_registros)
+        return copy.deepcopy(_registros)
 
     #################################################################################################################################################
 
@@ -107,17 +108,17 @@ class HomericoGet:
         date: str = None
     ):
         if date == None:
-            date = py_misc.datetime.date.today().strftime('%d/%m/%Y')
-        timed = py_misc.datetime.datetime.strptime(date, '%d/%m/%Y')
+            date = datetime.date.today().strftime('%d/%m/%Y')
+        timed = datetime.datetime.strptime(date, '%d/%m/%Y')
         relatorio = self.RelatorioGerencialReport(rel, registros, date)
         qt = (3 * (1 + ((timed.month - 1) // 3)))
         m = [qt-2, qt-1, qt]
         for i in m:
             last_day = LastDayOfMonth(
-                py_misc.datetime.date(timed.year, i, 1)
+                datetime.date(timed.year, i, 1)
             ).day
             if i == timed.month: last_day = timed.day
-            _date = py_misc.datetime.date(timed.year, i, last_day).strftime('%d/%m/%Y')
+            _date = datetime.date(timed.year, i, last_day).strftime('%d/%m/%Y')
             e = self.RelatorioGerencialReport(rel, registros, _date)
             for item in relatorio:
                 mes = 'mes{}'.format(i-qt+3)
@@ -133,7 +134,7 @@ class HomericoGet:
         date: str = None
     ):
         if date == None:
-            date = py_misc.datetime.date.today().strftime('%d/%m/%Y')
+            date = datetime.date.today().strftime('%d/%m/%Y')
         homerico_csv = self.__dll__.RelatorioGerencialRegistro(date, str(reg))
         return matrix(homerico_csv)
 
@@ -146,7 +147,7 @@ class HomericoGet:
         date: str = None
     ):
         if date == None:
-            date = py_misc.datetime.date.today()
+            date = datetime.date.today()
         ultimo_dia = LastDayOfMonth(date).strftime('%d/%m/%Y')
         homerico_csv = self.__dll__.ProducaoLista(ultimo_dia, str(lista))
         dados = matrix(homerico_csv)

@@ -2,6 +2,8 @@
 #################################################################################################################################################
 
 # Imports
+import json
+import flask
 import py_misc
 
 # modules
@@ -9,8 +11,8 @@ from .. import turno
 
 #################################################################################################################################################
 
-Request = py_misc.flask.request
-Response = py_misc.flask.Response
+Request = flask.request
+Response = flask.Response
 
 #################################################################################################################################################
 
@@ -23,7 +25,7 @@ def __load__(api: py_misc.API):
     def turma_turno(req: Request, res: Response):
         data = turno.escala.get()
         return res(
-            py_misc.json.dumps(data),
+            json.dumps(data),
             mimetype='application/json',
             status=200
         )
