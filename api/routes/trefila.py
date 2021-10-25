@@ -53,7 +53,6 @@ def __load__(api: py_misc.API):
     def api_trf(req: Request, res: Response):
         date = py_misc.datetime.datetime.today().strftime('%d/%m/%Y')
         csv_str = homerico.__dll__.RelatorioLista(date, date, '50')
-        print(csv_str)
         csv_file = io.StringIO(csv_str)
         df = pandas.read_csv(csv_file, sep=';')
         try:
@@ -105,7 +104,7 @@ def __load__(api: py_misc.API):
         registros = homerico.get.RelatorioGerencialTrim(16, registros)
         # custo trf
         try: registros.update(metas.trefila.Custo())
-        except Exception as e: print(e)
+        except: pass
         # sucateamento trf
         try: registros.update(metas.trefila.Sucata())
         except: pass
