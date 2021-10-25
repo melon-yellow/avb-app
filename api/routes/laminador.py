@@ -16,11 +16,6 @@ Response = py_misc.flask.Response
 
 #################################################################################################################################################
 
-# Gets Actual File Directory
-filedir = py_misc.__schema__()
-
-#################################################################################################################################################
-
 def readUtil():
     r = dict()
     default = [None, None]
@@ -35,7 +30,7 @@ def readUtil():
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API, h: homerico):
+def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
@@ -48,9 +43,9 @@ def __load__(api: py_misc.API, h: homerico):
             'BLBP':1444,
             'SUCATEAMENTO':1350
             }
-        registros = h.get.RelatorioGerencialTrim(10, registros)
+        data = homerico.get.RelatorioGerencialTrim(10, registros)
         return res(
-            py_misc.json.dumps(registros),
+            py_misc.json.dumps(data),
             mimetype='application/json',
             status=200
         )
