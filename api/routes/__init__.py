@@ -10,16 +10,15 @@ from . import aciaria
 from . import laminador
 from . import trefila
 from . import turno
-from .. import homerico
 
 #################################################################################################################################################
 
 # Load Modules
-def __load__(api: py_misc.API, h: homerico):
+def __load__(api: py_misc.API):
     avbot.__load__(api)
-    aciaria.__load__(api, h)
-    laminador.__load__(api, h)
-    trefila.__load__(api, h)
+    aciaria.__load__(api)
+    laminador.__load__(api)
+    trefila.__load__(api)
     turno.__load__(api)
 
 #################################################################################################################################################
