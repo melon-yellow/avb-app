@@ -9,7 +9,7 @@ import ctypes
 
 #Informa o caminho da dll
 fileDir = os.path.dirname(__file__)
-dllPath = os.path.join(fileDir, '\\homerico_python64bits.dll')
+dllPath = os.path.join(fileDir, '\homerico_python64bits')
 MyDllObject = ctypes.cdll.LoadLibrary(dllPath)
 
 #################################################################################################################################################
