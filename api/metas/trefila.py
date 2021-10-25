@@ -137,7 +137,6 @@ def Custo():
     except:
         try: dbCusto.close()
         except: pass
-        print('Erro na conexão sql')
         return
 
     hoje = datetime.date.today()
@@ -205,7 +204,6 @@ def S5():
     except:
         try: db5S.close()
         except: pass
-        print('Erro na conexão sql')
         return
 
     hoje = datetime.date.today()
@@ -272,7 +270,6 @@ def Sucata():
     except:
         try: dbSuca.close()
         except: pass
-        print('Erro na conexão sql')
         return
 
     hoje = datetime.date.today()
