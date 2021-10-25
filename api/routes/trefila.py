@@ -149,22 +149,17 @@ def __load__(api: py_misc.API):
 
     @api.route('/api/util_csv/')
     def trf_util_csv(req: Request, res: Response):
-        df = None
-        try:
-            mydb = mysql.connector.connect(
-                host='127.0.0.1',
-                user='Jayron',
-                passwd='123456',
-                port='3306',
-                database='iba_i'
-            )
-            try:
-                sql = open('../sql/trefila.util.sql').read()
-                df = pandas.read_sql(sql, mydb)
-            except: pass
-            mydb.close()
-        except: pass
-        if df == None: return
+        # MySQL Connection
+        mydb = mysql.connector.connect(
+            host='127.0.0.1',
+            user='Jayron',
+            passwd='123456',
+            port='3306',
+            database='iba_i'
+        )
+        sql = open('../sql/trefila.util.sql').read()
+        df = pandas.read_sql(sql, mydb)
+        mydb.close()
         # Processing
         meses = {'1':[1,2,3],'2':[4,5,6],'3':[7,8,9],'4':[10,11,12]}
         df['_0h'] = df._date.apply(lambda row : turno.escala.get(dia = row)[0][0])
@@ -196,22 +191,17 @@ def __load__(api: py_misc.API):
 
     @api.route('/api/util_csv_dia')
     def trf_util_csv_dia(req: Request, res: Response):
-        csv = None
-        try:
-            mydb = mysql.connector.connect(
-                host='127.0.0.1',
-                user='Jayron',
-                passwd='123456',
-                port='3306',
-                database='iba_i'
-            )
-            try:
-                sql = open('sql/trf_util_day.sql').read()
-                csv = pandas.read_sql(sql, mydb).to_csv()
-            except: pass
-            mydb.close()
-        except: pass
-        if csv == None: return
+        # MySQL Connection
+        mydb = mysql.connector.connect(
+            host='127.0.0.1',
+            user='Jayron',
+            passwd='123456',
+            port='3306',
+            database='iba_i'
+        )
+        sql = open('sql/trf_util_day.sql').read()
+        csv = pandas.read_sql(sql, mydb).to_csv()
+        mydb.close()
         # Return Data
         return res(
             csv,
