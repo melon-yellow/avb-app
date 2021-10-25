@@ -128,7 +128,7 @@ def Custo():
         dbCusto = mysql.connector.connect(
             host='127.0.0.1',
             user='jayron',
-            passwd='123123',
+            passwd='123456',
             port='1517',
             database='lam'
         )
@@ -195,7 +195,7 @@ def S5():
         db5S = mysql.connector.connect(
             host='127.0.0.1',
             user='jayron',
-            passwd='123123',
+            passwd='123456',
             port='1517',
             database='lam'
         )
@@ -261,7 +261,7 @@ def Sucata():
         dbSuca = mysql.connector.connect(
             host='127.0.0.1',
             user='jayron',
-            passwd='123123', 
+            passwd='123456', 
             port='1517',
             database='lam'
         )
