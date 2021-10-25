@@ -23,7 +23,6 @@ file_dir = os.path.dirname(__file__)
 def LoadMemory():
     words = open(file_dir + '\words.nlp', 'r').read()
     words = yaml.safe_load(words)
-    #print(type(words))
     return words
 
 #Função responsavel por calcular a pontuação por classe
@@ -32,13 +31,10 @@ def calculate_class_score(sentence,class_name):
     sentence = re.sub(expression, '', sentence)
     sentence = nltk.word_tokenize(sentence)
     for word in sentence:
-        #print(stemmer.stem(word.lower()),corpus_words[class_name])
         try:
             if stemmer.stem(word.lower()) in corpus_words[class_name]:
                 score += corpus_words[class_name][stemmer.stem(word.lower())]
-        except:
-            pass
-            #print("fail on: ",word)
+        except: pass
     return score
 
 #Função responsavel por classificar a frase
@@ -54,10 +50,6 @@ def classifique(sentence):
             high_score = score
         if(score > 0):
             item[c] = score
-    #print(item)
-    #print(str(high_class))
-    #print(high_score)
-    #return high_class
     return item
 
 memory = LoadMemory()
