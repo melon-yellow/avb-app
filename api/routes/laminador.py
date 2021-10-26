@@ -22,7 +22,7 @@ Response = flask.Response
 def readUtil():
     r = dict()
     default = [None, None]
-    gets = json.load(open('api/util.json', 'r'))
+    gets = json.load(open('./api/util.json', 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
@@ -107,7 +107,7 @@ def __load__(api: py_misc.API):
 
     @api.route('/set_util/')
     def set_util(req: Request, res: Response):
-        json.dump(req.json, open('api/util.json', 'w'))
+        json.dump(req.json, open('./api/util.json', 'w'))
         return res(
             json.dumps({ 'done': True }),
             mimetype='application/json',
