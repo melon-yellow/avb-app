@@ -9,9 +9,9 @@ import pyodbc
 
 # Get File-Paths
 fileDir = os.path.dirname(__file__)
-product_sql = os.path.join(fileDir, '..\\sql\\iba.mssql.product.sql')
-rfa_lim_sql = os.path.join(fileDir, '..\\sql\\iba.mssql.rfa.lim.sql')
-rfa_sql = os.path.join(fileDir, '..\\sql\\iba.mssql.rfa.sql')
+product_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.mssql.product.sql'))
+rfa_lim_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.mssql.rfa.lim.sql'))
+rfa_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.mssql.rfa.sql'))
 
 #################################################################################################################################################
 

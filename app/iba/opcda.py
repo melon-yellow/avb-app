@@ -16,7 +16,7 @@ def tag(tagname: str | list[str]):
 
     try: # Request PDA Server
         res = requests.post(
-            'http://localhost:3001/api/pda/',
+            'http://10.20.6.71:3000/pda/opc/da/',
             json=dict(tagname=tagname),
             auth=('client', '123456')
         )
