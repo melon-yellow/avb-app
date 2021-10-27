@@ -25,7 +25,7 @@ Response = flask.Response
 
 # Get File-Paths
 fileDir = os.path.dirname(__file__)
-util_json = os.path.abspath(os.path.join(fileDir, './util.json'))
+util_json = os.path.abspath(os.path.join(fileDir, '../util.json'))
 
 #################################################################################################################################################
 
