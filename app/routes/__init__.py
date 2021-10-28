@@ -14,11 +14,11 @@ from . import turno
 #################################################################################################################################################
 
 # Load Modules
-def __load__(api: py_misc.API):
-    avbot.__load__(api)
-    aciaria.__load__(api)
-    laminador.__load__(api)
-    trefila.__load__(api)
-    turno.__load__(api)
+def __load__(app: py_misc.API):
+    avbot.__load__(app)
+    aciaria.__load__(app)
+    laminador.__load__(app)
+    trefila.__load__(app)
+    turno.__load__(app)
 
 #################################################################################################################################################

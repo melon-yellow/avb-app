@@ -32,7 +32,7 @@ util_json = os.path.abspath(os.path.join(fileDir, '../util.json'))
 def readUtil():
     # Open File
     default = [None, None, None, None, None, None]
-    gets = json.load(open(util_json, 'r'))
+    gets: dict = json.load(open(util_json, 'r'))
     time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):
@@ -55,11 +55,11 @@ def readUtil():
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(app: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/trf/')
+    @app.route('/api/trf/')
     def api_trf(req: Request, res: Response):
         date = datetime.datetime.today().strftime('%d/%m/%Y')
         csv_str = homerico.__dll__.RelatorioLista(date, date, '50')
@@ -102,7 +102,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/metas_lam_frio/')
+    @app.route('/api/metas_lam_frio/')
     def metas_lam_frio(req: Request, res: Response):
         registros = {
             'PRODUÇÃO':2962,
@@ -145,7 +145,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/prod_lam_frio/')
+    @app.route('/api/prod_lam_frio/')
     def prod_lam_frio(req: Request, res: Response):
         data = homerico.get.ProducaoLista(2361)
         return res(
@@ -156,7 +156,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/util_csv/')
+    @app.route('/api/util_csv/')
     def trf_util_csv(req: Request, res: Response):
         # MySQL Connection
         csv = iba.mysql.UtilizacaoTrefila()
@@ -171,7 +171,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/util_csv_dia')
+    @app.route('/api/util_csv_dia')
     def trf_util_csv_dia(req: Request, res: Response):
         # MySQL Connection
         csv = iba.mysql.UtilizacaoDiaTrefila()

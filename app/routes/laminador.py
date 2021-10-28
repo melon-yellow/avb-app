@@ -40,11 +40,11 @@ def readUtil():
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(app: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/metas_lam_quente/')
+    @app.route('/api/metas_lam_quente/')
     def metas_lam_quente(req: Request, res: Response):
         registros = {
             'ACIDENTE CPT':1333,
@@ -62,7 +62,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/prod_lam_quente/')
+    @app.route('/api/prod_lam_quente/')
     def prod_lam_quente(req: Request, res: Response):
         data = homerico.get.ProducaoLista(1269)
         return res(
@@ -73,7 +73,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/l2/')
+    @app.route('/api/l2/')
     def mill_rfa(req: Request, res: Response):
         data = iba.mssql.rfaLim()
         return res(
@@ -84,7 +84,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/mill/')
+    @app.route('/api/mill/')
     def api_mill(req: Request, res: Response):
         data = iba.mssql.rfa()
         return res(
@@ -95,7 +95,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/furnace/')
+    @app.route('/api/furnace/')
     def fur_gusaapp(req: Request, res: Response):
         data = furl2.oracle.gusaapp()
         util = readUtil()
@@ -112,7 +112,7 @@ def __load__(api: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/set_util/')
+    @app.route('/set_util/')
     def set_util(req: Request, res: Response):
         json.dump(req.json, open(util_json, 'w'))
         return res(

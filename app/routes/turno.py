@@ -17,11 +17,11 @@ Response = flask.Response
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(app: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/turma/')
+    @app.route('/api/turma/')
     def turma_turno(req: Request, res: Response):
         data = turno.escala.get()
         return res(
