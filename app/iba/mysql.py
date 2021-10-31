@@ -34,6 +34,7 @@ def UtilizacaoTrefila():
     )
     mydb.close()
     # Processing
+    '''
     meses = {'1':[1,2,3],'2':[4,5,6],'3':[7,8,9],'4':[10,11,12]}
     df['_0h'] = df._date.apply(lambda row : turno.escala.get(dia = row)[0][0])
     df['_8h'] = df._date.apply(lambda row : turno.escala.get(dia = row)[1][0])
@@ -48,7 +49,9 @@ def UtilizacaoTrefila():
     bn = bn.drop(['M1'], axis=1)
     bn['Global'] = (bn['M2']+bn['M3']+bn['M4']+bn['M5']) / 4
     # Retrun Data
-    return str(bn.to_csv())
+    #return str(bn.to_csv())
+    '''
+    return str(df.to_csv())
 
 #################################################################################################################################################
 
