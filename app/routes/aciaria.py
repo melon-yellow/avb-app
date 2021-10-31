@@ -17,13 +17,13 @@ Response = flask.Response
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(app: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/api/aci_rendimento/')
+    @app.route('/api/aci_rendimento/')
     def aci_rendimento(req: Request, res: Response):
-        # get api data
+        # get app data
         rend = homerico.get.RelatorioGerencialRegistro(15)
         carg_s = homerico.get.RelatorioGerencialRegistro(1218)
 

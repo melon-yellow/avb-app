@@ -17,11 +17,11 @@ Response = flask.Response
 #################################################################################################################################################
 
 # Load Routes
-def __load__(api: py_misc.API):
+def __load__(app: py_misc.API):
 
     #################################################################################################################################################
 
-    @api.route('/questions/', methods=['POST'])
+    @app.route('/questions/', methods=['POST'])
     def questions(req: Request, res: Response):
         data = nlp.read.message(req.json.get('question'))
         return res(
