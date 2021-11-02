@@ -12,8 +12,11 @@ from . import routes
 #################################################################################################################################################
 
 # Setup Homerico Connection
-homerico.Validar('homerico.avb')
-homerico.Login('CH1200', 'bhn860')
+homerico.Validar(os.getenv('HOMERICO_GATEWAY'))
+homerico.Login(
+    os.getenv('HOMERICO_USER'),
+    os.getenv('HOMERICO_PASSWORD')
+)
 
 #################################################################################################################################################
 
