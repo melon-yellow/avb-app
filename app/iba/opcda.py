@@ -2,6 +2,7 @@
 #################################################################################################################################################
 
 # Imports
+import os
 import json
 import requests
 
@@ -16,9 +17,12 @@ def tag(tagname: str | list[str]):
 
     try: # Request PDA Server
         res = requests.post(
-            'http://10.20.6.71:3000/pda/opc/da/',
-            json=dict(tagname=tagname),
-            auth=('client', '123456')
+            json={ 'tagname': tagname },
+            url=os.getenv('AVB_APP_IBA_ENDNODE'),
+            auth=(
+                os.getenv('AVB_APP_IBA_USER'),
+                os.getenv('AVB_APP_IBA_PASSWORD')
+            )
         )
         res = json.loads(res.text)
     except: # If Server Not Responding

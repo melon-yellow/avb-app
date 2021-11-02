@@ -56,8 +56,8 @@ def Trim(cod):
 def Utilizacao():
     try:
         mydb12 = mysql.connector.connect(
-            host='192.168.61.1',
-            user='Jayron',
+            host='gusal2',
+            user='jayron',
             passwd='123456',
             port='3306',
             database='iba_i'

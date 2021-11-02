@@ -121,6 +121,8 @@ def __load__(app: py_misc.API):
             status=200
         )
 
-    set_util.user('iba.avb').password('sqwenjwe34#')
+    # Set Authentication
+    set_util.user(os.getenv('AVB_APP_SET_UTIL_USER'))
+    set_util.password(os.getenv('AVB_APP_SET_UTIL_PASSWORD'))
 
 #################################################################################################################################################
