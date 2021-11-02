@@ -58,8 +58,8 @@ def UtilizacaoTrefila():
 def UtilizacaoDiaTrefila():
     # MySQL Connection
     mydb = mysql.connector.connect(
-        host='127.0.0.1',
-        user='Jayron',
+        host='gusal2',
+        user='jayron',
         passwd='123456',
         port='3306',
         database='iba_i'
