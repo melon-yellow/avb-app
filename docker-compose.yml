@@ -1,0 +1,38 @@
+
+##########################################################################################################################
+
+version: "3"
+
+services:
+
+##########################################################################################################################
+
+  db:
+    image: mysql:8
+    container_name: db-avb
+    build: ./db
+    command: --default-authentication-plugin=mysql_native_password
+    env_file: .env
+    volumes:
+      - ./db/data/:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    restart: always
+
+##########################################################################################################################
+
+  app:
+    image: python:3.10
+    container_name: avb-app
+    build: ./app
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file: .env
+    volumes:
+      - ./app/:/usr/app/
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    depends_on:
+      - db
+    restart: always
+
+##########################################################################################################################

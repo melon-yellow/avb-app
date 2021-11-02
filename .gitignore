@@ -1,6 +1,9 @@
 
-# Ignore Python Cache
+# cache
 **/__pycache__/
 
-# Ignore Api util.json
+# util.json
 /app/util.json
+
+# env
+**.env
