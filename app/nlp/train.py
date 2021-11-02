@@ -14,14 +14,15 @@ expression = '[!-@[-`{-¿ÆÐÑ×ØÝ-ßä-æëðñö-øý-ÿ]'
 
 #################################################################################################################################################
 
-# Gets Actual File Directory
-file_dir = os.path.dirname(__file__)
+# Get Actual File Directory
+fileDir = os.path.dirname(os.path.abspath(__file__))
+wordsPath = os.path.abspath(os.path.join(fileDir, './words.nlp'))
 
 #################################################################################################################################################
 
 #Carrega o Corpus Words
 def LoadMemory():
-    fileW = open(file_dir + '\words.nlp', 'r')
+    fileW = open(wordsPath, 'r')
     words = fileW.read()
     fileW.close()
     words = yaml.safe_load(words)

@@ -13,7 +13,7 @@ from .. import turno
 #################################################################################################################################################
 
 # Get File-Paths
-fileDir = os.path.dirname(__file__)
+fileDir = os.path.dirname(os.path.abspath(__file__))
 util_sql = os.path.abspath(os.path.join(fileDir, '../sql/trefila.util.sql'))
 util_day_sql = os.path.abspath(os.path.join(fileDir, '../sql/trefila.util.dia.sql'))
 

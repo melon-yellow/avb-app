@@ -21,15 +21,15 @@ Response = flask.Response
 #################################################################################################################################################
 
 # Get File-Paths
-fileDir = os.path.dirname(__file__)
-util_json = os.path.abspath(os.path.join(fileDir, '../util.json'))
+fileDir = os.path.dirname(os.path.abspath(__file__))
+utilPath = os.path.abspath(os.path.join(fileDir, '../util.json'))
 
 #################################################################################################################################################
 
 def readUtil():
     r = dict()
     default = [None, None]
-    gets = json.load(open(util_json, 'r'))
+    gets = json.load(open(utilPath, 'r'))
     time = gets.get('mill', default)[0]
     util = gets.get('mill', default)[1]
     c = time != None and util != None
@@ -114,7 +114,7 @@ def __load__(app: py_misc.API):
 
     @app.route('/set_util/')
     def set_util(req: Request, res: Response):
-        json.dump(req.json, open(util_json, 'w'))
+        json.dump(req.json, open(utilPath, 'w'))
         return res(
             json.dumps({ 'done': True }),
             mimetype='application/json',

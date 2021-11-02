@@ -24,15 +24,15 @@ Response = flask.Response
 #################################################################################################################################################
 
 # Get File-Paths
-fileDir = os.path.dirname(__file__)
-util_json = os.path.abspath(os.path.join(fileDir, '../util.json'))
+fileDir = os.path.dirname(os.path.abspath(__file__))
+utilPath = os.path.abspath(os.path.join(fileDir, '../util.json'))
 
 #################################################################################################################################################
 
 def readUtil():
     # Open File
     default = [None, None, None, None, None, None]
-    gets: dict = json.load(open(util_json, 'r'))
+    gets: dict = json.load(open(utilPath, 'r'))
     time = gets.get('trf', default)[0]
     # Parse Util
     def parse_util(mq):

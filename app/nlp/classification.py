@@ -14,14 +14,15 @@ stemmer = RSLPStemmer()
 
 #################################################################################################################################################
 
-# Gets Actual File Directory
-file_dir = os.path.dirname(__file__)
+# Get Actual File Directory
+fileDir = os.path.dirname(os.path.abspath(__file__))
+wordsPath = os.path.abspath(os.path.join(fileDir, './words.nlp'))
 
 #################################################################################################################################################
 
 #Carrega o Corpus Words
 def LoadMemory():
-    words = open(file_dir + '\words.nlp', 'r').read()
+    words = open(wordsPath, 'r').read()
     words = yaml.safe_load(words)
     return words
 
