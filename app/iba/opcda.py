@@ -17,12 +17,12 @@ def tag(tagname: str | list[str]):
 
     try: # Request PDA Server
         res = requests.post(
-            json={ 'tagname': tagname },
-            url=os.getenv('AVB_APP_IBA_ENDNODE'),
+            url=os.getenv('AVB_IBA_OPC_DA_ADDR'),
             auth=(
-                os.getenv('AVB_APP_IBA_USER'),
-                os.getenv('AVB_APP_IBA_PASSWORD')
-            )
+                os.getenv('AVB_IBA_OPC_DA_USER'),
+                os.getenv('AVB_IBA_OPC_DA_PASSWORD')
+            ),
+            json={ 'tagname': tagname }
         )
         res = json.loads(res.text)
     except: # If Server Not Responding

@@ -17,12 +17,12 @@ def tag(tagname: str | list[str]):
 
     try: # Request PIMS Server
         res = requests.post(
-            json={ 'tagname': tagname },
-            url=os.getenv('AVB_APP_PIMS_ENDNODE'),
+            url=os.getenv('AVB_PIMS_OPC_DA_ADDR'),
             auth=(
-                os.getenv('AVB_APP_PIMS_USER'),
-                os.getenv('AVB_APP_PIMS_PASSWORD')
-            )
+                os.getenv('AVB_PIMS_OPC_DA_USER'),
+                os.getenv('AVB_PIMS_OPC_DA_PASSWORD')
+            ),
+            json={ 'tagname': tagname }
         )
         res = json.loads(res.text)
     except: # If Server Not Responding

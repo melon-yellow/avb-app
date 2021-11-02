@@ -2,6 +2,10 @@
 # cache
 **/__pycache__/
 
+
+# dependencies
+/app/src/
+
 # util.json
 /app/util.json
 
