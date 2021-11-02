@@ -112,7 +112,7 @@ def __load__(app: py_misc.API):
 
     #################################################################################################################################################
 
-    @app.route('/set_util/')
+    @app.route('/reports/util/')
     def set_util(req: Request, res: Response):
         json.dump(req.json, open(utilPath, 'w'))
         return res(
@@ -122,7 +122,7 @@ def __load__(app: py_misc.API):
         )
 
     # Set Authentication
-    set_util.user(os.getenv('AVB_APP_SET_UTIL_USER'))
-    set_util.password(os.getenv('AVB_APP_SET_UTIL_PASSWORD'))
+    set_util.user(os.getenv('AVB_IBA_UTIL_REPORT_USER'))
+    set_util.password(os.getenv('AVB_IBA_UTIL_REPORT_PASSWORD'))
 
 #################################################################################################################################################

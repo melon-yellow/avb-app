@@ -5,5 +5,8 @@
 # util.json
 /app/util.json
 
+# db
+/db/data/
+
 # env
 **/.env
