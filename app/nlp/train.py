@@ -17,6 +17,7 @@ expression = '[!-@[-`{-¿ÆÐÑ×ØÝ-ßä-æëðñö-øý-ÿ]'
 # Get Actual File Directory
 fileDir = os.path.dirname(os.path.abspath(__file__))
 wordsPath = os.path.abspath(os.path.join(fileDir, './words.nlp'))
+examplesPath = os.path.abspath(os.path.join(fileDir, './examples.nlp'))
 
 #################################################################################################################################################
 
@@ -30,20 +31,20 @@ def LoadMemory():
 
 #Carrega as frases que foram treinadas
 def LoadExamples():
-    fileE = open(file_dir + '\examples.nlp', 'r')
+    fileE = open(examplesPath, 'r')
     examples = yaml.safe_load(fileE.read())
     fileE.close()
     return examples
 
 #Salva a corpus words
 def SaveMemory(w):
-    fileW = open(file_dir + '\words.nlp', 'w')
+    fileW = open(wordsPath, 'w')
     fileW.write(str(w))
     fileW.close()
 
 #Salva as novas frases treinadas
 def SaveExample(example):
-    fileE = open(file_dir + '\examples.nlp', 'a')
+    fileE = open(examplesPath, 'a')
     #yaml.dump(example, fileE)#
     fileE.write(example + "\n")
     fileE.close()
