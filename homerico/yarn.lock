@@ -2669,7 +2669,7 @@ ts-homerico@anthony-freitas/ts-homerico:
 
 ts-misc@anthony-freitas/ts-misc:
   version "1.6.1"
-  resolved "https://codeload.github.com/anthony-freitas/ts-misc/tar.gz/1f87c9633478d78b55efa5ee5f3ba51c41d47cd9"
+  resolved "https://codeload.github.com/anthony-freitas/ts-misc/tar.gz/533f08bfc58bc9278ea59f3ab25880a004188f28"
   dependencies:
     js-beautify "^1.13.5"
     prettier "^2.2.1"
