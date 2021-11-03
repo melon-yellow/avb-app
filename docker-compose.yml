@@ -21,6 +21,26 @@ services:
 
 ##########################################################################################################################
 
+  homerico:
+    image: node:16
+    container_name: homerico-avb
+    build: ./homerico
+    command: bash -c "yarn && yarn load"
+    env_file: .env
+    volumes:
+      # Folders
+      - ./homerico/src/:/usr/app/src/
+      - ./homerico/node_modules/:/usr/app/node_modules/
+      # Files
+      - ./homerico/yarn.lock:/usr/app/yarn.lock
+      - ./homerico/package.json:/usr/app/package.json
+      - ./homerico/tsconfig.json:/usr/app/tsconfig.json
+    ports:
+      - "${HOMERICO_NETWORK_PORT}:${HOMERICO_NETWORK_PORT}"
+    restart: always
+
+##########################################################################################################################
+
   app:
     image: python:3.10
     container_name: avb-app
@@ -33,6 +53,7 @@ services:
       - "${AVB_APP_PORT}:${AVB_APP_PORT}"
     depends_on:
       - db
+      - homerico
     restart: always
 
 ##########################################################################################################################

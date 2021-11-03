@@ -12,10 +12,10 @@ from . import routes
 #################################################################################################################################################
 
 # Setup Homerico Connection
-homerico.Validar(os.getenv('HOMERICO_GATEWAY'))
-homerico.Login(
-    os.getenv('HOMERICO_USER'),
-    os.getenv('HOMERICO_PASSWORD')
+homerico.addr(os.getenv('HOMERICO_NETWORK_ADDR'))
+homerico.auth(
+    user=os.getenv('HOMERICO_NETWORK_USER'),
+    password=os.getenv('HOMERICO_NETWORK_PASSWORD')
 )
 
 #################################################################################################################################################

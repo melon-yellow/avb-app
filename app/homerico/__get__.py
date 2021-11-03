@@ -6,7 +6,7 @@ import copy
 import datetime
 
 # Modules
-from . import __dll__
+from . import network
 
 #################################################################################################################################################
 
@@ -52,8 +52,8 @@ def LastDayOfMonth(date: datetime.datetime):
 class HomericoGet:
 
     # Init Homerico-Get
-    def __init__(self, src: __dll__):
-        self.__dll__ = src
+    def __init__(self, src: network):
+        self.net = src
 
     #################################################################################################################################################
 
@@ -87,7 +87,7 @@ class HomericoGet:
             return row
         # get function
         for i in _registros: _registros[i] = str(_registros[i])
-        homerico_csv = self.__dll__.RelatorioGerencialReport(date, str(rel))
+        homerico_csv = self.net.RelatorioGerencialReport(date, str(rel))
         list(map(_replace_reg, matrix(homerico_csv)))
         null_reg = dict(meta=None, dia=None, acumulado=None)
         for item in list(_registros):
@@ -135,7 +135,7 @@ class HomericoGet:
     ):
         if date == None:
             date = datetime.date.today().strftime('%d/%m/%Y')
-        homerico_csv = self.__dll__.RelatorioGerencialRegistro(date, str(reg))
+        homerico_csv = self.net.RelatorioGerencialRegistro(date, str(reg))
         return matrix(homerico_csv)
 
     #################################################################################################################################################
@@ -149,7 +149,7 @@ class HomericoGet:
         if date == None:
             date = datetime.date.today()
         ultimo_dia = LastDayOfMonth(date).strftime('%d/%m/%Y')
-        homerico_csv = self.__dll__.ProducaoLista(ultimo_dia, str(lista))
+        homerico_csv = self.net.ProducaoLista(ultimo_dia, str(lista))
         dados = matrix(homerico_csv)
         dados.pop(0)
         d = list()
