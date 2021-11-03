@@ -13,6 +13,6 @@ conexao = network.HomericoConexao()
 # Nest Objects
 addr = conexao.addr
 auth = conexao.auth
-get = __get__.HomericoGet(conexao)
+get = __get__.HomericoGet(src=conexao)
 
 #################################################################################################################################################
