@@ -1,13 +1,13 @@
 /*
 ##########################################################################################################################
-#                                                    TS-HOMERICO-AVBOT                                                   #
+#                                                      AVB-HOMERICO                                                      #
 ##########################################################################################################################
 #                                                                                                                        #
-#                                                   AVB Whatsapp Bot                                                     #
-#                                          Multi-language API for Whatsapp Bot                                           #
-#                                 ---------------- Python3 -- NodeJS ----------------                                    #
-#                                                * Under Development *                                                   #
-#                                     https://github.com/anthony-freitas/ts-avbot                                        #
+#                                                  Homerico Conexão AVB                                                  #
+#                                            Multi-language API for Homerico                                             #
+#                                  ---------------- Python3 -- NodeJS ----------------                                   #
+#                                                 * Under Development *                                                  #
+#                                      https://github.com/anthony-freitas/avb-app                                        #
 #                                                                                                                        #
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
