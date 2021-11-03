@@ -66,12 +66,12 @@ class HomericoGet:
     # relatorio gerencial parser
     def RelatorioGerencialReport(
         self,
-        rel: int,
+        relatorio: int,
         registros: dict[str, int] = dict(),
-        date: str = None
+        data: str = None
     ):
-        if date == None:
-            date = datetime.date.today().strftime('%d/%m/%Y')
+        if data == None:
+            data = datetime.date.today().strftime('%d/%m/%Y')
         _registros = copy.deepcopy(registros)
         # private map function
         def _replace_reg(row):
@@ -87,7 +87,10 @@ class HomericoGet:
             return row
         # get function
         for i in _registros: _registros[i] = str(_registros[i])
-        homerico_csv = self.net.RelatorioGerencialReport(data=date, registro=str(rel))
+        homerico_csv = self.net.RelatorioGerencialReport(
+            data=data,
+            registro=str(relatorio)
+        )
         list(map(_replace_reg, matrix(homerico_csv)))
         null_reg = dict(meta=None, dia=None, acumulado=None)
         for item in list(_registros):
@@ -101,16 +104,20 @@ class HomericoGet:
     #################################################################################################################################################
 
     # relatorio gerencial
-    def RelatorioGerencialTrim(
+    def RelatorioGerencialTrimestre(
         self,
-        rel: int,
+        relatorio: int,
         registros: dict[str, int] = dict(),
-        date: str = None
+        data: str = None
     ):
-        if date == None:
-            date = datetime.date.today().strftime('%d/%m/%Y')
-        timed = datetime.datetime.strptime(date, '%d/%m/%Y')
-        relatorio = self.RelatorioGerencialReport(rel, registros, date)
+        if data == None:
+            data = datetime.date.today().strftime('%d/%m/%Y')
+        timed = datetime.datetime.strptime(data, '%d/%m/%Y')
+        _relatorio = self.RelatorioGerencialReport(
+            relatorio=relatorio,
+            registros=registros,
+            data=data
+        )
         qt = (3 * (1 + ((timed.month - 1) // 3)))
         m = [qt-2, qt-1, qt]
         for i in m:
@@ -119,23 +126,30 @@ class HomericoGet:
             ).day
             if i == timed.month: last_day = timed.day
             _date = datetime.date(timed.year, i, last_day).strftime('%d/%m/%Y')
-            e = self.RelatorioGerencialReport(rel, registros, _date)
+            e = self.RelatorioGerencialReport(
+                relatorio=relatorio,
+                registros=registros,
+                date=_date
+            )
             for item in relatorio:
                 mes = 'mes{}'.format(i-qt+3)
-                relatorio[item][mes] = e[item]['acumulado']
-        return relatorio
+                _relatorio[item][mes] = e[item]['acumulado']
+        return _relatorio
 
     #################################################################################################################################################
 
     # relatorio gerencial
     def RelatorioGerencialRegistro(
         self,
-        reg: int,
-        date: str = None
+        registro: int,
+        data: str = None
     ):
-        if date == None:
-            date = datetime.date.today().strftime('%d/%m/%Y')
-        homerico_csv = self.net.RelatorioGerencialRegistro(data=date, registro=str(reg))
+        if data == None:
+            data = datetime.date.today().strftime('%d/%m/%Y')
+        homerico_csv = self.net.RelatorioGerencialRegistro(
+            data=data,
+            registro=str(registro)
+        )
         return matrix(homerico_csv)
 
     #################################################################################################################################################
@@ -144,20 +158,23 @@ class HomericoGet:
     def ProducaoLista(
         self,
         lista: int,
-        date: str = None
+        data: str = None
     ):
-        if date == None:
-            date = datetime.date.today()
-        ultimo_dia = LastDayOfMonth(date).strftime('%d/%m/%Y')
-        homerico_csv = self.net.ProducaoLista(dataFinal=ultimo_dia, controle=str(lista))
+        if data == None:
+            data = datetime.date.today()
+        last_day = LastDayOfMonth(data).strftime('%d/%m/%Y')
+        homerico_csv = self.net.ProducaoLista(
+            dataFinal=last_day,
+            controle=str(lista)
+        )
         dados = matrix(homerico_csv)
         dados.pop(0)
         d = list()
         for item in dados:
             if len(item) != 3: dados.pop(dados.index(item))
         for item in dados:
-            date = '{}{}'.format(item[0][:2].zfill(2), ultimo_dia[2:])
-            d.append(dict(data=date, peso=num(item[2], True)))
+            data = '{}{}'.format(item[0][:2].zfill(2), last_day[2:])
+            d.append(dict(data=data, peso=num(item[2], True)))
         return d
 
     #################################################################################################################################################

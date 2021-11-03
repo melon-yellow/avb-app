@@ -53,7 +53,10 @@ def __load__(app: py_misc.API):
             'BLBP':1444,
             'SUCATEAMENTO':1350
         }
-        data = homerico.get.RelatorioGerencialTrim(10, registros)
+        data = homerico.get.RelatorioGerencialTrimestre(
+            relatorio=10,
+            registros=registros
+        )
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -64,7 +67,7 @@ def __load__(app: py_misc.API):
 
     @app.route('/api/prod_lam_quente/')
     def prod_lam_quente(req: Request, res: Response):
-        data = homerico.get.ProducaoLista(1269)
+        data = homerico.get.ProducaoLista(lista=1269)
         return res(
             json.dumps(data),
             mimetype='application/json',
