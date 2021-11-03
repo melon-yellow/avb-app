@@ -57,11 +57,12 @@ app.use(express.json() as RequestHandler)
 
 // Homerico Ignore Items
 const ignore = ['acesso', 'relatorio', 'validar', 'login'] as const
+const keys = Object.getOwnPropertyNames(homerico)
 
 // Iterate over Homerico Methods
-for (const item in homerico) {
+keys.forEach(item => {
   // Check for Valid Item
-  if (item in ignore) continue
+  if (item in ignore) return
   // Post Endnode
   app.post(`/homerico/${item}`, async (req, res) => {
     // log action to be executed
@@ -75,7 +76,7 @@ for (const item in homerico) {
     // Send Response
     res.send(data)
   })
-}
+})
 
 /*
 ##########################################################################################################################
@@ -100,7 +101,7 @@ app.use(
 )
 
 // Listen on Port Especified
-app.listen(port)
+app.listen(Number(port))
 
 // Log Bot Start
 misc.logging.log('homerico::started')

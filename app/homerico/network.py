@@ -12,11 +12,11 @@ class HomericoConexao:
     #################################################################################################################################################
     
     def addr(self, addr: str):
-        self.addr = addr
+        self.__addr__ = addr
         return True
 
     def auth(self, user: str, password: str):
-        self.auth = (user, password)
+        self.__auth__ = (user, password)
         return True
 
     #################################################################################################################################################
@@ -29,8 +29,8 @@ class HomericoConexao:
         idProcesso: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatorioLista',
-            auth=self.auth,
+            url=f'{self.__addr__}/relatorioLista',
+            auth=self.__auth__,
             json={
                 'dataInicial': dataInicial,
                 'dataFinal': dataFinal,
@@ -49,8 +49,8 @@ class HomericoConexao:
         registro: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatorioGerencialReport',
-            auth=self.auth,
+            url=f'{self.__addr__}/relatorioGerencialReport',
+            auth=self.__auth__,
             json={
                 'data': data,
                 'registro': registro
@@ -69,8 +69,8 @@ class HomericoConexao:
         idReport: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatorioBoletim',
-            auth=self.auth,
+            url=f'{self.__addr__}/relatorioBoletim',
+            auth=self.__auth__,
             json={
                 'dataInicial': dataInicial,
                 'dataFinal': dataFinal,
@@ -89,8 +89,8 @@ class HomericoConexao:
         controle: str
     ):
         res = requests.post(
-            url=f'${self.addr}/producaoLista',
-            auth=self.auth,
+            url=f'{self.__addr__}/producaoLista',
+            auth=self.__auth__,
             json={
                 'dataFinal': dataFinal,
                 'controle': controle
@@ -108,8 +108,8 @@ class HomericoConexao:
         registro: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatorioGerencialRegistro',
-            auth=self.auth,
+            url=f'{self.__addr__}/relatorioGerencialRegistro',
+            auth=self.__auth__,
             json={
                 'data': data,
                 'registro': registro
