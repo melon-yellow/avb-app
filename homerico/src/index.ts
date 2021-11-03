@@ -31,10 +31,10 @@ const homerico = new HomericoConexao()
 
 // Homerico Authentication
 homerico.validar(process.env.HOMERICO_GATEWAY)
-homerico.login(
-    process.env.HOMERICO_USER,
-    process.env.HOMERICO_PASSWORD
-)
+homerico.login({
+  usuario: process.env.HOMERICO_USER,
+  senha: process.env.HOMERICO_PASSWORD
+})
 
 /*
 ##########################################################################################################################
