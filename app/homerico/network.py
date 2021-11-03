@@ -29,7 +29,7 @@ class HomericoConexao:
         idProcesso: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatoriolista',
+            url=f'${self.addr}/relatorioLista',
             auth=self.auth,
             json={
                 'dataInicial': dataInicial,
@@ -49,7 +49,7 @@ class HomericoConexao:
         registro: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatoriogerencialreport',
+            url=f'${self.addr}/relatorioGerencialReport',
             auth=self.auth,
             json={
                 'data': data,
@@ -69,7 +69,7 @@ class HomericoConexao:
         idReport: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatorioboletim',
+            url=f'${self.addr}/relatorioBoletim',
             auth=self.auth,
             json={
                 'dataInicial': dataInicial,
@@ -89,7 +89,7 @@ class HomericoConexao:
         controle: str
     ):
         res = requests.post(
-            url=f'${self.addr}/producaolista',
+            url=f'${self.addr}/producaoLista',
             auth=self.auth,
             json={
                 'dataFinal': dataFinal,
@@ -108,7 +108,7 @@ class HomericoConexao:
         registro: str
     ):
         res = requests.post(
-            url=f'${self.addr}/relatoriogerencialregistro',
+            url=f'${self.addr}/relatorioGerencialRegistro',
             auth=self.auth,
             json={
                 'data': data,
