@@ -2,8 +2,8 @@
 # cache
 **/__pycache__/
 
-
 # dependencies
+/homerico/node_modules/
 /app/src/
 
 # util.json
