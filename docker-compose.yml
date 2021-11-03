@@ -30,7 +30,7 @@ services:
     volumes:
       - ./app/:/usr/app/
     ports:
-      - "${API_PORT}:${API_PORT}"
+      - "${AVB_APP_PORT}:${AVB_APP_PORT}"
     depends_on:
       - db
     restart: always
