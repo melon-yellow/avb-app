@@ -102,6 +102,9 @@ app.use(
 // Listen on Port Especified
 app.listen(port)
 
+// Log Bot Start
+misc.logging.log('homerico::started')
+
 /*
 ##########################################################################################################################
 #                                                          END                                                           #
