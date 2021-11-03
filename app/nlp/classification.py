@@ -5,6 +5,7 @@ import os
 import re
 import yaml
 import nltk
+nltk.download('rslp')
 from nltk.stem import RSLPStemmer
 
 #################################################################################################################################################
