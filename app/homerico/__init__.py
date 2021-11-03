@@ -8,11 +8,11 @@ from . import __get__
 #################################################################################################################################################
 
 # Instance Conexao
-conexao = network.HomericoConexao()
+net = network.HomericoConexao()
 
 # Nest Objects
-addr = conexao.addr
-auth = conexao.auth
-get = __get__.HomericoGet(conexao)
+addr = net.addr
+auth = net.auth
+get = __get__.HomericoGet(net=net)
 
 #################################################################################################################################################

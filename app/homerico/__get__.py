@@ -52,8 +52,8 @@ def LastDayOfMonth(date: datetime.datetime):
 class HomericoGet:
 
     # Init Homerico-Get
-    def __init__(self, src: network.HomericoConexao):
-        self.net = src
+    def __init__(self, net: network.HomericoConexao):
+        self.net = net
 
     #################################################################################################################################################
 
@@ -66,7 +66,7 @@ class HomericoGet:
     # relatorio gerencial parser
     def RelatorioGerencialReport(
         self,
-        relatorio: int,
+        idReport: int,
         registros: dict[str, int] = dict(),
         data: str = None
     ):
@@ -89,7 +89,7 @@ class HomericoGet:
         for i in _registros: _registros[i] = str(_registros[i])
         homerico_csv = self.net.RelatorioGerencialReport(
             data=data,
-            registro=str(relatorio)
+            idReport=str(idReport)
         )
         list(map(_replace_reg, matrix(homerico_csv)))
         null_reg = dict(meta=None, dia=None, acumulado=None)
@@ -106,15 +106,15 @@ class HomericoGet:
     # relatorio gerencial
     def RelatorioGerencialTrimestre(
         self,
-        relatorio: int,
+        idReport: int,
         registros: dict[str, int] = dict(),
         data: str = None
     ):
         if data == None:
             data = datetime.date.today().strftime('%d/%m/%Y')
         timed = datetime.datetime.strptime(data, '%d/%m/%Y')
-        _relatorio = self.RelatorioGerencialReport(
-            relatorio=relatorio,
+        report = self.RelatorioGerencialReport(
+            idReport=idReport,
             registros=registros,
             data=data
         )
@@ -127,14 +127,14 @@ class HomericoGet:
             if i == timed.month: last_day = timed.day
             _date = datetime.date(timed.year, i, last_day).strftime('%d/%m/%Y')
             e = self.RelatorioGerencialReport(
-                relatorio=relatorio,
+                idReport=idReport,
                 registros=registros,
                 date=_date
             )
-            for item in relatorio:
+            for item in report:
                 mes = 'mes{}'.format(i-qt+3)
-                _relatorio[item][mes] = e[item]['acumulado']
-        return _relatorio
+                report[item][mes] = e[item]['acumulado']
+        return report
 
     #################################################################################################################################################
 

@@ -54,7 +54,7 @@ def __load__(app: py_misc.API):
             'SUCATEAMENTO':1350
         }
         data = homerico.get.RelatorioGerencialTrimestre(
-            relatorio=10,
+            idReport=10,
             registros=registros
         )
         return res(

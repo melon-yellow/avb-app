@@ -24,8 +24,8 @@ def __load__(app: py_misc.API):
     @app.route('/api/aci_rendimento/')
     def aci_rendimento(req: Request, res: Response):
         # get app data
-        rend = homerico.get.RelatorioGerencialRegistro(15)
-        carg_s = homerico.get.RelatorioGerencialRegistro(1218)
+        rend = homerico.get.RelatorioGerencialRegistro(registro=15)
+        carg_s = homerico.get.RelatorioGerencialRegistro(registro=1218)
 
         rendimento = None
         carga_solida = None

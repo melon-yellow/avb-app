@@ -62,7 +62,11 @@ def __load__(app: py_misc.API):
     @app.route('/api/trf/')
     def api_trf(req: Request, res: Response):
         date = datetime.datetime.today().strftime('%d/%m/%Y')
-        csv_str = homerico.__dll__.RelatorioLista(date, date, '50')
+        csv_str = homerico.net.RelatorioLista(
+            dataInicial=date,
+            dataFinal=date,
+            idProcesso='50'
+        )
         csv_file = io.StringIO(csv_str)
         df = pandas.read_csv(csv_file, sep=';')
         try:
@@ -111,15 +115,18 @@ def __load__(app: py_misc.API):
             'PRODUÇÃO POR MÁQUINA':2988
         }
         # get metas
-        registros = homerico.get.RelatorioGerencialTrim(16, registros)
+        report = homerico.get.RelatorioGerencialTrimestre(
+            idReport=16,
+            registros=registros
+        )
         # custo trf
-        try: registros.update(metas.trefila.Custo())
+        try: report.update(metas.trefila.Custo())
         except: pass
         # sucateamento trf
-        try: registros.update(metas.trefila.Sucata())
+        try: report.update(metas.trefila.Sucata())
         except: pass
         # 5S
-        try: registros.update(metas.trefila.S5())
+        try: report.update(metas.trefila.S5())
         except: pass
         try: # util trf dia
             ut = readUtil()
@@ -134,11 +141,11 @@ def __load__(app: py_misc.API):
             util = metas.trefila.Utilizacao()
             gen_util = dict(dia=((sum(ut) * 100) / 4))
             util['utilizacao'].update(gen_util)
-            registros.update(util)
+            report.update(util)
         except: pass
         # return data
         return res(
-            json.dumps(registros),
+            json.dumps(report),
             mimetype='application/json',
             status=200
         )
@@ -147,7 +154,7 @@ def __load__(app: py_misc.API):
 
     @app.route('/api/prod_lam_frio/')
     def prod_lam_frio(req: Request, res: Response):
-        data = homerico.get.ProducaoLista(2361)
+        data = homerico.get.ProducaoLista(lista=2361)
         return res(
             json.dumps(data),
             mimetype='application/json',
