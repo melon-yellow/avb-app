@@ -52,7 +52,7 @@ def LastDayOfMonth(date: datetime.datetime):
 class HomericoGet:
 
     # Init Homerico-Get
-    def __init__(self, src: network):
+    def __init__(self, src: network.HomericoConexao):
         self.net = src
 
     #################################################################################################################################################

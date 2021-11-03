@@ -74,7 +74,7 @@ class HomericoConexao:
             json={
                 'dataInicial': dataInicial,
                 'dataFinal': dataFinal,
-                'idaReport': idReport
+                'idReport': idReport
             }
         )
         # Return Result

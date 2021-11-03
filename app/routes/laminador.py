@@ -52,7 +52,7 @@ def __load__(app: py_misc.API):
             'REND. METALICO':1338,
             'BLBP':1444,
             'SUCATEAMENTO':1350
-            }
+        }
         data = homerico.get.RelatorioGerencialTrim(10, registros)
         return res(
             json.dumps(data),
