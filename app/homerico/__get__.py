@@ -129,7 +129,7 @@ class HomericoGet:
             e = self.RelatorioGerencialReport(
                 idReport=idReport,
                 registros=registros,
-                date=_date
+                data=_date
             )
             for item in report:
                 mes = 'mes{}'.format(i-qt+3)

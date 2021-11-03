@@ -173,7 +173,8 @@ def __load__(app: py_misc.API):
             mimetype = "text/csv",
             headers = {
                 "Content-disposition": "attachment; filename=utilizacao.csv"
-            }
+            },
+            status=200
         )
 
     #################################################################################################################################################
@@ -188,7 +189,8 @@ def __load__(app: py_misc.API):
             mimetype = "text/csv",
             headers = {
                 "Content-disposition": "attachment; filename=utilizacao-dia.csv"
-            }
+            },
+            status=200
         )
 
 
