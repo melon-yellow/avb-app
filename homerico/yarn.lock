@@ -2659,7 +2659,7 @@ toidentifier@1.0.0:
 
 ts-homerico@anthony-freitas/ts-homerico:
   version "1.0.1"
-  resolved "https://codeload.github.com/anthony-freitas/ts-homerico/tar.gz/2edeb4d3c3496e4e77abd8273de08e625a91ff1f"
+  resolved "https://codeload.github.com/anthony-freitas/ts-homerico/tar.gz/56e8c92a2103bd9c940ad93dbb139d5a487a097c"
   dependencies:
     axios "^0.21.1"
     js-beautify "^1.13.5"

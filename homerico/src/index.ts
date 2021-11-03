@@ -39,8 +39,8 @@ const misc = new Miscellaneous()
 const homerico = new HomericoConexao()
 
 // Homerico Authentication
-homerico.validar(process.env.HOMERICO_GATEWAY)
-homerico.login({
+await homerico.validar(process.env.HOMERICO_GATEWAY)
+await homerico.login({
   usuario: process.env.HOMERICO_USER,
   senha: process.env.HOMERICO_PASSWORD
 })
@@ -57,7 +57,7 @@ app.use(express.json() as RequestHandler)
 
 // Homerico Ignore Items
 const ignore = ['acesso', 'relatorio', 'validar', 'login'] as const
-const keys = Object.getOwnPropertyNames(homerico)
+const keys = Object.getOwnPropertyNames(HomericoConexao.prototype)
 
 // Iterate over Homerico Methods
 keys.forEach(item => {
@@ -72,7 +72,7 @@ keys.forEach(item => {
     if (!is.object(req)) throw new Error('bad request')
     if (!is.object(req.body)) throw new Error('bad request')
     // Execute Function
-    const data = homerico[item](req.body)
+    const data = await homerico[item](req.body)
     // Send Response
     res.send(data)
   })

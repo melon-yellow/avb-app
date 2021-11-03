@@ -46,26 +46,19 @@ def __load__(app: py_misc.API):
 
     @app.route('/api/metas_lam_quente/')
     def metas_lam_quente(req: Request, res: Response):
-        try:
-            registros = {
-                'ACIDENTE CPT':1333,
-                'PROD LAMINADO':1336,
-                'REND. METALICO':1338,
-                'BLBP':1444,
-                'SUCATEAMENTO':1350
-                }
-            data = homerico.get.RelatorioGerencialTrim(10, registros)
-            return res(
-                json.dumps(data),
-                mimetype='application/json',
-                status=200
-            )
-        except Exception as e:
-            return res(
-                json.dumps({ 'error': str(e) }),
-                mimetype='application/json',
-                status=200
-            )
+        registros = {
+            'ACIDENTE CPT':1333,
+            'PROD LAMINADO':1336,
+            'REND. METALICO':1338,
+            'BLBP':1444,
+            'SUCATEAMENTO':1350
+            }
+        data = homerico.get.RelatorioGerencialTrim(10, registros)
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 

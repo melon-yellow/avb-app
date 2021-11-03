@@ -88,7 +88,6 @@ class HomericoGet:
         # get function
         for i in _registros: _registros[i] = str(_registros[i])
         homerico_csv = self.net.RelatorioGerencialReport(date, str(rel))
-        return homerico_csv
         list(map(_replace_reg, matrix(homerico_csv)))
         null_reg = dict(meta=None, dia=None, acumulado=None)
         for item in list(_registros):
@@ -112,7 +111,6 @@ class HomericoGet:
             date = datetime.date.today().strftime('%d/%m/%Y')
         timed = datetime.datetime.strptime(date, '%d/%m/%Y')
         relatorio = self.RelatorioGerencialReport(rel, registros, date)
-        return relatorio
         qt = (3 * (1 + ((timed.month - 1) // 3)))
         m = [qt-2, qt-1, qt]
         for i in m:
