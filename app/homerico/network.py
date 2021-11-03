@@ -48,6 +48,7 @@ class HomericoConexao:
         data: str,
         registro: str
     ):
+        return f'{self.__addr__}/relatorioGerencialReport'
         res = requests.post(
             url=f'{self.__addr__}/relatorioGerencialReport',
             auth=self.__auth__,
