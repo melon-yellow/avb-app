@@ -37,6 +37,8 @@ services:
       - ./homerico/tsconfig.json:/usr/app/tsconfig.json
     ports:
       - "${HOMERICO_NETWORK_PORT}:${HOMERICO_NETWORK_PORT}"
+    depends_on:
+      - db
     restart: always
 
 ##########################################################################################################################
