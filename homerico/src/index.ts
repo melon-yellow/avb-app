@@ -66,7 +66,7 @@ for (const item in homerico) {
   app.post(`/homerico/${item}`, async (req, res) => {
     // log action to be executed
     const ip = requestIp.getClientIp(req).replace('::ffff:', '')
-    misc.log(`Exec(homerico::${item}) From(${ip})`)
+    misc.logging.log(`Exec(homerico::${item}) From(${ip})`)
     // check request
     if (!is.object(req)) throw new Error('bad request')
     if (!is.object(req.body)) throw new Error('bad request')
