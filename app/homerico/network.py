@@ -46,14 +46,14 @@ class HomericoConexao:
     def RelatorioGerencialReport(
         self,
         data: str,
-        registro: str
+        idReport: str
     ):
         res = requests.post(
             url=f'{self.__addr__}/relatorioGerencialReport',
             auth=self.__auth__,
             json={
                 'data': data,
-                'registro': registro
+                'idReport': idReport
             }
         )
         # Return Result
