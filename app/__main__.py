@@ -34,7 +34,9 @@ homerico.auth(
 
 # Declare HTTP API
 app = py_misc.API().host('0.0.0.0')
-app.port(os.getenv('AVB_APP_PORT'))
+app.port(
+    int(os.getenv('AVB_APP_PORT'))
+)
 
 ##########################################################################################################################
 
