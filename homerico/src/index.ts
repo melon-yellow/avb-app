@@ -84,24 +84,21 @@ keys.forEach(item => {
 ##########################################################################################################################
 */
 
-// Get Listen Port
-const port = process.env.HOMERICO_NETWORK_PORT
-
-// Get Authentication
-const [user, password] = [
-  process.env.HOMERICO_NETWORK_USER,
-  process.env.HOMERICO_NETWORK_PASSWORD
-]
-
 // Set Authentication
 app.use(
   basicAuth({
-    users: { [user]: password }
+    users: {
+      [process.env.HOMERICO_NETWORK_USER]: (
+        process.env.HOMERICO_NETWORK_PASSWORD
+      )
+    }
   })
 )
 
 // Listen on Port Especified
-app.listen(Number(port))
+app.listen(
+  Number(process.env.HOMERICO_NETWORK_PORT)
+)
 
 // Log Bot Start
 misc.logging.log('homerico::started')
