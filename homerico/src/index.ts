@@ -38,8 +38,10 @@ const misc = new Miscellaneous()
 // Instance Homerico
 const homerico = new HomericoConexao()
 
-// Homerico Authentication
+// Homerico Get Gateway Ip
 await homerico.validar(process.env.HOMERICO_GATEWAY)
+
+// Homerico Authentication
 await homerico.login({
   usuario: process.env.HOMERICO_USER,
   senha: process.env.HOMERICO_PASSWORD
@@ -51,9 +53,26 @@ await homerico.login({
 ##########################################################################################################################
 */
 
-// Set App
+// Set Network API
 const app = express()
-app.use(express.json() as RequestHandler)
+
+// Set Network API Port
+const port = Number(process.env.HOMERICO_NETWORK_PORT)
+
+// Set Network Authentication
+const auth = basicAuth({
+  users: {
+    [process.env.HOMERICO_NETWORK_USER]: (
+      process.env.HOMERICO_NETWORK_PASSWORD
+    )
+  }
+})
+
+/*
+##########################################################################################################################
+#                                                          MAIN                                                          #
+##########################################################################################################################
+*/
 
 // Homerico Ignore Items
 const ignore = ['acesso', 'relatorio', 'validar', 'login'] as const
@@ -64,18 +83,23 @@ keys.forEach(item => {
   // Check for Valid Item
   if (item in ignore) return
   // Post Endnode
-  app.post(`/homerico/${item}`, async (req, res) => {
-    // log action to be executed
-    const ip = requestIp.getClientIp(req).replace('::ffff:', '')
-    misc.logging.log(`Exec(homerico::${item}) From(${ip})`)
-    // check request
-    if (!is.object(req)) throw new Error('bad request')
-    if (!is.object(req.body)) throw new Error('bad request')
-    // Execute Function
-    const data = await homerico[item](req.body)
-    // Send Response
-    res.send(data)
-  })
+  app.post(
+    `/homerico/${item}`,
+    auth,
+    express.json() as RequestHandler,
+    async (req, res) => {
+      // log action to be executed
+      const ip = requestIp.getClientIp(req).replace('::ffff:', '')
+      misc.logging.log(`Exec(homerico::${item}) From(${ip})`)
+      // check request
+      if (!is.object(req)) throw new Error('bad request')
+      if (!is.object(req.body)) throw new Error('bad request')
+      // Execute Function
+      const data = await homerico[item](req.body)
+      // Send Response
+      res.send(data)
+    }
+  )
 })
 
 /*
@@ -84,21 +108,8 @@ keys.forEach(item => {
 ##########################################################################################################################
 */
 
-// Set Authentication
-app.use(
-  basicAuth({
-    users: {
-      [process.env.HOMERICO_NETWORK_USER]: (
-        process.env.HOMERICO_NETWORK_PASSWORD
-      )
-    }
-  })
-)
-
 // Listen on Port Especified
-app.listen(
-  Number(process.env.HOMERICO_NETWORK_PORT)
-)
+app.listen(port)
 
 // Log Bot Start
 misc.logging.log('homerico::started')
