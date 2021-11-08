@@ -17,7 +17,7 @@ def tag(tagname: str | list[str]):
 
     try: # Request PIMS Server
         res = requests.post(
-            url=os.getenv('AVB_PIMS_OPC_DA_ADDR'),
+            url=os.getenv('AVB_PIMS_OPC_DA_ADDRESS'),
             auth=(
                 os.getenv('AVB_PIMS_OPC_DA_USER'),
                 os.getenv('AVB_PIMS_OPC_DA_PASSWORD')
