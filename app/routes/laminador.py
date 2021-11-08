@@ -40,7 +40,7 @@ def readUtil():
 #################################################################################################################################################
 
 # Load Routes
-def __load__(app: py_misc.API):
+def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
@@ -116,7 +116,7 @@ def __load__(app: py_misc.API):
     #################################################################################################################################################
 
     @app.route('/reports/util/')
-    def set_util(req: Request, res: Response):
+    def utilReport(req: Request, res: Response):
         json.dump(req.json, open(utilPath, 'w'))
         return res(
             json.dumps({ 'done': True }),
@@ -125,7 +125,9 @@ def __load__(app: py_misc.API):
         )
 
     # Set Authentication
-    set_util.user(os.getenv('AVB_IBA_UTIL_REPORT_USER'))
-    set_util.password(os.getenv('AVB_IBA_UTIL_REPORT_PASSWORD'))
+    utilReport.users.update({
+        os.getenv('AVB_IBA_UTIL_REPORT_USER'):
+        os.getenv('AVB_IBA_UTIL_REPORT_PASSWORD')
+    })
 
 #################################################################################################################################################

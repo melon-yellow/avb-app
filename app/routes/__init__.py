@@ -14,7 +14,7 @@ from . import turno
 #################################################################################################################################################
 
 # Load Modules
-def __load__(app: py_misc.API):
+def __load__(app: py_misc.Express):
     avbot.__load__(app)
     aciaria.__load__(app)
     laminador.__load__(app)

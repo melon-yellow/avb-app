@@ -24,7 +24,7 @@ from . import routes
 ##########################################################################################################################
 
 # Setup Homerico Connection
-homerico.addr(os.getenv('HOMERICO_NETWORK_ADDR'))
+homerico.addr(os.getenv('HOMERICO_NETWORK_ADDRESS'))
 homerico.auth(
     user=os.getenv('HOMERICO_NETWORK_USER'),
     password=os.getenv('HOMERICO_NETWORK_PASSWORD')
@@ -33,7 +33,7 @@ homerico.auth(
 ##########################################################################################################################
 
 # Declare HTTP API
-app = py_misc.API().host('0.0.0.0')
+app = py_misc.Express()
 app.port(
     int(os.getenv('AVB_APP_PORT'))
 )
