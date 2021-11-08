@@ -47,7 +47,7 @@ services:
     image: python:3.10
     container_name: avb-app
     build: ./app
-    command: bash -c "cd .. && python -m app"
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
     env_file: .env
     volumes:
       - ./app/:/usr/app/
