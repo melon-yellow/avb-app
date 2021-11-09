@@ -18,7 +18,8 @@ rfa_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.mssql.rfa.sql'))
 def product():
     # Connect to Server
     conn = pyodbc.connect(
-        dsn=os.getenv('IBA_MSSQL_DB_DSN'),
+        driver='ODBC Driver 17 for SQL Server',
+        server=os.getenv('IBA_MSSQL_DB_DSN'),
         uid=os.getenv('IBA_MSSQL_DB_USER'),
         pwd=os.getenv('IBA_MSSQL_DB_PASSWORD')
     )
@@ -43,7 +44,8 @@ def product():
 def rfa():
     # Connect to Server
     conn = pyodbc.connect(
-        dsn=os.getenv('IBA_MSSQL_DB_DSN'),
+        driver='ODBC Driver 17 for SQL Server',
+        server=os.getenv('IBA_MSSQL_DB_DSN'),
         uid=os.getenv('IBA_MSSQL_DB_USER'),
         pwd=os.getenv('IBA_MSSQL_DB_PASSWORD')
     )
@@ -70,7 +72,8 @@ def rfaLim():
     produto = product().get('CTR_PRODUCT_NAME')
     # Connect to Server
     conn = pyodbc.connect(
-        dsn=os.getenv('L2_SERVER_DB_DSN'),
+        driver='ODBC Driver 17 for SQL Server',
+        server=os.getenv('L2_SERVER_DB_DSN'),
         uid=os.getenv('L2_SERVER_DB_USER'),
         pwd=os.getenv('L2_SERVER_DB_PASSWORD')
     )
