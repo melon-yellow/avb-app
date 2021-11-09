@@ -16,9 +16,9 @@ def gusaapp():
     r = None
     try:
         conn = cx_Oracle.connect(
-            dsn=os.getenv('ORACLE_DB_FURNACE_DSN'),
-            user=os.getenv('ORACLE_DB_FURNACE_USER'),
-            password=os.getenv('ORACLE_DB_FURNACE_PASSWORD'),
+            dsn=os.getenv('FURNACE_ORACLE_DB_DSN'),
+            user=os.getenv('FURNACE_ORACLE_DB_USER'),
+            password=os.getenv('FURNACE_ORACLE_DB_PASSWORD'),
             encoding='UTF-8'
         )
         cur = conn.cursor()
