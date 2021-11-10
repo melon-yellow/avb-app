@@ -11,8 +11,7 @@ from . import __get__
 net = network.HomericoConexao()
 
 # Nest Objects
-addr = net.addr
-auth = net.auth
+remote = net.remote
 get = __get__.HomericoGet(net=net)
 
 #################################################################################################################################################
