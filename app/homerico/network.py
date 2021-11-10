@@ -11,11 +11,13 @@ class HomericoConexao:
 
     #################################################################################################################################################
     
-    def addr(self, addr: str):
-        self.__addr__ = addr
-        return True
-
-    def auth(self, user: str, password: str):
+    def remote(
+        self,
+        address: str,
+        user: str,
+        password: str
+    ):
+        self.__addr__ = address
         self.__auth__ = (user, password)
         return True
 

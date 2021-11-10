@@ -24,8 +24,8 @@ from . import routes
 ##########################################################################################################################
 
 # Setup Homerico Connection
-homerico.addr(os.getenv('HOMERICO_NETWORK_ADDRESS'))
-homerico.auth(
+homerico.remote(
+    address=os.getenv('HOMERICO_NETWORK_ADDRESS'),
     user=os.getenv('HOMERICO_NETWORK_USER'),
     password=os.getenv('HOMERICO_NETWORK_PASSWORD')
 )

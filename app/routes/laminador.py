@@ -15,7 +15,7 @@ from .. import homerico
 
 #################################################################################################################################################
 
-Request = flask.request
+Request = flask.Request
 Response = flask.Response
 
 #################################################################################################################################################
@@ -45,7 +45,7 @@ def __load__(app: py_misc.Express):
     #################################################################################################################################################
 
     @app.route('/api/metas_lam_quente/')
-    def metas_lam_quente(req: Request, res: Response):
+    def metasLamQuente(req: Request, res: Response):
         registros = {
             'ACIDENTE CPT':1333,
             'PROD LAMINADO':1336,
@@ -66,7 +66,7 @@ def __load__(app: py_misc.Express):
     #################################################################################################################################################
 
     @app.route('/api/prod_lam_quente/')
-    def prod_lam_quente(req: Request, res: Response):
+    def prodLamQuente(req: Request, res: Response):
         data = homerico.get.ProducaoLista(lista=1269)
         return res(
             json.dumps(data),
@@ -77,7 +77,7 @@ def __load__(app: py_misc.Express):
     #################################################################################################################################################
 
     @app.route('/api/l2/')
-    def mill_rfa(req: Request, res: Response):
+    def rfaLaminador(req: Request, res: Response):
         data = iba.mssql.rfaLim()
         return res(
             json.dumps(data),
@@ -88,7 +88,7 @@ def __load__(app: py_misc.Express):
     #################################################################################################################################################
 
     @app.route('/api/mill/')
-    def api_mill(req: Request, res: Response):
+    def apiLaminador(req: Request, res: Response):
         data = iba.mssql.rfa()
         return res(
             json.dumps(data),
@@ -99,7 +99,7 @@ def __load__(app: py_misc.Express):
     #################################################################################################################################################
 
     @app.route('/api/furnace/')
-    def fur_gusaapp(req: Request, res: Response):
+    def furGusaapp(req: Request, res: Response):
         data = furl2.oracle.gusaapp()
         util = readUtil()
         data.update({

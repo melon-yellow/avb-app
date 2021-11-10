@@ -11,7 +11,7 @@ from .. import homerico
 
 #################################################################################################################################################
 
-Request = flask.request
+Request = flask.Request
 Response = flask.Response
 
 #################################################################################################################################################
@@ -22,7 +22,7 @@ def __load__(app: py_misc.Express):
     #################################################################################################################################################
 
     @app.route('/api/aci_rendimento/')
-    def aci_rendimento(req: Request, res: Response):
+    def aciRendimento(req: Request, res: Response):
         # get app data
         rend = homerico.get.RelatorioGerencialRegistro(registro=15)
         carg_s = homerico.get.RelatorioGerencialRegistro(registro=1218)
