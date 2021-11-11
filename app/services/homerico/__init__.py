@@ -3,7 +3,7 @@
 
 # Modules
 from . import network
-from . import __get__
+from . import handlers
 
 #################################################################################################################################################
 
@@ -12,6 +12,6 @@ net = network.HomericoConexao()
 
 # Nest Objects
 remote = net.remote
-get = __get__.HomericoGet(net=net)
+get = handlers.HomericoGet(net=net)
 
 #################################################################################################################################################

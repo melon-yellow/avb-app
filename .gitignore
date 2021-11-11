@@ -1,16 +1,21 @@
 
-# cache
-**/__pycache__/
+# env
+**/.env
 
 # dependencies
-/homerico/node_modules/
 /app/src/
-
-# util.json
-/app/util.json
+/services/helpers/src/
+/services/homerico/node_modules/
+/services/mysql/src/
+/services/odbc/src/
+/services/opc/src/
+/services/oracle/src/
 
 # db
 /db/data/
 
-# env
-**/.env
+# cache
+**/__pycache__/
+
+# util.json
+/app/util.json

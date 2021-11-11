@@ -1,0 +1,3 @@
+pandas
+requests
+-e git+https://github.com/anthony-freitas/py-misc#egg=py-misc
