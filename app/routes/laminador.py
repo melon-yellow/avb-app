@@ -12,7 +12,7 @@ import datetime
 from ..helpers import homerico
 from ..helpers import turno
 from ..services import oracle
-from ..services import mssql
+from ..services import odbc
 
 #################################################################################################################################################
 
@@ -79,7 +79,7 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/laminador/nivel2/')
     def laminadorNivel2(req: Request, res: Response):
-        data = mssql.mill.rfaLim()
+        data = odbc.mill.rfal2()
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -90,7 +90,7 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/laminador/rfa/')
     def laminadorRFA(req: Request, res: Response):
-        data = mssql.mill.rfa()
+        data = odbc.mill.rfa()
         return res(
             json.dumps(data),
             mimetype='application/json',
