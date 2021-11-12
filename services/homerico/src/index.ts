@@ -23,7 +23,6 @@ import { is } from 'ts-misc/dist/utils/guards.js'
 
 // Import Express
 import express, { RequestHandler } from 'express'
-import basicAuth from 'express-basic-auth'
 import requestIp from 'request-ip'
 
 // Instance Miscellaneous
@@ -59,18 +58,7 @@ const app = express()
 // Set Network API Port
 const port = Number(process.env.HOMERICO_NETWORK_PORT)
 
-// Set Network Authentication
-const auth = basicAuth({
-  users: {
-    [process.env.HOMERICO_NETWORK_USER]: (
-      process.env.HOMERICO_NETWORK_PASSWORD
-    )
-  }
-})
-
 /*
-##########################################################################################################################
-#                                                          MAIN                                                          #
 ##########################################################################################################################
 */
 
@@ -85,7 +73,6 @@ keys.forEach(item => {
   // Post Endnode
   app.post(
     `/homerico/${item}`,
-    auth,
     express.json() as RequestHandler,
     async (req, res) => {
       // log action to be executed
@@ -103,8 +90,6 @@ keys.forEach(item => {
 })
 
 /*
-##########################################################################################################################
-#                                                          MAIN                                                          #
 ##########################################################################################################################
 */
 

@@ -23,7 +23,7 @@ services:
 
   homerico:
     image: node:16
-    container_name: homerico-avb
+    container_name: cx-homerico
     build: ./services/homerico
     command: bash -c "yarn && yarn build && yarn nonstop"
     env_file: .env
@@ -37,8 +37,6 @@ services:
       - ./services/homerico/tsconfig.json:/usr/app/tsconfig.json
     expose:
       - ${HOMERICO_NETWORK_PORT}
-    depends_on:
-      - db
     restart: always
 
 ##########################################################################################################################
