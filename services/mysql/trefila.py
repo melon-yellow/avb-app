@@ -8,7 +8,7 @@ import datetime
 import mysql.connector
 
 # Modules
-from . import network
+from . import helpers
 
 #################################################################################################################################################
 
@@ -68,9 +68,9 @@ def utilizacao():
         db.close()
     except: return {}
 
-    df['_0h'] = df['_date'].apply(lambda row : network.escalaTurno(dia = row)[0][0])
-    df['_8h'] = df['_date'].apply(lambda row : network.escalaTurno(dia = row)[1][0])
-    df['_16h'] = df['_date'].apply(lambda row : network.escalaTurno(dia = row)[2][0])
+    df['_0h'] = df['_date'].apply(lambda row : helpers.escalaTurno(data=row)[0][0])
+    df['_8h'] = df['_date'].apply(lambda row : helpers.escalaTurno(data=row)[1][0])
+    df['_16h'] = df['_date'].apply(lambda row : helpers.escalaTurno(data=row)[2][0])
     df['_date'] = df['_date'].astype('str')
 
     hoje = datetime.datetime.now()
@@ -93,7 +93,7 @@ def utilizacao():
             if m > mes: raise Exception('invalid month')
             if m < mes:
                 month = m
-                last = functions.lastDayOfMonth(
+                last = helpers.lastDayOfMonth(
                     datetime.date(hoje.year,m,1)
                 ).day
             if m == mes:
@@ -170,7 +170,7 @@ def custo():
         else:
             try:
                 dz = df[df['DATA_MSG']>=datetime.date(hoje.year,m,1).strftime('%Y-%m-%d')]
-                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year,m, functions.lastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
+                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year,m, helpers.lastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
                 dz = dz['VALOR'].sum()
                 mon.append(dz)
             except: mon.append(None)
@@ -236,7 +236,7 @@ def vs():
         else:
             try:
                 dz = dfC[dfC['DATA_MSG']>=datetime.date(hoje.year, m, 1).strftime('%Y-%m-%d')]
-                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year, m, functions.lastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
+                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year, m, helpers.lastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
                 dz = dz['VALOR'].sum()
                 mon.append(dz)
             except: mon.append(None)
@@ -302,7 +302,7 @@ def sucata():
         else:
             try:
                 dz = dfC[dfC['DATA_MSG']>=datetime.date(hoje.year, m, 1).strftime('%Y-%m-%d')]
-                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year, m, functions.lastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
+                dz = dz[dz['DATA_MSG']<=datetime.date(hoje.year, m, helpers.lastDayOfMonth(datetime.date(hoje.year,m,1)).day).strftime('%Y-%m-%d')]
                 dz = dz['VALOR'].sum()
                 mon.append(dz)
             except: mon.append(None)

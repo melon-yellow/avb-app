@@ -7,7 +7,7 @@ import datetime
 
 # Modules
 from ..services import homerico as network
-from . import functions
+from . import num, matrix, lastDayOfMonth
 
 #################################################################################################################################################
 #                                                       HOMERICO GETTERS                                                                        #
@@ -31,9 +31,9 @@ def RelatorioGerencialReport(
                 row[0] = reg if (row[0] == _registros[reg]) else row[0]
             _registros.update({
                 row[0]: {
-                    'meta': functions.num(row[1], True),
-                    'dia': functions.num(row[2], True),
-                    'acumulado': functions.num(row[3], True)
+                    'meta': num(row[1], True),
+                    'dia': num(row[2], True),
+                    'acumulado': num(row[3], True)
                 }
             })
         else: return None
@@ -48,7 +48,7 @@ def RelatorioGerencialReport(
         data=data,
         idReport=str(idReport)
     )
-    list(map(_replace_reg, functions.matrix(csv)))
+    list(map(_replace_reg, matrix(csv)))
 
     # Fix Wrong Data
     for item in list(_registros):
@@ -84,7 +84,7 @@ def RelatorioGerencialTrimestre(
     qt = (3 * (1 + ((timed.month - 1) // 3)))
     m = [qt-2, qt-1, qt]
     for i in m:
-        last_day = functions.lastDayOfMonth(
+        last_day = lastDayOfMonth(
             datetime.date(timed.year, i, 1)
         ).day
         if i == timed.month: last_day = timed.day
@@ -112,7 +112,7 @@ def RelatorioGerencialRegistro(
         data=data,
         registro=str(registro)
     )
-    return functions.matrix(homerico_csv)
+    return matrix(homerico_csv)
 
 #################################################################################################################################################
 
@@ -123,12 +123,12 @@ def ProducaoLista(
 ):
     if data == None:
         data = datetime.date.today()
-    last_day = functions.lastDayOfMonth(data).strftime('%d/%m/%Y')
+    last_day = lastDayOfMonth(data).strftime('%d/%m/%Y')
     homerico_csv = network.ProducaoLista(
         dataFinal=last_day,
         controle=str(lista)
     )
-    dados = functions.matrix(homerico_csv)
+    dados = matrix(homerico_csv)
     dados.pop(0)
     d = list()
     for item in dados:
@@ -137,7 +137,7 @@ def ProducaoLista(
         data = '{}{}'.format(item[0][:2].zfill(2), last_day[2:])
         d.append({
             'data': data,
-            'peso': functions.num(item[2], True)
+            'peso': num(item[2], True)
         })
     return d
 

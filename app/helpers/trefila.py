@@ -8,7 +8,7 @@ import datetime
 
 # Modules
 from . import homerico
-from . import functions
+from . import lastDayOfMonth
 
 #################################################################################################################################################
 
@@ -33,7 +33,7 @@ def trimestre(registro: int):
             # Check Month
             day = 0
             if month > now.month: raise Exception('invalid month')
-            if month < now.month: day = functions.lastDayOfMonth(
+            if month < now.month: day = lastDayOfMonth(
                 datetime.date(now.year, month, 1)
             ).day
             if month == now.month: day = now.day

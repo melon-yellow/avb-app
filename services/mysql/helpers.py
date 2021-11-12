@@ -9,7 +9,7 @@ import datetime
 #################################################################################################################################################
 
 # Get Address
-remote = os.getenv('AVB_APP_NETWORK_ADDRESS')
+remoteApp = os.getenv('AVB_APP_NETWORK_ADDRESS')
 
 #################################################################################################################################################
 
@@ -19,7 +19,7 @@ def escalaTurno(
     referencia: dict[str,tuple[str,str,str,str]] = None
 ):
     res = requests.post(
-        url=f'{remote}/laminador/escalaTurno',
+        url=f'{remoteApp}/laminador/escalaTurno',
         json={
             'data': data,
             'referencia': referencia
@@ -27,5 +27,15 @@ def escalaTurno(
     )
     # Return Result
     return res.json()
+
+#################################################################################################################################################
+
+# Get Last Day Of Month
+def lastDayOfMonth(date: datetime.datetime):
+    if date.month == 12: return date.replace(day=31)
+    return (
+        date.replace(month=(date.month + 1), day=1) -
+        datetime.timedelta(days=1)
+    )
 
 #################################################################################################################################################
