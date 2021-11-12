@@ -80,7 +80,7 @@ keys.forEach(item => {
       misc.logging.log(`Exec(homerico::${item}) From(${ip})`)
       // check request
       if (!is.object(req)) throw new Error('bad request')
-      if (!is.object(req.body)) throw new Error('bad request')
+      if (!is.in(req, 'body', 'object')) throw new Error('bad request')
       // Execute Function
       const data = await homerico[item](req.body)
       // Send Response

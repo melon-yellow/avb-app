@@ -2668,8 +2668,8 @@ ts-homerico@anthony-freitas/ts-homerico:
     typescript "^4.1.5"
 
 ts-misc@anthony-freitas/ts-misc:
-  version "1.6.1"
-  resolved "https://codeload.github.com/anthony-freitas/ts-misc/tar.gz/533f08bfc58bc9278ea59f3ab25880a004188f28"
+  version "1.7.1"
+  resolved "https://codeload.github.com/anthony-freitas/ts-misc/tar.gz/1a6b5f766712e22360f41fbd37d72a4dd6350117"
   dependencies:
     js-beautify "^1.13.5"
     prettier "^2.2.1"
