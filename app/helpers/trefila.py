@@ -3,6 +3,7 @@
 
 # Imports
 import io
+import json
 import pandas
 import datetime
 
@@ -12,17 +13,18 @@ from . import lastDayOfMonth
 
 #################################################################################################################################################
 
+# Get Registro Trimestre
 def trimestre(registro: int):
     # Set Variables
-    mon = []
+    acc: list[float] = []
 
     # Get Now
     now = datetime.datetime.now()
-    trim = {
-        1: [1,2,3],
-        2: [4,5,6],
-        3: [7,8,9],
-        4: [10,11,12]
+    trim: tuple[int, int, int] = {
+        1: (1, 2, 3),
+        2: (4, 5, 6),
+        3: (7, 8, 9),
+        4: (10, 11, 12)
     }.get(
         ((now.month - 1) // 3) + 1
     )
@@ -47,14 +49,61 @@ def trimestre(registro: int):
                 io.StringIO(csv),
                 sep=';'
             )
-            mon.append(
+            acc.append(
                 df['acumulado'].values[0]
             )
         # On Error
-        except: mon.append(None)
+        except: acc.append(None)
+
+    # Turn to Tuple
+    tacc: tuple[
+        float | None,
+        float | None,
+        float | None
+    ] = tuple(acc)
     
     # Return Data
-    return mon
+    return tacc
 
 #################################################################################################################################################
 
+# Get Proucao Maquinas
+def producaoMaquinas():
+    # get date
+    date = datetime.datetime.today().strftime('%d/%m/%Y')
+
+    # read meta
+    csv = homerico.network.RelatorioLista(
+        dataInicial=date,
+        dataFinal=date,
+        idProcesso='50'
+    )
+    df = pandas.read_csv(
+        io.StringIO(csv),
+        sep=';'
+    )
+
+    # Set Prod
+    prod: dict[str, float] = {}
+    try:
+        df = df.filter(['Produto','Maquina','Peso do Produto'])
+        df = df.stack().str.replace(',','.').unstack()
+        df['Peso do Produto'] = df['Peso do Produto'].astype(float)
+        df = df.groupby('Maquina').sum()
+        df = df['Peso do Produto']
+        prod.update(json.loads(df.to_json()))
+    except: pass
+
+    # get prod data
+    data = {
+        'p01': prod.get('Trefila 01'),
+        'p02': prod.get('Trefila 02'),
+        'p03': prod.get('Trefila 03'),
+        'p04': prod.get('Trefila 04'),
+        'p05': prod.get('Trefila 05')
+    }
+
+    # Return Data
+    return data
+
+#################################################################################################################################################

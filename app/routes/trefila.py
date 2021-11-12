@@ -2,16 +2,13 @@
 #################################################################################################################################################
 
 # Imports
-import io
-import os
 import json
 import flask
-import pandas
 import py_misc
-import datetime
 
 # Modules
 from ..helpers import homerico
+from ..helpers import trefila
 from ..helpers import util
 from ..services import mysql
 
@@ -27,35 +24,40 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
+    @app.route('/avb/trefila/producao/')
+    def trefilaProducao(req: Request, res: Response):
+        # read prod
+        data = homerico.ProducaoLista(lista=2361)
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+
+    #################################################################################################################################################
+
+    @app.route('/avb/trefila/utilizacao/csv/')
+    def trefilaUtilizacaoCsv(req: Request, res: Response):
+        # MySQL Connection
+        csv = mysql.trefila.utilizacao()
+        # Retrun Data
+        return res(
+            csv,
+            mimetype='text/csv',
+            headers={
+                'Content-disposition': (
+                    'attachment; filename=utilizacao.csv'
+                )
+            },
+            status=200
+        )
+
+    #################################################################################################################################################
+
     @app.route('/avb/trefila/produtividade/')
     def trefilaProdutividade(req: Request, res: Response):
         # get date
-        date = datetime.datetime.today().strftime('%d/%m/%Y')
-        # read meta
-        csv_str = homerico.network.RelatorioLista(
-            dataInicial=date,
-            dataFinal=date,
-            idProcesso='50'
-        )
-        csv_file = io.StringIO(csv_str)
-        df = pandas.read_csv(csv_file, sep=';')
-        prod = {}
-        try:
-            df = df.filter(['Produto','Maquina','Peso do Produto'])
-            df = df.stack().str.replace(',','.').unstack()
-            df['Peso do Produto'] = df['Peso do Produto'].astype(float)
-            df = df.groupby('Maquina').sum()
-            df = df['Peso do Produto']
-            prod.update(json.loads(df.to_json()))
-        except: pass
-        # get prod data
-        data = {
-            'p01': prod.get('Trefila 01'),
-            'p02': prod.get('Trefila 02'),
-            'p03': prod.get('Trefila 03'),
-            'p04': prod.get('Trefila 04'),
-            'p05': prod.get('Trefila 05')
-        }
+        data = trefila.producaoMaquinas()
         # get util data
         utilTrefila = util.read.trefila()
         data.update({
@@ -82,7 +84,7 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/trefila/metas/')
     def trefilaMetas(req: Request, res: Response):
-        # read metas
+        # Read Metas
         report = homerico.RelatorioGerencialTrimestre(
             idReport=16,
             registros={
@@ -92,17 +94,14 @@ def __load__(app: py_misc.Express):
                 'PRODUÇÃO POR MÁQUINA': 2988
             }
         )
-        # custo trf
+        # Append Metas
         try: report.update(mysql.trefila.custo())
         except: pass
-        # sucateamento trf
         try: report.update(mysql.trefila.sucata())
         except: pass
-        # 5S
         try: report.update(mysql.trefila.vs())
         except: pass
-        try: 
-            # util trf
+        try: # Utilizacao
             metaUtil = mysql.trefila.utilizacao()
             # util trf dia
             utilTrefila = util.read.trefila()
@@ -120,38 +119,11 @@ def __load__(app: py_misc.Express):
             # update metas
             report.update(metaUtil)
         except: pass
-        # return data
+
+        # Return Data
         return res(
             json.dumps(report),
             mimetype='application/json',
-            status=200
-        )
-
-    #################################################################################################################################################
-
-    @app.route('/avb/trefila/producao/')
-    def trefilaProducao(req: Request, res: Response):
-        # read prod
-        data = homerico.ProducaoLista(lista=2361)
-        return res(
-            json.dumps(data),
-            mimetype='application/json',
-            status=200
-        )
-
-    #################################################################################################################################################
-
-    @app.route('/avb/trefila/utilizacao/csv/')
-    def trefilaUtilizacaoCsv(req: Request, res: Response):
-        # MySQL Connection
-        csv = mysql.trefila.utilizacao()
-        # Retrun Data
-        return res(
-            csv,
-            mimetype = "text/csv",
-            headers = {
-                "Content-disposition": "attachment; filename=utilizacao.csv"
-            },
             status=200
         )
 
