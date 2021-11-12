@@ -36,7 +36,7 @@ def __load__(app: py_misc.Express):
                 or not isinstance(rend[1], list)
                 or not len(rend[1]) >= 3
                 or not isinstance(rend[1][2], str)
-                ): raise Exception('?')
+                ): raise Exception('homerico report "15" is invalid')
             rendimento = float(rend[1][2].replace(',', '.'))
         except: pass
 
@@ -46,14 +46,16 @@ def __load__(app: py_misc.Express):
                 or not isinstance(carg_s[1], list)
                 or not len(carg_s[1]) >= 3
                 or not isinstance(carg_s[1][2], str)
-                ): raise Exception('?')
+                ): raise Exception('homerico report "1218" is invalid')
             carga_solida = float(carg_s[1][2].replace(',', '.'))
         except: pass
+
         # Set Data
-        data = dict(
-            rendimento = rendimento,
-            carga_solida = carga_solida
-        )
+        data = {
+            'rendimento': rendimento,
+            'carga_solida': carga_solida
+        }
+
         # Return data
         return res(
             json.dumps(data),
