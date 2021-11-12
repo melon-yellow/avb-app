@@ -41,6 +41,48 @@ services:
 
 ##########################################################################################################################
 
+  mysql:
+    image: python:3.10
+    container_name: cx-mysql
+    build: ./services/mysql
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file: .env
+    volumes:
+      - ./services/mysql/:/usr/app/
+    expose:
+      - ${MYSQL_NETWORK_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  odbc:
+    image: python:3.10
+    container_name: cx-odbc
+    build: ./services/odbc
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file: .env
+    volumes:
+      - ./services/odbc/:/usr/app/
+    expose:
+      - ${ODBC_NETWORK_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  oracle:
+    image: python:3.10
+    container_name: cx-oracle
+    build: ./services/oracle
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file: .env
+    volumes:
+      - ./services/oracle/:/usr/app/
+    expose:
+      - ${ORACLE_NETWORK_PORT}
+    restart: always
+
+##########################################################################################################################
+
   app:
     image: python:3.10
     container_name: avb-app
@@ -49,12 +91,14 @@ services:
     env_file: .env
     volumes:
       - ./app/:/usr/app/
-      - /usr/local/lib/python3.10/site-packages/
     ports:
       - "${AVB_APP_PORT}:${AVB_APP_PORT}"
     depends_on:
       - db
       - homerico
+      - mysql
+      - odbc
+      - oracle
     restart: always
 
 ##########################################################################################################################
