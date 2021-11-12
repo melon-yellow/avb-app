@@ -9,9 +9,10 @@ import py_misc
 import datetime
 
 # modules
-from .. import iba
-from .. import furl2
-from .. import homerico
+from ..helpers import homerico
+from ..helpers import turno
+from ..services import oracle
+from ..services import mssql
 
 #################################################################################################################################################
 
@@ -44,18 +45,18 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/metas_lam_quente/')
-    def metasLamQuente(req: Request, res: Response):
-        registros = {
-            'ACIDENTE CPT':1333,
-            'PROD LAMINADO':1336,
-            'REND. METALICO':1338,
-            'BLBP':1444,
-            'SUCATEAMENTO':1350
-        }
-        data = homerico.get.RelatorioGerencialTrimestre(
+    @app.route('/avb/laminador/metas/')
+    def laminadorMetas(req: Request, res: Response):
+        # read metas
+        data = homerico.RelatorioGerencialTrimestre(
             idReport=10,
-            registros=registros
+            registros={
+                'ACIDENTE CPT': 1333,
+                'PROD LAMINADO': 1336,
+                'REND. METALICO': 1338,
+                'BLBP': 1444,
+                'SUCATEAMENTO': 1350
+            }
         )
         return res(
             json.dumps(data),
@@ -65,9 +66,9 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/prod_lam_quente/')
-    def prodLamQuente(req: Request, res: Response):
-        data = homerico.get.ProducaoLista(lista=1269)
+    @app.route('/avb/laminador/producao/')
+    def laminadorProducao(req: Request, res: Response):
+        data = homerico.ProducaoLista(lista=1269)
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -76,9 +77,9 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/l2/')
-    def rfaLaminador(req: Request, res: Response):
-        data = iba.mssql.rfaLim()
+    @app.route('/avb/laminador/nivel2/')
+    def laminadorNivel2(req: Request, res: Response):
+        data = mssql.mill.rfaLim()
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -87,9 +88,9 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/mill/')
-    def apiLaminador(req: Request, res: Response):
-        data = iba.mssql.rfa()
+    @app.route('/avb/laminador/rfa/')
+    def laminadorRFA(req: Request, res: Response):
+        data = mssql.mill.rfa()
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -98,9 +99,9 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/furnace/')
-    def furGusaapp(req: Request, res: Response):
-        data = furl2.oracle.gusaapp()
+    @app.route('/avb/laminador/forno/')
+    def laminadorForno(req: Request, res: Response):
+        data = oracle.furnace.gusaapp()
         util = readUtil()
         data.update({
             'UTIL': util.get('UTIL'),
@@ -115,8 +116,20 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/reports/util/')
-    def utilReport(req: Request, res: Response):
+    @app.route('/avb/laminador/escalaTurno/')
+    def laminadorEscalaTurno(req: Request, res: Response):
+        data = turno.escala.get()
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+
+    #################################################################################################################################################
+
+    @app.route('/avb/laminador/reports/util/')
+    def laminadorReportsUtil(req: Request, res: Response):
+        # save json file
         json.dump(req.json, open(utilPath, 'w'))
         return res(
             json.dumps({ 'done': True }),
@@ -125,7 +138,7 @@ def __load__(app: py_misc.Express):
         )
 
     # Set Authentication
-    utilReport.users.update({
+    laminadorReportsUtil.users.update({
         os.getenv('AVB_IBA_UTIL_REPORT_USER'):
         os.getenv('AVB_IBA_UTIL_REPORT_PASSWORD')
     })

@@ -15,8 +15,8 @@ services:
     env_file: .env
     volumes:
       - ./db/data/:/var/lib/mysql
-    ports:
-      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    expose:
+      - ${MYSQL_PORT}
     restart: always
 
 ##########################################################################################################################
@@ -24,19 +24,19 @@ services:
   homerico:
     image: node:16
     container_name: homerico-avb
-    build: ./homerico
-    command: bash -c "yarn && yarn load"
+    build: ./services/homerico
+    command: bash -c "yarn && yarn build && yarn nonstop"
     env_file: .env
     volumes:
       # Folders
-      - ./homerico/src/:/usr/app/src/
-      - ./homerico/node_modules/:/usr/app/node_modules/
+      - ./services/homerico/src/:/usr/app/src/
+      - ./services/homerico/node_modules/:/usr/app/node_modules/
       # Files
-      - ./homerico/yarn.lock:/usr/app/yarn.lock
-      - ./homerico/package.json:/usr/app/package.json
-      - ./homerico/tsconfig.json:/usr/app/tsconfig.json
-    ports:
-      - "${HOMERICO_NETWORK_PORT}:${HOMERICO_NETWORK_PORT}"
+      - ./services/homerico/yarn.lock:/usr/app/yarn.lock
+      - ./services/homerico/package.json:/usr/app/package.json
+      - ./services/homerico/tsconfig.json:/usr/app/tsconfig.json
+    expose:
+      - ${HOMERICO_NETWORK_PORT}
     depends_on:
       - db
     restart: always

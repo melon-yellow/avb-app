@@ -4,7 +4,6 @@
 
 # dependencies
 /app/src/
-/services/helpers/src/
 /services/homerico/node_modules/
 /services/mysql/src/
 /services/odbc/src/

@@ -10,7 +10,7 @@
     "build": "rm -rf \"./build\" && yarn transpile && yarn beautify",
     "start": "node ./build/index.js",
     "load": "yarn build && yarn start",
-    "nonstop": "bash -c \"for /l %n in () do (yarn start)\""
+    "nonstop": "bash -c \" while true; do (yarn start); sleep 1; done\""
   },
   "author": "",
   "license": "MIT",

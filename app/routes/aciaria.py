@@ -7,7 +7,7 @@ import flask
 import py_misc
 
 # modules
-from .. import homerico
+from ..helpers import homerico
 
 #################################################################################################################################################
 
@@ -21,11 +21,11 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/aci_rendimento/')
-    def aciRendimento(req: Request, res: Response):
+    @app.route('/avb/aciaria/rendimento/')
+    def aciariaRendimento(req: Request, res: Response):
         # get app data
-        rend = homerico.get.RelatorioGerencialRegistro(registro=15)
-        carg_s = homerico.get.RelatorioGerencialRegistro(registro=1218)
+        rend = homerico.RelatorioGerencialRegistro(registro=15)
+        carg_s = homerico.RelatorioGerencialRegistro(registro=1218)
 
         rendimento = None
         carga_solida = None

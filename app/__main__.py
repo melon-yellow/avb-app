@@ -17,45 +17,26 @@
 import os
 import py_misc
 
-# Services Interface
-from .services import helpers
-from .services import homerico
-from .services import mysql
-from .services import odbc
-from .services import opc
-from .services import oracle
-
 # Routes
 from . import routes
 
 ##########################################################################################################################
 
-# Setup Homerico Connection
-homerico.remote(
-    address=os.getenv('HOMERICO_NETWORK_ADDRESS'),
-    user=os.getenv('HOMERICO_NETWORK_USER'),
-    password=os.getenv('HOMERICO_NETWORK_PASSWORD')
-)
-
-##########################################################################################################################
-
 # Declare HTTP API
 app = py_misc.Express()
+
+# Set API Port
 app.port(
     int(os.getenv('AVB_APP_PORT'))
 )
 
-##########################################################################################################################
-
 # Load Routes
 routes.__load__(app)
 
-##########################################################################################################################
-
-# start server
+# Start Server
 app.start()
 
-# keep main thread alive
+# Keep Main Thread Alive
 py_misc.keepalive()
 
 ##########################################################################################################################

@@ -10,11 +10,9 @@ import pandas
 import py_misc
 import datetime
 
-# modules
-from .. import turno
-from .. import homerico
-from .. import metas
-from .. import iba
+# Modules
+from ..helpers import homerico
+from ..services import mysql
 
 #################################################################################################################################################
 
@@ -59,10 +57,12 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/trf/')
-    def apiTrf(req: Request, res: Response):
+    @app.route('/avb/trefila/produtividade/')
+    def trefilaProdutividade(req: Request, res: Response):
+        # get date
         date = datetime.datetime.today().strftime('%d/%m/%Y')
-        csv_str = homerico.net.RelatorioLista(
+        # read meta
+        csv_str = homerico.network.RelatorioLista(
             dataInicial=date,
             dataFinal=date,
             idProcesso='50'
@@ -78,7 +78,6 @@ def __load__(app: py_misc.Express):
             df = df['Peso do Produto']
             prod.update(json.loads(df.to_json()))
         except: pass
-        data = dict()
         # get prod data
         data = {
             'p01': prod.get('Trefila 01'),
@@ -111,41 +110,44 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/metas_lam_frio/')
-    def metasLamFrio(req: Request, res: Response):
-        registros = {
-            'PRODUÇÃO':2962,
-            'PRODUÇÃO HORÁRIA':2966,
-            'RENDIMENTO METÁLICO':2963,
-            'PRODUÇÃO POR MÁQUINA':2988
-        }
-        # get metas
-        report = homerico.get.RelatorioGerencialTrimestre(
+    @app.route('/avb/trefila/metas/')
+    def trefilaMetas(req: Request, res: Response):
+        # read metas
+        report = homerico.RelatorioGerencialTrimestre(
             idReport=16,
-            registros=registros
+            registros={
+                'PRODUÇÃO': 2962,
+                'PRODUÇÃO HORÁRIA': 2966,
+                'RENDIMENTO METÁLICO': 2963,
+                'PRODUÇÃO POR MÁQUINA': 2988
+            }
         )
         # custo trf
-        try: report.update(metas.trefila.Custo())
+        try: report.update(mysql.trefila.custo())
         except: pass
         # sucateamento trf
-        try: report.update(metas.trefila.Sucata())
+        try: report.update(mysql.trefila.sucata())
         except: pass
         # 5S
-        try: report.update(metas.trefila.S5())
+        try: report.update(mysql.trefila.fives())
         except: pass
-        try: # util trf dia
-            ut = readUtil()
-            ut = [
-                ut['m01']['UTIL'],
-                ut['m02']['UTIL'],
-                ut['m03']['UTIL'],
-                ut['m04']['UTIL'],
-                ut['m05']['UTIL']
-            ]
+        try: 
             # util trf
-            util = metas.trefila.Utilizacao()
-            gen_util = dict(dia=((sum(ut) * 100) / 4))
-            util['utilizacao'].update(gen_util)
+            util = mysql.trefila.utilizacao()
+            # util trf dia
+            ru = readUtil()
+            total = (
+                ru.get('m01', {}).get('UTIL') +
+                ru.get('m02', {}).get('UTIL') +
+                ru.get('m03', {}).get('UTIL') +
+                ru.get('m04', {}).get('UTIL') +
+                ru.get('m05', {}).get('UTIL')
+            )
+            # update util
+            util['utilizacao'].update({
+                'dia': (total / 4) * 100
+            })
+            # update metas
             report.update(util)
         except: pass
         # return data
@@ -157,9 +159,10 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/prod_lam_frio/')
-    def prodLamFrio(req: Request, res: Response):
-        data = homerico.get.ProducaoLista(lista=2361)
+    @app.route('/avb/trefila/producao/')
+    def trefilaProducao(req: Request, res: Response):
+        # read prod
+        data = homerico.ProducaoLista(lista=2361)
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -168,32 +171,16 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/api/util_csv/')
-    def trfUtilCsv(req: Request, res: Response):
+    @app.route('/avb/trefila/utilizacao/csv/')
+    def trefilaUtilizacaoCsv(req: Request, res: Response):
         # MySQL Connection
-        csv = iba.mysql.UtilizacaoTrefila()
+        csv = mysql.trefila.utilizacao()
         # Retrun Data
         return res(
             csv,
             mimetype = "text/csv",
             headers = {
                 "Content-disposition": "attachment; filename=utilizacao.csv"
-            },
-            status=200
-        )
-
-    #################################################################################################################################################
-
-    @app.route('/api/util_csv_dia')
-    def trfUtilCsvDia(req: Request, res: Response):
-        # MySQL Connection
-        csv = iba.mysql.UtilizacaoDiaTrefila()
-        # Return Data
-        return res(
-            csv,
-            mimetype = "text/csv",
-            headers = {
-                "Content-disposition": "attachment; filename=utilizacao-dia.csv"
             },
             status=200
         )
