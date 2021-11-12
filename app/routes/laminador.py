@@ -11,6 +11,7 @@ import datetime
 # modules
 from ..helpers import homerico
 from ..helpers import turno
+from ..helpers import util
 from ..services import oracle
 from ..services import odbc
 
@@ -18,25 +19,6 @@ from ..services import odbc
 
 Request = flask.Request
 Response = flask.Response
-
-#################################################################################################################################################
-
-# Get File-Paths
-fileDir = os.path.dirname(os.path.abspath(__file__))
-utilPath = os.path.abspath(os.path.join(fileDir, '../util.json'))
-
-#################################################################################################################################################
-
-def readUtil():
-    r = dict()
-    default = [None, None]
-    gets = json.load(open(utilPath, 'r'))
-    time = gets.get('mill', default)[0]
-    util = gets.get('mill', default)[1]
-    c = time != None and util != None
-    r['UTIL'] = util / (time if time > 0 else 1) if c else None
-    r['TEMPO_PARADO'] = ((time - util) / 60) if c else None
-    return r
 
 #################################################################################################################################################
 
@@ -102,10 +84,10 @@ def __load__(app: py_misc.Express):
     @app.route('/avb/laminador/forno/')
     def laminadorForno(req: Request, res: Response):
         data = oracle.furnace.gusaapp()
-        util = readUtil()
+        laminadorUtil = util.read.laminador()
         data.update({
-            'UTIL': util.get('UTIL'),
-            'TEMPO_PARADO': util.get('TEMPO_PARADO'),
+            'UTIL': laminadorUtil.get('UTIL'),
+            'TEMPO_PARADO': laminadorUtil.get('TEMPO_PARADO'),
             'timestamp': datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')
         })
         return res(
@@ -130,7 +112,7 @@ def __load__(app: py_misc.Express):
     @app.route('/avb/laminador/reports/util/')
     def laminadorReportsUtil(req: Request, res: Response):
         # save json file
-        json.dump(req.json, open(utilPath, 'w'))
+        util.write(req.json)
         return res(
             json.dumps({ 'done': True }),
             mimetype='application/json',

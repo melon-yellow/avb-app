@@ -12,43 +12,13 @@ import datetime
 
 # Modules
 from ..helpers import homerico
+from ..helpers import util
 from ..services import mysql
 
 #################################################################################################################################################
 
 Request = flask.Request
 Response = flask.Response
-
-#################################################################################################################################################
-
-# Get File-Paths
-fileDir = os.path.dirname(os.path.abspath(__file__))
-utilPath = os.path.abspath(os.path.join(fileDir, '../util.json'))
-
-#################################################################################################################################################
-
-def readUtil():
-    # Open File
-    default = [None, None, None, None, None, None]
-    gets: dict = json.load(open(utilPath, 'r'))
-    time = gets.get('trf', default)[0]
-    # Parse Util
-    def parseUtil(mq):
-        r = dict()
-        util = gets.get('trf', default)[mq]
-        c = time != None and util != None
-        r['UTIL'] = util / (time if time > 0 else 1) if c else None
-        r['TEMPO_PARADO'] = ((time - util) / 60) if c else None
-        return r
-    # Return Util Dictionary
-    return {
-        'SEC': time,
-        'm01': parseUtil(1),
-        'm02': parseUtil(2),
-        'm03': parseUtil(3),
-        'm04': parseUtil(4),
-        'm05': parseUtil(5),
-    }
 
 #################################################################################################################################################
 
@@ -87,19 +57,19 @@ def __load__(app: py_misc.Express):
             'p05': prod.get('Trefila 05')
         }
         # get util data
-        util = readUtil()
+        utilTrefila = util.read.trefila()
         data.update({
-            's': util.get('SEC'),
-            'u01': util.get('m01', {}).get('UTIL'),
-            'u02': util.get('m02', {}).get('UTIL'),
-            'u03': util.get('m03', {}).get('UTIL'),
-            'u04': util.get('m04', {}).get('UTIL'),
-            'u05': util.get('m05', {}).get('UTIL'),
-            't01': util.get('m01', {}).get('TEMPO_PARADO'),
-            't02': util.get('m02', {}).get('TEMPO_PARADO'),
-            't03': util.get('m03', {}).get('TEMPO_PARADO'),
-            't04': util.get('m04', {}).get('TEMPO_PARADO'),
-            't05': util.get('m05', {}).get('TEMPO_PARADO')
+            's': utilTrefila.get('SEC'),
+            'u01': utilTrefila.get('m01', {}).get('UTIL'),
+            'u02': utilTrefila.get('m02', {}).get('UTIL'),
+            'u03': utilTrefila.get('m03', {}).get('UTIL'),
+            'u04': utilTrefila.get('m04', {}).get('UTIL'),
+            'u05': utilTrefila.get('m05', {}).get('UTIL'),
+            't01': utilTrefila.get('m01', {}).get('TEMPO_PARADO'),
+            't02': utilTrefila.get('m02', {}).get('TEMPO_PARADO'),
+            't03': utilTrefila.get('m03', {}).get('TEMPO_PARADO'),
+            't04': utilTrefila.get('m04', {}).get('TEMPO_PARADO'),
+            't05': utilTrefila.get('m05', {}).get('TEMPO_PARADO')
         })
         # return json
         return res(
@@ -129,26 +99,26 @@ def __load__(app: py_misc.Express):
         try: report.update(mysql.trefila.sucata())
         except: pass
         # 5S
-        try: report.update(mysql.trefila.fives())
+        try: report.update(mysql.trefila.vs())
         except: pass
         try: 
             # util trf
-            util = mysql.trefila.utilizacao()
+            metaUtil = mysql.trefila.utilizacao()
             # util trf dia
-            ru = readUtil()
+            utilTrefila = util.read.trefila()
             total = (
-                ru.get('m01', {}).get('UTIL') +
-                ru.get('m02', {}).get('UTIL') +
-                ru.get('m03', {}).get('UTIL') +
-                ru.get('m04', {}).get('UTIL') +
-                ru.get('m05', {}).get('UTIL')
+                utilTrefila.get('m01', {}).get('UTIL') +
+                utilTrefila.get('m02', {}).get('UTIL') +
+                utilTrefila.get('m03', {}).get('UTIL') +
+                utilTrefila.get('m04', {}).get('UTIL') +
+                utilTrefila.get('m05', {}).get('UTIL')
             )
             # update util
-            util['utilizacao'].update({
+            metaUtil['utilizacao'].update({
                 'dia': (total / 4) * 100
             })
             # update metas
-            report.update(util)
+            report.update(metaUtil)
         except: pass
         # return data
         return res(
