@@ -17,4 +17,4 @@
 **/__pycache__/
 
 # util.json
-/app/util.json
+/app/helpers/util.json

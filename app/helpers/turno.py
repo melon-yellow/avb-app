@@ -31,12 +31,12 @@ def escala(
     sourceDates = list(referencia.keys())
 
     # Get Delta Time
-    delta = data - (
+    delta = (data - (
         datetime.datetime.strptime(
             sourceDates[0],
             '%Y-%m-%d'
         )
-    )
+    ))
 
     # Iterate Over Dates
     b = referencia.get(sourceDates[0])
@@ -45,7 +45,7 @@ def escala(
             dy.rotate(-i)
     
     # Rotates
-    dy.rotate(-delta.days)
+    dy.rotate(-(delta.days))
     t1 = list(dy)
     dy.rotate(-7)
     t2 = list(dy)
