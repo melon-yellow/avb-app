@@ -38,8 +38,8 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/trefila/utilizacao/csv/')
     def trefilaUtilizacaoCsv(req: Request, res: Response):
-        # MySQL Connection
-        csv = mysql.trefila.utilizacao()
+        # Query Data
+        csv = mysql.trefila.utilizacaoTurno()
         # Retrun Data
         return res(
             csv,
@@ -99,7 +99,7 @@ def __load__(app: py_misc.Express):
         except: pass
         try: report.update(mysql.trefila.sucata())
         except: pass
-        try: report.update(mysql.trefila.vs())
+        try: report.update(mysql.trefila.cincos())
         except: pass
         try: # Utilizacao
             metaUtil = mysql.trefila.utilizacao()
