@@ -84,10 +84,10 @@ def __load__(app: py_misc.Express):
     @app.route('/avb/laminador/forno/')
     def laminadorForno(req: Request, res: Response):
         data = oracle.furnace.gusaapp()
-        laminadorUtil = util.read.laminador()
+        utilLaminador = util.read.laminador()
         data.update({
-            'UTIL': laminadorUtil.get('UTIL'),
-            'TEMPO_PARADO': laminadorUtil.get('TEMPO_PARADO'),
+            'UTIL': utilLaminador.get('UTIL'),
+            'TEMPO_PARADO': utilLaminador.get('TEMPO_PARADO'),
             'timestamp': datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')
         })
         return res(
