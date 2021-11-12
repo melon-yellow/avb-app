@@ -9,9 +9,9 @@ import pyodbc
 
 # Get File-Paths
 fileDir = os.path.dirname(os.path.abspath(__file__))
-product_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.mssql.product.sql'))
-rfa_lim_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.mssql.rfa.lim.sql'))
-rfa_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.mssql.rfa.sql'))
+product_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.product.sql'))
+rfa_lim_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.rfal2.sql'))
+rfa_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.rfa.sql'))
 
 #################################################################################################################################################
 
@@ -67,7 +67,7 @@ def rfa():
 
 #################################################################################################################################################
 
-def rfaLim():
+def rfal2():
     # Get Product Name
     produto = product().get('CTR_PRODUCT_NAME')
     # Connect to Server

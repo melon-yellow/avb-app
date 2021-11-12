@@ -8,7 +8,7 @@ import cx_Oracle
 #################################################################################################################################################
 
 fileDir = os.path.dirname(os.path.abspath(__file__))
-gusaapp_sql = os.path.abspath(os.path.join(fileDir, '../sql/furl2.oracle.gusaapp.sql'))
+gusaapp_sql = os.path.abspath(os.path.join(fileDir, './sql/furnace.gusaapp.sql'))
 
 #################################################################################################################################################
 

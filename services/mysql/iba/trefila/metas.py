@@ -34,14 +34,14 @@ def Trim(cod):
         elif i == mes:
             try:
                 data = datetime.date(me.year,i,me.day).strftime('%d/%m/%Y')
-                homerico_csv = homerico.get.RelatorioGerencialRegistro(data, cod)
+                homerico_csv = homerico.RelatorioGerencialRegistro(data, cod)
                 csv_file = io.StringIO(homerico_csv)
                 df = pandas.read_csv(csv_file, sep=';')
                 mon.append(df['acumulado'].values[0])
             except: mon.append(None)
         else:
             try:
-                data = datetime.date(me.year,i, homerico.get.LastDayOfMonth(datetime.date(me.year,i,1)).day).strftime('%d/%m/%Y')
+                data = datetime.date(me.year,i, homerico.LastDayOfMonth(datetime.date(me.year,i,1)).day).strftime('%d/%m/%Y')
                 homerico_csv = homerico.RelatorioGerencialRegistro(data, cod)
                 csv_file = io.StringIO(homerico_csv)
                 df = pandas.read_csv(csv_file, sep=';')
