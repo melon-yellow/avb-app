@@ -9,9 +9,9 @@ import pyodbc
 
 # Get File-Paths
 fileDir = os.path.dirname(os.path.abspath(__file__))
-product_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.product.sql'))
-rfa_lim_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.rfal2.sql'))
-rfa_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.rfa.sql'))
+product_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.product.sql'))
+rfal2_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.rfal2.sql'))
+rfa_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.rfa.sql'))
 
 #################################################################################################################################################
 
@@ -79,7 +79,7 @@ def rfal2():
     )
     # Execute Query
     cur = conn.cursor()
-    cur.execute(open(rfa_lim_sql).read().format(produto))
+    cur.execute(open(rfal2_sql).read().format(produto))
     # Parse to Dictionary
     r = [dict((cur.description[i][0], value)
         for i, value in enumerate(row)) for row in cur.fetchall()]

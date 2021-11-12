@@ -118,7 +118,7 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/laminador/escalaTurno/')
     def laminadorEscalaTurno(req: Request, res: Response):
-        data = turno.escala.get()
+        data = turno.escala()
         return res(
             json.dumps(data),
             mimetype='application/json',
