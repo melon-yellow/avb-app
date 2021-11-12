@@ -12,7 +12,6 @@ remote = os.getenv('HOMERICO_NETWORK_ADDRESS')
 
 #################################################################################################################################################
 
-# RelatorioLista("01/06/2020","13/07/2020","35")
 def RelatorioLista(
     dataInicial: str,
     dataFinal: str,
@@ -31,7 +30,6 @@ def RelatorioLista(
 
 #################################################################################################################################################
 
-# RelatorioGerencialReport("01/05/2020","1")
 def RelatorioGerencialReport(
     data: str,
     idReport: str
@@ -48,7 +46,6 @@ def RelatorioGerencialReport(
 
 #################################################################################################################################################
 
-# RelatorioBoletim("01/07/2020","13/07/2020","85")
 def RelatorioBoletim(
     dataInicial: str,
     dataFinal: str,
@@ -67,7 +64,6 @@ def RelatorioBoletim(
 
 #################################################################################################################################################
 
-# ProducaoLista("30/04/2021","2361")
 def ProducaoLista(
     dataFinal: str,
     controle: str
@@ -84,7 +80,6 @@ def ProducaoLista(
 
 #################################################################################################################################################
 
-# RelatorioGerencialRegistro("01/05/2020","2")
 def RelatorioGerencialRegistro(
     data: str,
     registro: str

@@ -16,6 +16,10 @@ remote = os.getenv('ORACLE_NETWORK_ADDRESS')
 class furnace:
 
     def gusaapp():
-        return {}
+        res = requests.get(
+            url=f'{remote}/furnace/gusaapp/',
+        )
+        res.raise_for_status()
+        return res.json()
 
 #################################################################################################################################################

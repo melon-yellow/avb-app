@@ -12,13 +12,21 @@ remote = os.getenv('ODBC_NETWORK_ADDRESS')
 
 #################################################################################################################################################
 
-# Mill
-class mill:
+# Laminador
+class laminador:
 
     def rfa():
-        return {}
+        res = requests.get(
+            url=f'{remote}/laminador/rfa/',
+        )
+        res.raise_for_status()
+        return res.json()
 
     def rfal2():
-        return {}
+        res = requests.get(
+            url=f'{remote}/laminador/rfal2/',
+        )
+        res.raise_for_status()
+        return res.json()
 
 #################################################################################################################################################

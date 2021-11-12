@@ -16,18 +16,38 @@ remote = os.getenv('MYSQL_NETWORK_ADDRESS')
 class trefila:
 
     def utilizacaoTurno():
-        return {}
+        res = requests.get(
+            url=f'{remote}/trefila/utilizacao/turno/',
+        )
+        res.raise_for_status()
+        return res.json()
     
     def utilizacao():
-        return {}
+        res = requests.get(
+            url=f'{remote}/trefila/utilizacao/',
+        )
+        res.raise_for_status()
+        return res.json()
     
     def custo():
-        return {}
+        res = requests.get(
+            url=f'{remote}/trefila/custo/',
+        )
+        res.raise_for_status()
+        return res.json()
 
     def sucata():
-        return {}
+        res = requests.get(
+            url=f'{remote}/trefila/sucata/',
+        )
+        res.raise_for_status()
+        return res.json()
     
     def cincos():
-        return {}
+        res = requests.get(
+            url=f'{remote}/trefila/cincos/',
+        )
+        res.raise_for_status()
+        return res.json()
 
 #################################################################################################################################################
