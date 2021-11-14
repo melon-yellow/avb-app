@@ -31,7 +31,7 @@ Response = flask.Response
 def trefilaUtilizacaoTurno(req: Request, res: Response):
     data = trefila.utilizacaoTurno()
     return res(
-        json.dumps(data),
+        data,
         mimetype='text/csv',
         status=200
     )
