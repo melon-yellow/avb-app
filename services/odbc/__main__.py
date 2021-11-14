@@ -27,6 +27,17 @@ Response = flask.Response
 
 ##########################################################################################################################
 
+@app.route('/odbc/laminador/produto/')
+def laminadorRFAL2(req: Request, res: Response):
+    data = laminador.product()
+    return res(
+        json.dumps(data),
+        mimetype='application/json',
+        status=200
+    )
+
+##########################################################################################################################
+
 @app.route('/odbc/laminador/rfa/')
 def laminadorRFA(req: Request, res: Response):
     data = laminador.rfa()

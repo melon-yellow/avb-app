@@ -43,15 +43,12 @@ class connect:
 
 #################################################################################################################################################
 
-# Datetime Helper
-def dateFormat(
-    year: int,
-    month: int,
-    day: int
-):
-    return datetime.datetime(
-        year, month, day
-    ).strftime('%Y-%m-%d')
+# Datetime Helpers
+def date(year: int, month: int, day: int = 1):
+    return datetime.date(year, month, day)
+
+def dateFormat(year: int, month: int, day: int = 1):
+    return date(year, month, day).strftime('%Y-%m-%d')
 
 #################################################################################################################################################
 
@@ -60,29 +57,21 @@ def getMetaTrimestre(
     parser: Callable[[int, int, int], float]
 ):
     try:
-        # Trimestre
-        trim: tuple[int, int, int] = {
-            1: (1, 2, 3), 2: (4, 5, 6),
-            3: (7, 8, 9), 4: (10, 11, 12)
-        }[1 + ((now.month - 1) // 3)]
-
-        # Acumulado do Trimestre
-        acc = parser(trim[0], now.month, now.day)
-
         # Iterate over Months
         def getMonths(month: int) -> float:
-            # Check Input
-            if month > now.month: raise Exception('invalid month')
-            if month == now.month: return parser(month, month, now.day)
-            if month < now.month: return parser(month, month,
-                helpers.lastDayOfMonth(
-                    datetime.datetime(now.year, month, 1)
-                ).day
+            if month > now.month: return
+            else: return parser(month, month,
+                now.day if month == now.month else
+                helpers.lastDayOfMonth(date(now.year, month)).day
             )
+        
+        # Trimestre
+        trims = { 1: (1, 2, 3), 2: (4, 5, 6), 3: (7, 8, 9), 4: (10, 11, 12) }
+        trim: tuple[int, int, int] = trims[1 + ((now.month - 1) // 3)]
 
         # Return Data
         return {
-            'acumulado': acc,
+            'acumulado': parser(trim[0], now.month, now.day),
             'mes1': getMonths(trim[0]),
             'mes2': getMonths(trim[1]),
             'mes3': getMonths(trim[2])
@@ -124,53 +113,10 @@ def utilizacaoTurno():
 
 #################################################################################################################################################
 
-def utilizacao():
-    try:
-        # Execute Query
-        df = pandas.read_sql(
-            open('sql/trf_util_shift.sql').read(),
-            connect.iba()
-        )
-        # Datetime
-        now = datetime.datetime.now()
-
-        # Update Shift Helper
-        escalaIndex = lambda i: (
-            lambda row : helpers.escalaTurno(data=row)[i][0]
-        )
-
-        # Update Shift
-        df['_0h'] = df['_date'].apply(escalaIndex(0))
-        df['_8h'] = df['_date'].apply(escalaIndex(1))
-        df['_16h'] = df['_date'].apply(escalaIndex(2))
-        df['_date'] = df['_date'].astype('str')
-
-        # Parser Function
-        def parser(initMonth: int, month: int, day: int):
-            s = dateFormat(now.year, initMonth, 1)
-            e = dateFormat(now.year, month, day)
-            return float(
-                df[(s <= df['_date']) & (df['_date'] <= e)].filter([
-                    '_date', 'M1','M2','M3', 'M4', 'M5', '_0h', '_8h','_16h'
-                ]).drop(['M1'], axis=1).mean().mean()
-            )
-
-        # Assembly Data
-        meta = getMetaTrimestre(now, parser)
-        meta.update({ 'meta': 60, 'dia': 0 })
-        # Return Data
-        return { 'utilizacao': meta }
-    # On Error
-    except: return {}
-
-#################################################################################################################################################
-
 def custo():
     try: # Connect
-        df = pandas.read_sql(
-            'SELECT * FROM wf_sap WHERE YEAR(data_msg) = 2021',
-            connect.bot()
-        )
+        sql = 'SELECT * FROM wf_sap WHERE (YEAR(data_msg) = 2021)'
+        df = pandas.read_sql(sql, connect.bot())
         # Datetime
         now = datetime.datetime.now()
         # Get Meta Parser
@@ -187,10 +133,8 @@ def custo():
 
 def cincos():
     try: # Connect
-        df = pandas.read_sql(
-            'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) and (nome_meta = "5S")',
-            connect.bot()
-        )
+        sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "5S")'
+        df = pandas.read_sql(sql, connect.bot())
         # Datetime
         now = datetime.datetime.now()
         # Get Meta Parser
@@ -207,10 +151,8 @@ def cincos():
 
 def sucata():
     try: # Connect
-        df = pandas.read_sql(
-            'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) and (nome_meta = "sucateamento")',
-            connect.bot()
-        )
+        sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "sucateamento")'
+        df = pandas.read_sql(sql, connect.bot())
         # Datetime
         now = datetime.datetime.now()
         # Get Meta Parser
@@ -220,6 +162,41 @@ def sucata():
         meta.update({ 'meta': 3, 'dia': 0 })
         # Return Data
         return { 'sucateamento': meta }
+    # On Error
+    except: return {}
+
+#################################################################################################################################################
+
+def utilizacao():
+    try: # Connect
+        sql = open('sql/trf_util_shift.sql').read()
+        df = pandas.read_sql(sql, connect.iba())
+        # Datetime
+        now = datetime.datetime.now()
+
+        # Update Shift Helper
+        eTurno = lambda row: helpers.escalaTurno(data=row)
+        turnoIndex = lambda i: (lambda row : eTurno(row)[i][0])
+
+        # Update Shift
+        df['_0h'] = df['_date'].apply(turnoIndex(0))
+        df['_8h'] = df['_date'].apply(turnoIndex(1))
+        df['_16h'] = df['_date'].apply(turnoIndex(2))
+        df['_date'] = df['_date'].astype('str')
+
+        # Parser Function
+        def parser(initMonth: int, month: int, day: int):
+            s = dateFormat(now.year, initMonth, 1)
+            e = dateFormat(now.year, month, day)
+            return df.query(f'"{s}" <= _date & _date <= "{e}"').filter([
+                '_date','M1','M2','M3','M4','M5','_0h','_8h','_16h'
+            ]).drop(['M1'], axis=1).mean().mean()
+
+        # Assembly Data
+        meta = getMetaTrimestre(now, parser)
+        meta.update({ 'meta': 60, 'dia': 0 })
+        # Return Data
+        return { 'utilizacao': meta }
     # On Error
     except: return {}
 
