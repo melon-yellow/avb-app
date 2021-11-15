@@ -26,7 +26,9 @@ services:
     container_name: cx-homerico
     build: ./services/homerico
     command: bash -c "yarn && yarn build && yarn nonstop"
-    env_file: .env
+    env_file:
+      - .env
+      - ./services/homerico/.env
     volumes:
       # Folders
       - ./services/homerico/src/:/usr/app/src/
@@ -46,7 +48,9 @@ services:
     container_name: cx-mysql
     build: ./services/mysql
     command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
-    env_file: .env
+    env_file:
+      - .env
+      - ./services/mysql/.env
     volumes:
       - ./services/mysql/:/usr/app/
     expose:
@@ -60,7 +64,9 @@ services:
     container_name: cx-odbc
     build: ./services/odbc
     command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
-    env_file: .env
+    env_file:
+      - .env
+      - ./services/odbc/.env
     volumes:
       - ./services/odbc/:/usr/app/
     expose:
@@ -74,7 +80,9 @@ services:
     container_name: cx-oracle
     build: ./services/oracle
     command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
-    env_file: .env
+    env_file:
+      - .env
+      - ./services/oracle/.env
     volumes:
       - ./services/oracle/:/usr/app/
     expose:

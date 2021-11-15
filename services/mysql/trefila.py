@@ -25,20 +25,20 @@ class connect:
 
     def iba():
         return mysql.connector.connect(
-            host='192.168.17.61',
-            user='jayron',
-            passwd='123456',
-            port='3306',
-            database='iba_i'
+            host=os.getenv('IBA_MYSQL_HOST'),
+            user=os.getenv('IBA_MYSQL_USER'),
+            passwd=os.getenv('IBA_MYSQL_PASSWORD'),
+            port=os.getenv('IBA_MYSQL_PORT'),
+            database=os.getenv('IBA_MYSQL_DATABASE'),
         )
 
     def bot():
         return mysql.connector.connect(
-            host='192.168.17.61',
-            user='jayron',
-            passwd='123456',
-            port='1517',
-            database='lam'
+            host=os.getenv('BOT_MYSQL_HOST'),
+            user=os.getenv('BOT_MYSQL_USER'),
+            passwd=os.getenv('BOT_MYSQL_PASSWORD'),
+            port=os.getenv('BOT_MYSQL_PORT'),
+            database=os.getenv('BOT_MYSQL_DATABASE'),
         )
 
 #################################################################################################################################################
