@@ -3,7 +3,6 @@
 
 # Imports
 import os
-import json
 import pyodbc
 
 #################################################################################################################################################
@@ -11,7 +10,7 @@ import pyodbc
 # Get File-Paths
 fileDir = os.path.dirname(os.path.abspath(__file__))
 blbp_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.blbp.sql'))
-product_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.produto.sql'))
+product_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.product.sql'))
 rfal2_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.rfal2.sql'))
 rfa_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.rfa.sql'))
 
@@ -46,7 +45,6 @@ def exQuery(conn, query: str):
     # Parse to Dictionary
     data = [dict((cur.description[i][0], value)
         for i, value in enumerate(row)) for row in cur.fetchall()]
-    print(json.dumps(data))
     data = data[0] if len(data) > 0 else {}
     # Return Data
     return data
