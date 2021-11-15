@@ -59,9 +59,20 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/avb/laminador/nivel2/')
-    def laminadorNivel2(req: Request, res: Response):
-        data = odbc.mill.rfal2()
+    @app.route('/avb/laminador/produto/')
+    def laminadorProduto(req: Request, res: Response):
+        data = odbc.laminador.produto()
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+
+    #################################################################################################################################################
+
+    @app.route('/avb/laminador/blbp/')
+    def laminadorBLBP(req: Request, res: Response):
+        data = odbc.laminador.blbp()
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -72,7 +83,18 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/laminador/rfa/')
     def laminadorRFA(req: Request, res: Response):
-        data = odbc.mill.rfa()
+        data = odbc.laminador.rfa()
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+
+    #################################################################################################################################################
+
+    @app.route('/avb/laminador/rfal2/')
+    def laminadorRFAL2(req: Request, res: Response):
+        data = odbc.laminador.rfal2()
         return res(
             json.dumps(data),
             mimetype='application/json',

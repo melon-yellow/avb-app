@@ -9,7 +9,8 @@ import pyodbc
 
 # Get File-Paths
 fileDir = os.path.dirname(os.path.abspath(__file__))
-product_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.product.sql'))
+blbp_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.blbp.sql'))
+product_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.produto.sql'))
 rfal2_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.rfal2.sql'))
 rfa_sql = os.path.abspath(os.path.join(fileDir, './sql/mill.rfa.sql'))
 
@@ -53,7 +54,7 @@ def exQuery(conn, query: str):
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
-def product():
+def produto():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
@@ -67,15 +68,22 @@ def product():
 
 #################################################################################################################################################
 
+def blbp():
+    # Connect to Server
+    conn = connect.iba()
+    # Execute Query
+    data = exQuery(conn, open(blbp_sql).read())
+    # Return Data
+    return data
+
+
+#################################################################################################################################################
+
 def rfa():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
     data = exQuery(conn, open(rfa_sql).read())
-    # Fix Product Name
-    pname = data.get('CTR_PRODUCT_NAME')
-    pname = pname.strip() if isinstance(pname, str) else None
-    if pname != None: data['CTR_PRODUCT_NAME'] = pname
     # Return Data
     return data
 
@@ -83,11 +91,11 @@ def rfa():
 
 def rfal2():
     # Get Product Name
-    produto = product().get('CTR_PRODUCT_NAME')
+    product = produto().get('CTR_PRODUCT_NAME')
     # Connect to Server
     conn = connect.l2()
     # Execute Query
-    data = exQuery(conn, open(rfal2_sql).read().format(produto))
+    data = exQuery(conn, open(rfal2_sql).read().format(product))
     # Return Data
     return data
 

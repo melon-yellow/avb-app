@@ -15,6 +15,20 @@ remote = os.getenv('ODBC_SERVICE_ADDRESS')
 # Laminador
 class laminador:
 
+    def produto():
+        res = requests.get(
+            url=f'{remote}/laminador/produto/',
+        )
+        res.raise_for_status()
+        return res.json()
+
+    def blbp():
+        res = requests.get(
+            url=f'{remote}/laminador/blbp/',
+        )
+        res.raise_for_status()
+        return res.json()
+
     def rfa():
         res = requests.get(
             url=f'{remote}/laminador/rfa/',
