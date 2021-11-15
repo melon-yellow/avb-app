@@ -7,7 +7,7 @@
   "scripts": {
     "transpile": "tsc -p tsconfig.json",
     "beautify": "js-beautify -r --editorconfig ./build/**/*.{js,ts,tsx}",
-    "build": "rm -rf \"./build\" && yarn transpile && yarn beautify",
+    "build": "rm -rf \"./build/*\" && yarn transpile && yarn beautify",
     "start": "node ./build/index.js",
     "load": "yarn build && yarn start",
     "nonstop": "bash -c \" while true; do (yarn start); sleep 1; done\""
