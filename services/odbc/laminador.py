@@ -3,6 +3,7 @@
 
 # Imports
 import os
+import json
 import pyodbc
 
 #################################################################################################################################################
@@ -45,6 +46,7 @@ def exQuery(conn, query: str):
     # Parse to Dictionary
     data = [dict((cur.description[i][0], value)
         for i, value in enumerate(row)) for row in cur.fetchall()]
+    print(json.dumps(data))
     data = data[0] if len(data) > 0 else {}
     # Return Data
     return data
@@ -61,7 +63,7 @@ def produto():
     # Fix Product Name
     pname = data.get('CTR_PRODUCT_NAME')
     pname = pname.strip() if isinstance(pname, str) else None
-    if pname != None: data['CTR_PRODUCT_NAME'] = pname
+    data['CTR_PRODUCT_NAME'] = pname
     # Return Data
     return data
 
