@@ -56,7 +56,7 @@ await homerico.login({
 const app = express()
 
 // Set Network API Port
-const port = Number(process.env.HOMERICO_NETWORK_PORT)
+const port = Number(process.env.HOMERICO_SERVICE_PORT)
 
 /*
 ##########################################################################################################################

@@ -17,7 +17,7 @@ app = py_misc.Express()
 
 # Set API Port
 app.port(
-    int(os.getenv('ODBC_NETWORK_PORT'))
+    int(os.getenv('ODBC_SERVICE_PORT'))
 )
 
 #################################################################################################################################################

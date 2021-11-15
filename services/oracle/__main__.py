@@ -17,7 +17,7 @@ app = py_misc.Express()
 
 # Set API Port
 app.port(
-    int(os.getenv('ORACLE_NETWORK_PORT'))
+    int(os.getenv('ORACLE_SERVICE_PORT'))
 )
 
 #################################################################################################################################################

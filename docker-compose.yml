@@ -33,7 +33,7 @@ services:
       - ./services/homerico/:/usr/app/
       - /usr/app/build/
     expose:
-      - ${HOMERICO_NETWORK_PORT}
+      - ${HOMERICO_SERVICE_PORT}
     restart: always
 
 ##########################################################################################################################
@@ -49,7 +49,7 @@ services:
     volumes:
       - ./services/mysql/:/usr/app/
     expose:
-      - ${MYSQL_NETWORK_PORT}
+      - ${MYSQL_SERVICE_PORT}
     restart: always
 
 ##########################################################################################################################
@@ -65,7 +65,7 @@ services:
     volumes:
       - ./services/odbc/:/usr/app/
     expose:
-      - ${ODBC_NETWORK_PORT}
+      - ${ODBC_SERVICE_PORT}
     restart: always
 
 ##########################################################################################################################
@@ -81,7 +81,7 @@ services:
     volumes:
       - ./services/oracle/:/usr/app/
     expose:
-      - ${ORACLE_NETWORK_PORT}
+      - ${ORACLE_SERVICE_PORT}
     restart: always
 
 ##########################################################################################################################
