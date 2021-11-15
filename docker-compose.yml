@@ -30,13 +30,8 @@ services:
       - .env
       - ./services/homerico/.env
     volumes:
-      # Folders
-      - ./services/homerico/src/:/usr/app/src/
-      - ./services/homerico/node_modules/:/usr/app/node_modules/
-      # Files
-      - ./services/homerico/yarn.lock:/usr/app/yarn.lock
-      - ./services/homerico/package.json:/usr/app/package.json
-      - ./services/homerico/tsconfig.json:/usr/app/tsconfig.json
+      - ./services/homerico/:/usr/app/
+      - /usr/app/build/
     expose:
       - ${HOMERICO_NETWORK_PORT}
     restart: always
