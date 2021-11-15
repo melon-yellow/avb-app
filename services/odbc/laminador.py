@@ -88,14 +88,16 @@ def rfa():
 #################################################################################################################################################
 
 def rfal2():
-    # Get Product Name
-    product = produto().get('CTR_PRODUCT_NAME')
-    # Connect to Server
-    conn = connect.l2()
-    # Execute Query
-    data = exQuery(conn, open(rfal2_sql).read().format(product))
-    # Return Data
-    return data
+    try:
+        # Get Product Name
+        product = produto().get('CTR_PRODUCT_NAME')
+        # Connect to Server
+        conn = connect.l2()
+        # Execute Query
+        data = exQuery(conn, open(rfal2_sql).read().format(product))
+        # Return Data
+        return data
+    except Exception as e: return { 'error': str(e) }
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
