@@ -30,12 +30,15 @@ Response = flask.Response
 
 @app.route('/odbc/aciaria/ld/espectrometro/')
 def aciariaLDEspectrometro(req: Request, res: Response):
-    data = aciaria.espectrometroLD()
-    return res(
-        json.dumps(data),
-        mimetype='application/json',
-        status=200
-    )
+    try:
+        data = aciaria.espectrometroLD()
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+    except Exception as e:
+        return { 'error': str(e) }
 
 ##########################################################################################################################
 
