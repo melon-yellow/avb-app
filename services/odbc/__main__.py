@@ -10,6 +10,7 @@ import py_misc
 # Modules
 from . import laminador
 from . import aciaria
+from . import sap
 
 ##########################################################################################################################
 
@@ -25,6 +26,18 @@ app.port(
 
 Request = flask.Request
 Response = flask.Response
+
+##########################################################################################################################
+
+@app.route('/odbc/sap/preditivas/')
+def sapPreditivas(req: Request, res: Response):
+    kwargs = req.json()
+    data = sap.preditivas(kwargs['equip'])
+    return res(
+        json.dumps(data),
+        mimetype='application/json',
+        status=200
+    )
 
 ##########################################################################################################################
 

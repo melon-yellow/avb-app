@@ -24,7 +24,7 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/aciaria/ld/espectrometro/')
     def aciariaLDEspectrometro(req: Request, res: Response):
-        data = odbc.aciaria.espectrometroLD()
+        data = odbc.aciaria.ld.espectrometro()
         return res(
             json.dumps(data),
             mimetype='application/json',
@@ -35,7 +35,7 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/aciaria/fp/espectrometro/')
     def aciariaFPEspectrometro(req: Request, res: Response):
-        data = odbc.aciaria.espectrometroFP()
+        data = odbc.aciaria.fp.espectrometro()
         return res(
             json.dumps(data),
             mimetype='application/json',

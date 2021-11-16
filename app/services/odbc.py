@@ -12,23 +12,41 @@ remote = os.getenv('ODBC_SERVICE_ADDRESS')
 
 #################################################################################################################################################
 
+# SAP
+class sap:
+
+    def preditivas(equip: list[str]):
+        if not isinstance(equip, list): raise Exception('invalid argument "equip"')
+        if not all(isinstance(i, str) for i in equip): raise Exception('invalid argument "equip"')
+        res = requests.post(
+            url=f'{remote}/sap/preditivas/',
+            json={ 'equip': equip }
+        )
+        res.raise_for_status()
+        return res.json()
+
+#################################################################################################################################################
 
 # Aciaria
 class aciaria:
 
-    def espectrometroLD():
-        res = requests.get(
-            url=f'{remote}/aciaria/ld/espectrometro/',
-        )
-        res.raise_for_status()
-        return res.json()
+    class ld:
 
-    def espectrometroFP():
-        res = requests.get(
-            url=f'{remote}/aciaria/fp/espectrometro/',
-        )
-        res.raise_for_status()
-        return res.json()
+        def espectrometro():
+            res = requests.get(
+                url=f'{remote}/aciaria/ld/espectrometro/',
+            )
+            res.raise_for_status()
+            return res.json()
+    
+    class fp:
+
+        def espectrometro():
+            res = requests.get(
+                url=f'{remote}/aciaria/fp/espectrometro/',
+            )
+            res.raise_for_status()
+            return res.json()
 
 #################################################################################################################################################
 

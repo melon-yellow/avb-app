@@ -1,0 +1,4 @@
+SELECT TOP 1 *
+FROM PM_MEASURING_POINT
+WHERE {}
+ORDER BY "Data Medição", "Hora Medição"
