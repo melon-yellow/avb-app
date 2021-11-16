@@ -40,7 +40,11 @@ def sapPreditivas(req: Request, res: Response):
             status=200
         )
     except Exception as e:
-        return { 'error': str(e) }
+        return res(
+            json.dumps({ 'error': str(e) }),
+            mimetype='application/json',
+            status=200
+        )
 
 ##########################################################################################################################
 
