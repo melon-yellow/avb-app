@@ -121,14 +121,13 @@ def ProducaoLista(
     lista: int,
     data: str = None
 ):
-    if data == None:
-        data = datetime.date.today()
+    if data == None: data = datetime.date.today()
     last_day = lastDayOfMonth(data).strftime('%d/%m/%Y')
-    homerico_csv = network.ProducaoLista(
+    csv = network.ProducaoLista(
         dataFinal=last_day,
         controle=str(lista)
     )
-    dados = matrix(homerico_csv)
+    dados = matrix(csv)
     dados.pop(0)
     d = list()
     for item in dados:
