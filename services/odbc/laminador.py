@@ -47,7 +47,7 @@ def produto():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
-    data = helpers.execute(conn, open(product_sql).read())
+    data = helpers.execute(conn, open(product_sql).read())[0]
     # Fix Product Name
     pname = data.get('CTR_PRODUCT_NAME')
     pname = pname.strip() if isinstance(pname, str) else None
@@ -61,7 +61,7 @@ def blbp():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
-    data = helpers.execute(conn, open(blbp_sql).read())
+    data = helpers.execute(conn, open(blbp_sql).read())[0]
     # Return Data
     return data
 
@@ -71,7 +71,7 @@ def rfa():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
-    data = helpers.execute(conn, open(rfa_sql).read())
+    data = helpers.execute(conn, open(rfa_sql).read())[0]
     # Return Data
     return data
 
@@ -84,7 +84,7 @@ def rfal2():
     conn = connect.l2()
     # Execute Query
     query = open(rfal2_sql).read().format(product)
-    data = helpers.execute(conn, query)
+    data = helpers.execute(conn, query)[0]
     # Return Data
     return data
 

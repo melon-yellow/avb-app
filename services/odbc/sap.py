@@ -24,10 +24,10 @@ class connect:
     def sap():
         return pyodbc.connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('SPEC_LD_MSSQL_DSN'),
-            uid=os.getenv('SPEC_LD_MSSQL_USER'),
-            pwd=os.getenv('SPEC_LD_MSSQL_PASSWORD'),
-            database='ANALYSES'
+            server=os.getenv('SAP_PM_MSSQL_DSN'),
+            uid=os.getenv('SAP_PM_MSSQL_USER'),
+            pwd=os.getenv('SAP_PM_MSSQL_PASSWORD'),
+            database='ECP'
         )
 
 
