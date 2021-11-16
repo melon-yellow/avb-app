@@ -7,8 +7,9 @@ import json
 import flask
 import py_misc
 
-# Routes
+# Modules
 from . import laminador
+from . import aciaria
 
 ##########################################################################################################################
 
@@ -24,6 +25,28 @@ app.port(
 
 Request = flask.Request
 Response = flask.Response
+
+##########################################################################################################################
+
+@app.route('/odbc/aciaria/ld/espectrometro/')
+def laminadorRFAL2(req: Request, res: Response):
+    data = aciaria.espectrometroLD()
+    return res(
+        json.dumps(data),
+        mimetype='application/json',
+        status=200
+    )
+
+##########################################################################################################################
+
+@app.route('/odbc/aciaria/fp/espectrometro/')
+def laminadorRFAL2(req: Request, res: Response):
+    data = aciaria.espectrometroFP()
+    return res(
+        json.dumps(data),
+        mimetype='application/json',
+        status=200
+    )
 
 ##########################################################################################################################
 

@@ -5,6 +5,9 @@
 import os
 import pyodbc
 
+# Modules
+from . import helpers
+
 #################################################################################################################################################
 
 # Get File-Paths
@@ -23,31 +26,18 @@ class connect:
     def iba():
         return pyodbc.connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('IBA_MSSQL_DB_DSN'),
-            uid=os.getenv('IBA_MSSQL_DB_USER'),
-            pwd=os.getenv('IBA_MSSQL_DB_PASSWORD')
+            server=os.getenv('IBA_MSSQL_DSN'),
+            uid=os.getenv('IBA_MSSQL_USER'),
+            pwd=os.getenv('IBA_MSSQL_PASSWORD')
         )
 
     def l2():
         return pyodbc.connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('L2_SERVER_DB_DSN'),
-            uid=os.getenv('L2_SERVER_DB_USER'),
-            pwd=os.getenv('L2_SERVER_DB_PASSWORD')
+            server=os.getenv('L2_MSSQL_DSN'),
+            uid=os.getenv('L2_MSSQL_USER'),
+            pwd=os.getenv('L2_MSSQL_PASSWORD')
         )
-
-#################################################################################################################################################
-
-def exQuery(conn, query: str):
-    # Execute Query
-    cur = conn.cursor()
-    cur.execute(query)
-    # Parse to Dictionary
-    data = [dict((cur.description[i][0], value)
-        for i, value in enumerate(row)) for row in cur.fetchall()]
-    data = data[0] if len(data) > 0 else {}
-    # Return Data
-    return data
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
@@ -57,7 +47,7 @@ def produto():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
-    data = exQuery(conn, open(product_sql).read())
+    data = helpers.execute(conn, open(product_sql).read())
     # Fix Product Name
     pname = data.get('CTR_PRODUCT_NAME')
     pname = pname.strip() if isinstance(pname, str) else None
@@ -71,7 +61,7 @@ def blbp():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
-    data = exQuery(conn, open(blbp_sql).read())
+    data = helpers.execute(conn, open(blbp_sql).read())
     # Return Data
     return data
 
@@ -81,7 +71,7 @@ def rfa():
     # Connect to Server
     conn = connect.iba()
     # Execute Query
-    data = exQuery(conn, open(rfa_sql).read())
+    data = helpers.execute(conn, open(rfa_sql).read())
     # Return Data
     return data
 
@@ -93,7 +83,8 @@ def rfal2():
     # Connect to Server
     conn = connect.l2()
     # Execute Query
-    data = exQuery(conn, open(rfal2_sql).read().format(product))
+    query = open(rfal2_sql).read().format(product)
+    data = helpers.execute(conn, query)
     # Return Data
     return data
 

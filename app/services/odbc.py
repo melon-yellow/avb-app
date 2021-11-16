@@ -12,6 +12,26 @@ remote = os.getenv('ODBC_SERVICE_ADDRESS')
 
 #################################################################################################################################################
 
+
+# Aciaria
+class aciaria:
+
+    def espectrometroLD():
+        res = requests.get(
+            url=f'{remote}/aciaria/ld/espectrometro/',
+        )
+        res.raise_for_status()
+        return res.json()
+
+    def espectrometroFP():
+        res = requests.get(
+            url=f'{remote}/aciaria/fp/espectrometro/',
+        )
+        res.raise_for_status()
+        return res.json()
+
+#################################################################################################################################################
+
 # Laminador
 class laminador:
 

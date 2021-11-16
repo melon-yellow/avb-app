@@ -8,6 +8,7 @@ import py_misc
 
 # modules
 from ..helpers import homerico
+from ..services import odbc
 
 #################################################################################################################################################
 
@@ -18,6 +19,28 @@ Response = flask.Response
 
 # Load Routes
 def __load__(app: py_misc.Express):
+
+    ##########################################################################################################################
+
+    @app.route('/avb/aciaria/ld/espectrometro/')
+    def aciariaLDEspectrometro(req: Request, res: Response):
+        data = odbc.aciaria.espectrometroLD()
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+
+    ##########################################################################################################################
+
+    @app.route('/avb/aciaria/fp/espectrometro/')
+    def aciariaFPEspectrometro(req: Request, res: Response):
+        data = odbc.aciaria.espectrometroFP()
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
 
     #################################################################################################################################################
 
