@@ -29,7 +29,7 @@ Response = flask.Response
 ##########################################################################################################################
 
 @app.route('/odbc/aciaria/ld/espectrometro/')
-def laminadorRFAL2(req: Request, res: Response):
+def aciariaLDEspectrometro(req: Request, res: Response):
     data = aciaria.espectrometroLD()
     return res(
         json.dumps(data),
@@ -40,7 +40,7 @@ def laminadorRFAL2(req: Request, res: Response):
 ##########################################################################################################################
 
 @app.route('/odbc/aciaria/fp/espectrometro/')
-def laminadorRFAL2(req: Request, res: Response):
+def aciariaFPEspectrometro(req: Request, res: Response):
     data = aciaria.espectrometroFP()
     return res(
         json.dumps(data),
