@@ -27,8 +27,6 @@ def __load__(app: py_misc.Express):
         # Check Input
         if not isinstance(input, dict): raise Exception('bad request')
         if 'equip' not in input: raise Exception('invalid argument "equip"')
-        if not isinstance(input['equip'], list): raise Exception('invalid argument "equip"')
-        if not all(isinstance(i, str) for i in input['equip']): raise Exception('invalid argument "equip"')
         # Get Data
         data = odbc.sap.preditivas(input['equip'])
         return res(

@@ -31,13 +31,16 @@ Response = flask.Response
 
 @app.route('/odbc/sap/preditivas/')
 def sapPreditivas(req: Request, res: Response):
-    kwargs = req.json()
-    data = sap.preditivas(kwargs['equip'])
-    return res(
-        json.dumps(data),
-        mimetype='application/json',
-        status=200
-    )
+    try:
+        kwargs = req.json()
+        data = sap.preditivas(kwargs['equip'])
+        return res(
+            json.dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+    except Exception as e:
+        return { 'error': str(e) }
 
 ##########################################################################################################################
 
