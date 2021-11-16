@@ -63,23 +63,27 @@ class query:
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
-def espectrometroLD():
-    # Connect to Server
-    conn = connect.ld()
-    # Execute Query
-    data = helpers.execute(conn, query.ld())
-    # Return Data
-    return data
+class ld:
+
+    def espectrometro():
+        # Connect to Server
+        conn = connect.ld()
+        # Execute Query
+        data = helpers.execute(conn, query.ld())
+        # Return Data
+        return data
 
 #################################################################################################################################################
 
-def espectrometroFP():
-    # Connect to Server
-    conn = connect.fp()
-    # Execute Query
-    data = helpers.execute(conn, query.fp())
-    # Return Data
-    return data
+class fp:
+
+    def espectrometro():
+        # Connect to Server
+        conn = connect.fp()
+        # Execute Query
+        data = helpers.execute(conn, query.fp())
+        # Return Data
+        return data
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

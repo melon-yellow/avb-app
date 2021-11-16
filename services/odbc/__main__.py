@@ -43,7 +43,7 @@ def sapPreditivas(req: Request, res: Response):
 
 @app.route('/odbc/aciaria/ld/espectrometro/')
 def aciariaLDEspectrometro(req: Request, res: Response):
-    data = aciaria.espectrometroLD()
+    data = aciaria.ld.espectrometro()
     return res(
         json.dumps(data),
         mimetype='application/json',
@@ -54,7 +54,7 @@ def aciariaLDEspectrometro(req: Request, res: Response):
 
 @app.route('/odbc/aciaria/fp/espectrometro/')
 def aciariaFPEspectrometro(req: Request, res: Response):
-    data = aciaria.espectrometroFP()
+    data = aciaria.fp.espectrometro()
     return res(
         json.dumps(data),
         mimetype='application/json',
