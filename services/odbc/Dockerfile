@@ -19,6 +19,10 @@ RUN eval "$(cat ~/.bashrc | tail -n +10)"
 # optional: for unixODBC development headers
 RUN apt-get install -y unixodbc-dev
 
+# Lower Minimum TLS Version
+RUN echo 'MinProtocol = TLSv1.0' >> /etc/ssl/openssl.cnf
+RUN echo 'CipherString = DEFAULT@SECLEVEL=1' >> /etc/ssl/openssl.cnf
+
 #################################################################################################################################################
 
 # pip Install Requirements
