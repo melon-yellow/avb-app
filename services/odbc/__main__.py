@@ -32,7 +32,7 @@ Response = flask.Response
 @app.route('/odbc/sap/preditivas/')
 def sapPreditivas(req: Request, res: Response):
     try:
-        kwargs = req.json()
+        kwargs = req.json
         data = sap.preditivas(kwargs['equip'])
         return res(
             json.dumps(data),
