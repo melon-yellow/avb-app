@@ -40,7 +40,7 @@ def preditivas(equip: list[str]):
     conn = connect.sap()
     # Get Where Clause
     where = ' OR '.join(
-        list(map(lambda e: f'("Equipamento" = \'{e}\')', equip))
+        list(map(lambda e: f'("Equipamento" = {e})', equip))
     )
     # Execute Query
     query = open(equip_sql).read().format(where)
