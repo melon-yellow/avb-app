@@ -1,7 +1,7 @@
 # Main Select Query
 SELECT
 	# General Info
-	date_format(cte00._date, "%d-%m-%Y") AS _data,
+	date_format(cte00._date, "%d-%m-%Y") AS 'DATA',
 	# Maquina 02
 	REPLACE(ROUND((cte16.TIME_TRF_02_SHIFT) / 864, 1),".",",") AS M2,
 	# Maquina 03

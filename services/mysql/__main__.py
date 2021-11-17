@@ -29,19 +29,12 @@ Response = flask.Response
 
 @app.route('/mysql/trefila/utilizacao/turno/')
 def trefilaUtilizacaoTurno(req: Request, res: Response):
-    try:
-        data = trefila.utilizacaoTurno()
-        return res(
-            data,
-            mimetype='text/csv',
-            status=200
-        )
-    except Exception as e:
-        return res(
-            json.dumps({ 'error': str(e) }),
-            mimetype='application/json',
-            status=200
-        )
+    data = trefila.utilizacaoTurno()
+    return res(
+        data,
+        mimetype='text/csv',
+        status=200
+    )
 
 ##########################################################################################################################
 
