@@ -38,19 +38,26 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/trefila/utilizacao/csv/')
     def trefilaUtilizacaoCsv(req: Request, res: Response):
-        # Query Data
-        csv = mysql.trefila.utilizacaoTurno()
-        # Retrun Data
-        return res(
-            csv,
-            mimetype='text/csv',
-            headers={
-                'Content-disposition': (
-                    'attachment; filename=utilizacao.csv'
-                )
-            },
-            status=200
-        )
+        try:
+            # Query Data
+            csv = mysql.trefila.utilizacaoTurno()
+            # Retrun Data
+            return res(
+                csv,
+                mimetype='text/csv',
+                headers={
+                    'Content-disposition': (
+                        'attachment; filename=utilizacao.csv'
+                    )
+                },
+                status=200
+            )
+        except Exception as e:
+            return res(
+                json.dumps({ 'error': str(e) }),
+                mimetype='application/json',
+                status=200
+            )
 
     #################################################################################################################################################
 
