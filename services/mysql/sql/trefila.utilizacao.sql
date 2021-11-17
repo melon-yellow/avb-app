@@ -2,7 +2,6 @@
 SELECT
 	# General Info
 	date_format(cte00._date, "%d-%m-%Y") AS _data,
-	
 	# Maquina 02
 	REPLACE(ROUND((cte16.TIME_TRF_02_SHIFT) / 864, 1),".",",") AS M2,
 	# Maquina 03
@@ -14,7 +13,7 @@ SELECT
 	# Utilizacao Global
 	REPLACE(
 		ROUND(
-			(
+			((
 				(cte16.TIME_TRF_02_SHIFT / 864) + 
 				(cte16.TIME_TRF_03_SHIFT / 864) +
 				(cte16.TIME_TRF_04_SHIFT / 592) +
