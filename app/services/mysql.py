@@ -20,7 +20,7 @@ class trefila:
             url=f'{remote}/trefila/utilizacao/turno/',
         )
         res.raise_for_status()
-        return res.json()
+        return res.text
     
     def utilizacao():
         res = requests.get(
