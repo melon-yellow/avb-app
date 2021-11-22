@@ -37,7 +37,7 @@ def __load__(app: py_misc.Express):
     #################################################################################################################################################
 
     @app.route('/avb/trefila/utilizacao/')
-    def trefilaUtilizacaoCsv(req: Request, res: Response):
+    def trefilaUtilizacao(req: Request, res: Response):
         # Query Data
         csv = mysql.trefila.utilizacao()
         # Retrun Data

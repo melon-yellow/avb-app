@@ -173,8 +173,8 @@ class metas:
     #################################################################################################################################################
 
     def utilizacao():
-        try: # Connect
-            sql = open('sql/trf_util_shift.sql').read()
+        try: # Connect 
+            sql = open(util_sql).read()
             df = pandas.read_sql(sql, connect.iba())
             # Datetime
             now = datetime.datetime.now()

@@ -28,7 +28,7 @@ Response = flask.Response
 ##########################################################################################################################
 
 @app.route('/mysql/trefila/utilizacao/')
-def trefilaUtilizacaoTurno(req: Request, res: Response):
+def trefilaUtilizacao(req: Request, res: Response):
     data = trefila.utilizacao()
     return res(
         data,
@@ -39,7 +39,7 @@ def trefilaUtilizacaoTurno(req: Request, res: Response):
 ##########################################################################################################################
 
 @app.route('/mysql/trefila/metas/utilizacao/')
-def trefilaUtilizacao(req: Request, res: Response):
+def trefilaMetasUtilizacao(req: Request, res: Response):
     data = trefila.metas.utilizacao()
     return res(
         json.dumps(data),
@@ -50,7 +50,7 @@ def trefilaUtilizacao(req: Request, res: Response):
 ##########################################################################################################################
 
 @app.route('/mysql/trefila/metas/custo/')
-def trefilaCusto(req: Request, res: Response):
+def trefilaMetasCusto(req: Request, res: Response):
     data = trefila.metas.custo()
     return res(
         json.dumps(data),
@@ -61,7 +61,7 @@ def trefilaCusto(req: Request, res: Response):
 ##########################################################################################################################
 
 @app.route('/mysql/trefila/metas/sucata/')
-def trefilaSucata(req: Request, res: Response):
+def trefilaMetasSucata(req: Request, res: Response):
     data = trefila.metas.sucata()
     return res(
         json.dumps(data),
@@ -72,7 +72,7 @@ def trefilaSucata(req: Request, res: Response):
 ##########################################################################################################################
 
 @app.route('/mysql/trefila/metas/cincos/')
-def trefilaCincoS(req: Request, res: Response):
+def trefilaMetasCincoS(req: Request, res: Response):
     data = trefila.metas.cincos()
     return res(
         json.dumps(data),
