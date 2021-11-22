@@ -36,10 +36,10 @@ def __load__(app: py_misc.Express):
 
     #################################################################################################################################################
 
-    @app.route('/avb/trefila/utilizacao/csv/')
+    @app.route('/avb/trefila/utilizacao/')
     def trefilaUtilizacaoCsv(req: Request, res: Response):
         # Query Data
-        csv = mysql.trefila.utilizacaoTurno()
+        csv = mysql.trefila.utilizacao()
         # Retrun Data
         return res(
             csv,
@@ -57,7 +57,7 @@ def __load__(app: py_misc.Express):
     @app.route('/avb/trefila/produtividade/')
     def trefilaProdutividade(req: Request, res: Response):
         # get date
-        data = trefila.producaoMaquinas()
+        data = trefila.produtividade()
         # get util data
         utilTrefila = util.read.trefila()
         data.update({
@@ -95,14 +95,14 @@ def __load__(app: py_misc.Express):
             }
         )
         # Append Metas
-        try: report.update(mysql.trefila.custo())
+        try: report.update(mysql.trefila.metas.custo())
         except: pass
-        try: report.update(mysql.trefila.sucata())
+        try: report.update(mysql.trefila.metas.sucata())
         except: pass
-        try: report.update(mysql.trefila.cincos())
+        try: report.update(mysql.trefila.metas.cincos())
         except: pass
         try: # Utilizacao
-            metaUtil = mysql.trefila.utilizacao()
+            metaUtil = mysql.trefila.metas.utilizacao()
             # util trf dia
             utilTrefila = util.read.trefila()
             total = (

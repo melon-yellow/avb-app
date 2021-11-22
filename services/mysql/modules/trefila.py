@@ -102,7 +102,7 @@ def getMeta(
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
-def utilizacaoTurno():
+def utilizacao():
     # Execute Query
     df = pandas.read_sql(
         open(util_sql).read(),
@@ -113,92 +113,97 @@ def utilizacaoTurno():
 
 #################################################################################################################################################
 
-def custo():
-    try: # Connect
-        sql = 'SELECT * FROM wf_sap WHERE (YEAR(data_msg) = 2021)'
-        df = pandas.read_sql(sql, connect.bot())
-        # Datetime
-        now = datetime.datetime.now()
-        # Get Meta Parser
-        (day, parser) = getMeta(now, df)
-        # Assembly Data
-        meta = getMetaTrimestre(now, parser)
-        meta.update({ 'meta': 110, 'dia': day })
-        # Return Data
-        return { 'custo': meta }
-    # On Error
-    except: return {}
+# Metas Class
+class metas:
 
-#################################################################################################################################################
+    #################################################################################################################################################
 
-def cincos():
-    try: # Connect
-        sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "5S")'
-        df = pandas.read_sql(sql, connect.bot())
-        # Datetime
-        now = datetime.datetime.now()
-        # Get Meta Parser
-        (day, parser) = getMeta(now, df)
-        # Assembly Data
-        meta = getMetaTrimestre(now, parser)
-        meta.update({ 'meta': 90, 'dia': 90 })
-        # Return Data
-        return { '5S': meta }
-    # On Error
-    except: return {}
+    def custo():
+        try: # Connect
+            sql = 'SELECT * FROM wf_sap WHERE (YEAR(data_msg) = 2021)'
+            df = pandas.read_sql(sql, connect.bot())
+            # Datetime
+            now = datetime.datetime.now()
+            # Get Meta Parser
+            (day, parser) = getMeta(now, df)
+            # Assembly Data
+            meta = getMetaTrimestre(now, parser)
+            meta.update({ 'meta': 110, 'dia': day })
+            # Return Data
+            return { 'custo': meta }
+        # On Error
+        except: return {}
 
-#################################################################################################################################################
+    #################################################################################################################################################
 
-def sucata():
-    try: # Connect
-        sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "sucateamento")'
-        df = pandas.read_sql(sql, connect.bot())
-        # Datetime
-        now = datetime.datetime.now()
-        # Get Meta Parser
-        (day, parser) = getMeta(now, df)
-        # Assembly Data
-        meta = getMetaTrimestre(now, parser)
-        meta.update({ 'meta': 3, 'dia': 0 })
-        # Return Data
-        return { 'sucateamento': meta }
-    # On Error
-    except: return {}
+    def cincos():
+        try: # Connect
+            sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "5S")'
+            df = pandas.read_sql(sql, connect.bot())
+            # Datetime
+            now = datetime.datetime.now()
+            # Get Meta Parser
+            (day, parser) = getMeta(now, df)
+            # Assembly Data
+            meta = getMetaTrimestre(now, parser)
+            meta.update({ 'meta': 90, 'dia': 90 })
+            # Return Data
+            return { '5S': meta }
+        # On Error
+        except: return {}
 
-#################################################################################################################################################
+    #################################################################################################################################################
 
-def utilizacao():
-    try: # Connect
-        sql = open('sql/trf_util_shift.sql').read()
-        df = pandas.read_sql(sql, connect.iba())
-        # Datetime
-        now = datetime.datetime.now()
+    def sucata():
+        try: # Connect
+            sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "sucateamento")'
+            df = pandas.read_sql(sql, connect.bot())
+            # Datetime
+            now = datetime.datetime.now()
+            # Get Meta Parser
+            (day, parser) = getMeta(now, df)
+            # Assembly Data
+            meta = getMetaTrimestre(now, parser)
+            meta.update({ 'meta': 3, 'dia': 0 })
+            # Return Data
+            return { 'sucateamento': meta }
+        # On Error
+        except: return {}
 
-        # Update Shift Helper
-        eTurno = lambda row: helpers.escalaTurno(data=row)
-        turnoIndex = lambda i: (lambda row : eTurno(row)[i][0])
+    #################################################################################################################################################
 
-        # Update Shift
-        df['_0h'] = df['_date'].apply(turnoIndex(0))
-        df['_8h'] = df['_date'].apply(turnoIndex(1))
-        df['_16h'] = df['_date'].apply(turnoIndex(2))
-        df['_date'] = df['_date'].astype('str')
+    def utilizacao():
+        try: # Connect
+            sql = open('sql/trf_util_shift.sql').read()
+            df = pandas.read_sql(sql, connect.iba())
+            # Datetime
+            now = datetime.datetime.now()
 
-        # Parser Function
-        def parser(initMonth: int, month: int, day: int):
-            s = dateFormat(now.year, initMonth, 1)
-            e = dateFormat(now.year, month, day)
-            return df.query(f'"{s}" <= _date & _date <= "{e}"').filter([
-                '_date','M1','M2','M3','M4','M5','_0h','_8h','_16h'
-            ]).drop(['M1'], axis=1).mean().mean()
+            # Update Shift Helper
+            eTurno = lambda row: helpers.escalaTurno(data=row)
+            turnoIndex = lambda i: (lambda row : eTurno(row)[i][0])
 
-        # Assembly Data
-        meta = getMetaTrimestre(now, parser)
-        meta.update({ 'meta': 60, 'dia': 0 })
-        # Return Data
-        return { 'utilizacao': meta }
-    # On Error
-    except: return {}
+            # Update Shift
+            df['_0h'] = df['_date'].apply(turnoIndex(0))
+            df['_8h'] = df['_date'].apply(turnoIndex(1))
+            df['_16h'] = df['_date'].apply(turnoIndex(2))
+            df['_date'] = df['_date'].astype('str')
+
+            # Parser Function
+            def parser(initMonth: int, month: int, day: int):
+                s = dateFormat(now.year, initMonth, 1)
+                e = dateFormat(now.year, month, day)
+                return df.query(f'"{s}" <= _date & _date <= "{e}"').filter([
+                    '_date','M1','M2','M3','M4','M5','_0h','_8h','_16h'
+                ]).drop(['M1'], axis=1).mean().mean()
+
+            # Assembly Data
+            meta = getMetaTrimestre(now, parser)
+            meta.update({ 'meta': 60, 'dia': 0 })
+            # Return Data
+            return { 'utilizacao': meta }
+        # On Error
+        except: return {}
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

@@ -27,9 +27,9 @@ Response = flask.Response
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/utilizacao/turno/')
+@app.route('/mysql/trefila/utilizacao/')
 def trefilaUtilizacaoTurno(req: Request, res: Response):
-    data = trefila.utilizacaoTurno()
+    data = trefila.utilizacao()
     return res(
         data,
         mimetype='text/csv',
@@ -38,9 +38,9 @@ def trefilaUtilizacaoTurno(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/utilizacao/')
+@app.route('/mysql/trefila/metas/utilizacao/')
 def trefilaUtilizacao(req: Request, res: Response):
-    data = trefila.utilizacao()
+    data = trefila.metas.utilizacao()
     return res(
         json.dumps(data),
         mimetype='application/json',
@@ -49,9 +49,9 @@ def trefilaUtilizacao(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/custo/')
+@app.route('/mysql/trefila/metas/custo/')
 def trefilaCusto(req: Request, res: Response):
-    data = trefila.custo()
+    data = trefila.metas.custo()
     return res(
         json.dumps(data),
         mimetype='application/json',
@@ -60,9 +60,9 @@ def trefilaCusto(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/sucata/')
+@app.route('/mysql/trefila/metas/sucata/')
 def trefilaSucata(req: Request, res: Response):
-    data = trefila.sucata()
+    data = trefila.metas.sucata()
     return res(
         json.dumps(data),
         mimetype='application/json',
@@ -71,9 +71,9 @@ def trefilaSucata(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/cincos/')
+@app.route('/mysql/trefila/metas/cincos/')
 def trefilaCincoS(req: Request, res: Response):
-    data = trefila.cincos()
+    data = trefila.metas.cincos()
     return res(
         json.dumps(data),
         mimetype='application/json',

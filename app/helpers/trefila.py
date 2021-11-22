@@ -68,7 +68,7 @@ def trimestre(registro: int):
 #################################################################################################################################################
 
 # Get Proucao Maquinas
-def producaoMaquinas():
+def produtividade():
     # get date
     date = datetime.datetime.today().strftime('%d/%m/%Y')
 
