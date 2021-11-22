@@ -12,7 +12,7 @@ from . import helpers
 
 # Get File-Paths
 fileDir = os.path.dirname(os.path.abspath(__file__))
-spec_sql = os.path.abspath(os.path.join(fileDir, './sql/aciaria.spec.sql'))
+spec_sql = os.path.abspath(os.path.join(fileDir, '../sql/aciaria.spec.sql'))
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

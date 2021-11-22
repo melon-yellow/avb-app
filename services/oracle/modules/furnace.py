@@ -5,6 +5,9 @@
 import os
 import cx_Oracle
 
+# Modules
+from . import helpers
+
 #################################################################################################################################################
 
 fileDir = os.path.dirname(os.path.abspath(__file__))
@@ -26,26 +29,12 @@ class connect:
 
 #################################################################################################################################################
 
-def exQuery(conn, query: str):
-    # Execute Query
-    cur = conn.cursor()
-    cur.execute(query)
-    # Parse to Dictionary
-    data = [dict((cur.description[i][0], value)
-        for i, value in enumerate(row)) for row in cur.fetchall()]
-    data = data[0] if len(data) > 0 else {}
-    # Return Data
-    return data
-
-#################################################################################################################################################
-
 def gusaapp():
-    try: # Connect to Server
-        conn = connect.furnace()
-        # Execute Query
-        data = exQuery(conn, open(gusaapp_sql).read())
-        # Return Data
-        return data
-    except: return {}
+    # Connect to Server
+    conn = connect.furnace()
+    # Execute Query
+    data = helpers.execute(conn, open(gusaapp_sql).read())
+    # Return Data
+    return data[0]
 
 #################################################################################################################################################

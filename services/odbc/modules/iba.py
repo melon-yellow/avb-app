@@ -12,8 +12,7 @@ from . import helpers
 
 # Get File-Paths
 fileDir = os.path.dirname(os.path.abspath(__file__))
-equip_sql = os.path.abspath(os.path.join(fileDir, './sql/sap.equip.sql'))
-first_sql = os.path.abspath(os.path.join(fileDir, './sql/sap.first.sql'))
+iba_clear_sql = os.path.abspath(os.path.join(fileDir, '../sql/iba.clear.sql'))
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
@@ -21,37 +20,26 @@ first_sql = os.path.abspath(os.path.join(fileDir, './sql/sap.first.sql'))
 
 class connect:
 
-    def sap():
+    def iba():
         return pyodbc.connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('SAP_PM_MSSQL_DSN'),
-            uid=os.getenv('SAP_PM_MSSQL_USER'),
-            pwd=os.getenv('SAP_PM_MSSQL_PASSWORD'),
-            database='ECP'
+            server=os.getenv('IBA_MSSQL_DSN'),
+            uid=os.getenv('IBA_MSSQL_USER'),
+            pwd=os.getenv('IBA_MSSQL_PASSWORD')
         )
 
-
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
-def preditivas(equip: list[str]):
+def clear():
     # Connect to Server
-    conn = connect.sap()
-    # Get Where Clause
-    where = ' OR '.join(
-        list(map(lambda e: f'("Equipamento" = {e})', equip))
-    )
+    conn = connect.iba()
     # Execute Query
-    query = open(equip_sql).read().format(where)
-    data = helpers.execute(conn, query)
-    # Get First Date
-    queryf = open(first_sql).read().format(where)
-    first = helpers.execute(conn, queryf)
+    data = helpers.execute(conn, open(iba_clear_sql).read())
     # Return Data
-    return { 'data': data, 'first': first }
+    return data
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
-

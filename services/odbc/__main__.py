@@ -8,9 +8,10 @@ import flask
 import py_misc
 
 # Modules
-from . import laminador
-from . import aciaria
-from . import sap
+from .modules import laminador
+from .modules import aciaria
+from .modules import sap
+from .modules import iba
 
 ##########################################################################################################################
 
@@ -111,6 +112,13 @@ def laminadorRFAL2(req: Request, res: Response):
         mimetype='application/json',
         status=200
     )
+
+##########################################################################################################################
+
+# Scheduled Actions
+@py_misc.schedule.each.one.hour.do.at('00:00')
+def each_one_hour():
+    iba.clear()
 
 ##########################################################################################################################
 
