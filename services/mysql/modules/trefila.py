@@ -15,7 +15,7 @@ from . import helpers
 
 # Get File-Paths
 fileDir = os.path.dirname(os.path.abspath(__file__))
-util_sql = os.path.abspath(os.path.join(fileDir, './sql/trefila.utilizacao.sql'))
+util_sql = os.path.abspath(os.path.join(fileDir, '../sql/trefila.utilizacao.sql'))
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

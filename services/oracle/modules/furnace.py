@@ -11,7 +11,7 @@ from . import helpers
 #################################################################################################################################################
 
 fileDir = os.path.dirname(os.path.abspath(__file__))
-gusaapp_sql = os.path.abspath(os.path.join(fileDir, './sql/furnace.gusaapp.sql'))
+gusaapp_sql = os.path.abspath(os.path.join(fileDir, '../sql/furnace.gusaapp.sql'))
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
