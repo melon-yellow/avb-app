@@ -1,6 +1,6 @@
-defmodule HomericoApp do
+defmodule HomericoSx do
   @moduledoc """
-  HomericoApp keeps the contexts that define your domain
+  HomericoSx keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

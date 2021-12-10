@@ -1,4 +1,4 @@
-defmodule HomericoApp.Application do
+defmodule HomericoSx.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,21 +8,19 @@ defmodule HomericoApp.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      HomericoApp.Repo,
       # Start the Telemetry supervisor
-      HomericoWeb.Telemetry,
+      HomericoSxWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: HomericoApp.PubSub},
+      {Phoenix.PubSub, name: HomericoSx.PubSub},
       # Start the Endpoint (http/https)
-      HomericoWeb.Endpoint
-      # Start a worker by calling: HomericoApp.Worker.start_link(arg)
-      # {HomericoApp.Worker, arg}
+      HomericoSxWeb.Endpoint
+      # Start a worker by calling: HomericoSx.Worker.start_link(arg)
+      # {HomericoSx.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: HomericoApp.Supervisor]
+    opts = [strategy: :one_for_one, name: HomericoSx.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -30,7 +28,7 @@ defmodule HomericoApp.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    HomericoWeb.Endpoint.config_change(changed, removed)
+    HomericoSxWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

@@ -1,4 +1,4 @@
-defmodule HomericoWeb.ChannelCase do
+defmodule HomericoSxWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -11,7 +11,7 @@ defmodule HomericoWeb.ChannelCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use HomericoWeb.ChannelCase, async: true`, although
+  by setting `use HomericoSxWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -21,16 +21,14 @@ defmodule HomericoWeb.ChannelCase do
     quote do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import HomericoWeb.ChannelCase
+      import HomericoSxWeb.ChannelCase
 
       # The default endpoint for testing
-      @endpoint HomericoWeb.Endpoint
+      @endpoint HomericoSxWeb.Endpoint
     end
   end
 
-  setup tags do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(HomericoApp.Repo, shared: not tags[:async])
-    on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
+  setup _tags do
     :ok
   end
 end

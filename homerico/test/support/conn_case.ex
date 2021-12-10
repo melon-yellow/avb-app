@@ -1,4 +1,4 @@
-defmodule HomericoWeb.ConnCase do
+defmodule HomericoSxWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule HomericoWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use HomericoWeb.ConnCase, async: true`, although
+  by setting `use HomericoSxWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,18 +22,16 @@ defmodule HomericoWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import HomericoWeb.ConnCase
+      import HomericoSxWeb.ConnCase
 
-      alias HomericoWeb.Router.Helpers, as: Routes
+      alias HomericoSxWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint HomericoWeb.Endpoint
+      @endpoint HomericoSxWeb.Endpoint
     end
   end
 
-  setup tags do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(HomericoApp.Repo, shared: not tags[:async])
-    on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
+  setup _tags do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end
