@@ -9,7 +9,7 @@ services:
 
   db:
     image: mysql:8
-    container_name: db-avb
+    container_name: avb-app-sx-db
     build: ./db
     command: --default-authentication-plugin=mysql_native_password
     env_file: .env
@@ -22,16 +22,16 @@ services:
 ##########################################################################################################################
 
   homerico:
-    image: node:16
-    container_name: cx-homerico
-    build: ./services/homerico
+    image: elixir:1.13
+    container_name: avb-app-sx-homerico
+    build: ./homerico
     command: bash -c "yarn && yarn build && yarn nonstop"
     env_file:
       - .env
-      - ./services/homerico/.env
+      - ./homerico/.env
     volumes:
-      - ./services/homerico/:/usr/app/
-      - /usr/app/build/
+      - ./homerico/:/usr/app/
+      - /usr/app/_build/
     expose:
       - ${HOMERICO_SERVICE_PORT}
     restart: always
@@ -40,14 +40,14 @@ services:
 
   mysql:
     image: python:3.10
-    container_name: cx-mysql
-    build: ./services/mysql
+    container_name: avb-app-sx-mysql
+    build: ./mysql
     command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
     env_file:
       - .env
-      - ./services/mysql/.env
+      - ./mysql/.env
     volumes:
-      - ./services/mysql/:/usr/app/
+      - ./mysql/:/usr/app/
     expose:
       - ${MYSQL_SERVICE_PORT}
     restart: always
@@ -56,14 +56,14 @@ services:
 
   odbc:
     image: python:3.10
-    container_name: cx-odbc
-    build: ./services/odbc
+    container_name: avb-app-sx-odbc
+    build: ./odbc
     command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
     env_file:
       - .env
-      - ./services/odbc/.env
+      - ./odbc/.env
     volumes:
-      - ./services/odbc/:/usr/app/
+      - ./odbc/:/usr/app/
     expose:
       - ${ODBC_SERVICE_PORT}
     restart: always
@@ -72,14 +72,14 @@ services:
 
   oracle:
     image: python:3.10
-    container_name: cx-oracle
-    build: ./services/oracle
+    container_name: avb-app-sx-oracle
+    build: ./oracle
     command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
     env_file:
       - .env
-      - ./services/oracle/.env
+      - ./oracle/.env
     volumes:
-      - ./services/oracle/:/usr/app/
+      - ./oracle/:/usr/app/
     expose:
       - ${ORACLE_SERVICE_PORT}
     restart: always
