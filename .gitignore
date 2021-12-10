@@ -4,11 +4,11 @@
 
 # dependencies
 /app/src/
-/services/homerico/node_modules/
-/services/mysql/src/
-/services/odbc/src/
-/services/opc/src/
-/services/oracle/src/
+/homerico/deps/
+/mysql/src/
+/odbc/src/
+/opc/src/
+/oracle/src/
 
 # db
 /db/data/
