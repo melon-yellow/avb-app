@@ -10,6 +10,13 @@ defmodule HomericoSx do
   @keys keys!
   @config config!
 
+  defp keys! do
+    Homerico.Reports.__info__(:functions)
+      |> Enum.map(&Atom.to_string elem(&1, 0))
+      |> Enum.filter(&!String.contains?(&1, "!"))
+      |> Enum.map(&String.to_atom &1)
+  end
+
   defp config! do
     System.get_env("HOMERICO_GATEWAY")
       |> Homerico.Connect.gateway!
@@ -17,13 +24,6 @@ defmodule HomericoSx do
         System.get_env("HOMERICO_USER"),
         System.get_env("HOMERICO_PASSWORD")
       )
-  end
-
-  defp keys! do
-    Homerico.Reports.__info__(:functions)
-      |> Enum.map(&Atom.to_string elem(&1, 0))
-      |> Enum.filter(&!String.contains?(&1, "!"))
-      |> Enum.map(&String.to_atom &1)
   end
 
 end
