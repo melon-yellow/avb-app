@@ -11,7 +11,8 @@ defmodule HomericoSx.Reports do
     is_atom(report) and
     report in @reports
   do
-    apply(__MODULE__, report, params)
+    HomericoSx.Connect.config!
+      |> &apply(__MODULE__, report, [&1, params])
   end
 
   def relatorioLista(

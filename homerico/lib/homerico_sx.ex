@@ -7,13 +7,4 @@ defmodule HomericoSx do
   if it comes from the database, an external API or others.
   """
 
-  @config (
-    System.get_env("HOMERICO_GATEWAY")
-      |> Homerico.Connect.gateway!
-      |> Homerico.Connect.login!(
-        System.get_env("HOMERICO_USER"),
-        System.get_env("HOMERICO_PASSWORD")
-      )
-  )
-
 end
