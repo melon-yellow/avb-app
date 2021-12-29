@@ -7,6 +7,9 @@ defmodule HomericoSx.Application do
 
   @impl true
   def start(_type, _args) do
+    # Connect To Homerico
+    spawn HomericoSx.Connect, :loop, nil
+
     children = [
       # Start the Telemetry supervisor
       HomericoSxWeb.Telemetry,
