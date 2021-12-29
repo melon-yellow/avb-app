@@ -1,7 +1,7 @@
 defmodule HomericoSx.Reports do
 
   @reports (
-    Homerico.Reports.__info__(:functions)
+    __MODULE__.__info__(:functions)
       |> Enum.map(&Atom.to_string elem(&1, 0))
       |> Enum.filter(&!String.contains?(&1, "!"))
   )
@@ -11,14 +11,10 @@ defmodule HomericoSx.Reports do
     is_atom(report) and
     report in @reports
   do
-    apply(
-      HomericoSx.Reports,
-      report,
-      params
-    )
+    apply(__MODULE__, report, params)
   end
 
-  defp relatorio_lista(
+  def relatorioLista(
     %Homerico.Connect.Config{} = config,
     %{
       "idProcesso" => id_processo,
@@ -33,7 +29,7 @@ defmodule HomericoSx.Reports do
     )
   end
 
-  defp relatorio_gerencial_registro(
+  def relatorioGerencialRegistro(
     %Homerico.Connect.Config{} = config,
     %{
       "registro" => registro,
@@ -46,7 +42,7 @@ defmodule HomericoSx.Reports do
     )
   end
 
-  defp relatorio_gerencial_report(
+  def relatorioGerencialReport(
     %Homerico.Connect.Config{} = config,
     %{
       "idReport" => id_report,
@@ -59,7 +55,7 @@ defmodule HomericoSx.Reports do
     )
   end
 
-  defp relatorio_boletim(
+  def relatorioBoletim(
     %Homerico.Connect.Config{} = config,
     %{
       "idReport" => id_report,
@@ -74,7 +70,7 @@ defmodule HomericoSx.Reports do
     )
   end
 
-  defp producao_lista(
+  def producaoLista(
     %Homerico.Connect.Config{} = config,
     %{
       "controle" => controle,
@@ -87,7 +83,7 @@ defmodule HomericoSx.Reports do
     )
   end
 
-  defp relatorio_ov(
+  def relatorioOv(
     %Homerico.Connect.Config{} = config,
     %{
       "idProcessoGrupo" => id_processo_grupo,
@@ -100,7 +96,7 @@ defmodule HomericoSx.Reports do
     )
   end
 
-  defp relatorio_interrupcoes(
+  def relatorioInterrupcoes(
     %Homerico.Connect.Config{} = config,
     %{
       "idProceso" => id_processo,
