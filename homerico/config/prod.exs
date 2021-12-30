@@ -11,7 +11,7 @@ import Config
 # before starting your production server.
 config :homerico_sx, HomericoSxWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: System.get_env("HOMERICO_SERVICE_PORT")],
-  secret_key_base: "Y88AmjJfccxrSXEJ9HAGZ2bGNg85YMTkkcBYDtSDschRnjK/ys5EvF/h6F47H7OX",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   watchers: [],
   cache_static_manifest: "priv/static/cache_manifest.json"
 

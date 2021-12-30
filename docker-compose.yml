@@ -28,7 +28,7 @@ services:
     command: bash -c "
       mix deps.get &&
       mix do compile --force &&
-      MIX_ENV=prod SECRET_KEY_BASE=\"\" mix phx.server"
+      MIX_ENV=prod mix phx.server"
     env_file:
       - .env
       - ./homerico/.env

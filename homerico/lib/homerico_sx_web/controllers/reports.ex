@@ -18,11 +18,11 @@ defmodule HomericoSxWeb.ReportsController do
   end
 
   def handle(
-    _conn,
+    conn,
     %{"report" => report} = params
   ) when is_binary(report) do
-    IO.inspect report
-    IO.inspect @reports
-    apply! report, params
+    conn |> render("term.json",
+      (apply! report, params)
+    )
   end
 end

@@ -18,15 +18,9 @@ if config_env() == :prod do
   # want to use a different value for prod and you most likely don't want
   # to check this value into version control, so we use an environment
   # variable instead.
-  secret_key_base =
-    System.get_env("SECRET_KEY_BASE") ||
-      raise """
-      environment variable SECRET_KEY_BASE is missing.
-      You can generate one by calling: mix phx.gen.secret
-      """
-
-  host = System.get_env("PHX_HOST") || "example.com"
-  port = String.to_integer(System.get_env("PORT") || "4000")
+  host = "avb-app-sx-homerico"
+  port = System.get_env("HOMERICO_SERVICE_PORT")
+  secret_key_base = System.get_env("SECRET_KEY_BASE")
 
   config :homerico_sx, HomericoSxWeb.Endpoint,
     url: [host: host, port: 443],
