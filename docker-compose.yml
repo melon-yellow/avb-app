@@ -27,12 +27,13 @@ services:
     build: ./homerico
     command: bash -c "
       mix deps.get &&
-      mix local.rebar &&
       mix do compile --force &&
-      mix phx.server"
+      MIX_ENV=prod SECRET_KEY_BASE=\"\" mix phx.server"
     env_file:
       - .env
       - ./homerico/.env
+    ports:
+      - "${HOMERICO_SERVICE_PORT}:${HOMERICO_SERVICE_PORT}"
     volumes:
       - ./homerico/:/usr/app/
       - /usr/app/_build/
