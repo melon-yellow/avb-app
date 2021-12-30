@@ -7,7 +7,7 @@ defmodule HomericoSx.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:gettext] ++ Mix.compilers(),
+      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -34,13 +34,10 @@ defmodule HomericoSx.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.6.4"},
-      {:phoenix_live_dashboard, "~> 0.6"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"},
-      {:homerico, git: "https://github.com/melon-yellow/ex-homerico.git"}
+      {:plug_cowboy, "~> 2.5"}
     ]
   end
 

@@ -7,15 +7,6 @@ defmodule HomericoSxWeb.ReportsController do
       |> Enum.filter(&!String.contains?(&1, "!"))
   )
 
-  def handle(
-    _conn,
-    %{"report" => report} = params
-  ) when is_binary(report) do
-    IO.inspect report
-    IO.inspect @reports
-    apply! report, params
-  end
-
   defp apply!(report, params) when
     is_map(params) and
     is_binary(report) and
@@ -24,5 +15,14 @@ defmodule HomericoSxWeb.ReportsController do
     args = [HomericoSx.Connect.config!, params]
     func = String.to_existing_atom report
     apply HomericoSx.Reports, func, args
+  end
+
+  def handle(
+    _conn,
+    %{"report" => report} = params
+  ) when is_binary(report) do
+    IO.inspect report
+    IO.inspect @reports
+    apply! report, params
   end
 end

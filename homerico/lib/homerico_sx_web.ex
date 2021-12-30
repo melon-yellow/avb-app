@@ -61,6 +61,7 @@ defmodule HomericoSxWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import HomericoSxWeb.ErrorHelpers
       alias HomericoSxWeb.Router.Helpers, as: Routes
     end
   end

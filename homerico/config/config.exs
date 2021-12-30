@@ -12,7 +12,7 @@ config :homerico_sx, HomericoSxWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: HomericoSxWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: HomericoSx.PubSub,
-  live_view: [signing_salt: "KdRm6C3B"]
+  live_view: [signing_salt: "F93jEkH/"]
 
 # Configures Elixir's Logger
 config :logger, :console,

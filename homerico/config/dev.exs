@@ -13,7 +13,7 @@ config :homerico_sx, HomericoSxWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "FAAH6/5i1b/4gJ7/PNjuu6Z5Nt7BKwl+ZOz0NkynxujohFiTrXlKwEHW7tgerlVl",
+  secret_key_base: "Y88AmjJfccxrSXEJ9HAGZ2bGNg85YMTkkcBYDtSDschRnjK/ys5EvF/h6F47H7OX",
   watchers: []
 
 # ## SSL Support

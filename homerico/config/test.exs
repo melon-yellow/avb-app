@@ -4,7 +4,7 @@ import Config
 # you can enable the server option below.
 config :homerico_sx, HomericoSxWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "ub7MOD5JlpYgsYmZ+TnYpuZAV29e3bWx8sLE873gRvHnYqejHz+cL9t6uYjKXhVv",
+  secret_key_base: "SkPcTwEBPZC3qe881FfyFM7UtGZNoIUPslqwyOjPd4LeO6c3kGXcwoFimtZVDYUu",
   server: false
 
 # Print only warnings and errors during test

@@ -7,10 +7,10 @@ defmodule HomericoSxWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_homerico_sx_key",
-    signing_salt: "sAfpbAqT"
+    signing_salt: "1pw/Xxqw"
   ]
 
-  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+  # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -29,6 +29,7 @@ defmodule HomericoSxWeb.Endpoint do
   end
 
   plug Plug.RequestId
+  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
