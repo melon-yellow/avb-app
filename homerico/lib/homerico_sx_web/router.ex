@@ -5,7 +5,7 @@ defmodule HomericoSxWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/homerico", HomericoSxWeb do
+  scope "/", HomericoSxWeb do
     pipe_through :api
 
     post "/homerico/:report", ReportsController, :handle
