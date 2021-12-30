@@ -1,10 +1,13 @@
 defmodule HomericoSxWeb.ReportsController do
   use HomericoSxWeb, :controller
 
-  @reports (
+  @reports_raw (
     HomericoSx.Reports.__info__(:functions)
-      |> Enum.map(&Atom.to_string elem(&1, 0))
-      |> Enum.filter(&!String.contains?(&1, "!"))
+      |> Enum.map(&elem(&1, 0))
+  )
+  @reports (
+    @reports_raw
+      |> Enum.map(&Atom.to_string &1)
   )
 
   defp apply!(report, params) when
@@ -17,12 +20,14 @@ defmodule HomericoSxWeb.ReportsController do
     apply HomericoSx.Reports, func, args
   end
 
+  defp apply!(report, params) when
+    is_map(params) and is_binary(report)
+  do "report not found" end
+
   def handle(
     conn,
     %{"report" => report} = params
   ) when is_binary(report) do
-    conn |> render("term.json",
-      (apply! report, params)
-    )
+    html conn, (apply! report, params)
   end
 end

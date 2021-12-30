@@ -8,7 +8,7 @@ defmodule HomericoSx.Reports do
       "dataFinal" => data_final
     }
   ) do
-    config |> Homerico.Reports.relatorio_lista(
+    config |> Homerico.Reports.relatorio_lista!(
       id_processo,
       data_inicial,
       data_final
@@ -22,7 +22,7 @@ defmodule HomericoSx.Reports do
       "data" => data
     }
   ) do
-    config |> Homerico.Reports.relatorio_gerencial_registro(
+    config |> Homerico.Reports.relatorio_gerencial_registro!(
       registro,
       data
     )
@@ -35,7 +35,7 @@ defmodule HomericoSx.Reports do
       "data" => data
     }
   ) do
-    config |> Homerico.Reports.relatorio_gerencial_report(
+    config |> Homerico.Reports.relatorio_gerencial_report!(
       id_report,
       data
     )
@@ -49,7 +49,7 @@ defmodule HomericoSx.Reports do
       "dataFinal" => data_final
     }
   ) do
-    config |> Homerico.Reports.relatorio_boletim(
+    config |> Homerico.Reports.relatorio_boletim!(
       id_report,
       data_inicial,
       data_final
@@ -63,7 +63,7 @@ defmodule HomericoSx.Reports do
       "dataFinal" => data_final
     }
   ) do
-    config |> Homerico.Reports.producao_lista(
+    config |> Homerico.Reports.producao_lista!(
       controle,
       data_final
     )
@@ -76,7 +76,7 @@ defmodule HomericoSx.Reports do
       "data" => data
     }
   ) do
-    config |> Homerico.Reports.relatorio_ov(
+    config |> Homerico.Reports.relatorio_ov!(
       id_processo_grupo,
       data
     )
@@ -89,7 +89,7 @@ defmodule HomericoSx.Reports do
       "data" => data
     }
   ) do
-    config |> Homerico.Reports.relatorio_interrupcoes(
+    config |> Homerico.Reports.relatorio_interrupcoes!(
       id_processo,
       data
     )
