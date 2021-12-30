@@ -32,8 +32,6 @@ services:
     env_file:
       - .env
       - ./homerico/.env
-    ports:
-      - "${HOMERICO_SERVICE_PORT}:${HOMERICO_SERVICE_PORT}"
     volumes:
       - ./homerico/:/usr/app/
       - /usr/app/_build/
