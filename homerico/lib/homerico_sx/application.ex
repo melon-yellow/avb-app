@@ -7,18 +7,14 @@ defmodule HomericoSx.Application do
 
   @impl true
   def start(_type, _args) do
-    # Connect To Homerico
-    spawn HomericoSx.Connect, :loop, nil
 
     children = [
-      # Start the Telemetry supervisor
-      HomericoSxWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: HomericoSx.PubSub},
+      # Start Homerico Connection
+      HomericoSx.Connect,
       # Start the Endpoint (http/https)
       HomericoSxWeb.Endpoint
-      # Start a worker by calling: HomericoSx.Worker.start_link(arg)
-      # {HomericoSx.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

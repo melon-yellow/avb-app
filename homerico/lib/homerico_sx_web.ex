@@ -22,7 +22,6 @@ defmodule HomericoSxWeb do
       use Phoenix.Controller, namespace: HomericoSxWeb
 
       import Plug.Conn
-      import HomericoSxWeb.Gettext
       alias HomericoSxWeb.Router.Helpers, as: Routes
     end
   end
@@ -54,7 +53,6 @@ defmodule HomericoSxWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import HomericoSxWeb.Gettext
     end
   end
 
@@ -64,7 +62,6 @@ defmodule HomericoSxWeb do
       import Phoenix.View
 
       import HomericoSxWeb.ErrorHelpers
-      import HomericoSxWeb.Gettext
       alias HomericoSxWeb.Router.Helpers, as: Routes
     end
   end

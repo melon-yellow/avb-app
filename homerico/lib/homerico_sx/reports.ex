@@ -1,20 +1,5 @@
 defmodule HomericoSx.Reports do
 
-  @reports (
-    __MODULE__.__info__(:functions)
-      |> Enum.map(&Atom.to_string elem(&1, 0))
-      |> Enum.filter(&!String.contains?(&1, "!"))
-  )
-
-  def apply!(report, params) when
-    is_map(params) and
-    is_atom(report) and
-    report in @reports
-  do
-    HomericoSx.Connect.config!
-      |> &apply(__MODULE__, report, [&1, params])
-  end
-
   def relatorioLista(
     %Homerico.Connect.Config{} = config,
     %{
