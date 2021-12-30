@@ -25,7 +25,7 @@ services:
     image: elixir:1.13
     container_name: avb-app-sx-homerico
     build: ./homerico
-    command: bash -c "mix do compile && mix phx.server"
+    command: bash -c "(yes | mix do compile --force) && mix phx.server"
     env_file:
       - .env
       - ./homerico/.env
