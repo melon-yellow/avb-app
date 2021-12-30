@@ -46,44 +46,54 @@ def __load__(app: py_misc.Express):
 
     @app.route('/avb/aciaria/rendimento/')
     def aciariaRendimento(req: Request, res: Response):
-        # get app data
-        rend = homerico.RelatorioGerencialRegistro(registro=15)
-        carg_s = homerico.RelatorioGerencialRegistro(registro=1218)
-
-        rendimento = None
-        carga_solida = None
-
         try:
-            if (not isinstance(rend, list)
-                or not len(rend) >= 2
-                or not isinstance(rend[1], list)
-                or not len(rend[1]) >= 3
-                or not isinstance(rend[1][2], str)
-                ): raise Exception('homerico report "15" is invalid')
-            rendimento = float(rend[1][2].replace(',', '.'))
-        except: pass
+            # get app data
+            rend = homerico.RelatorioGerencialRegistro(registro=15)
+            carg_s = homerico.RelatorioGerencialRegistro(registro=1218)
 
-        try:
-            if (not isinstance(carg_s, list)
-                or not len(carg_s) >= 2
-                or not isinstance(carg_s[1], list)
-                or not len(carg_s[1]) >= 3
-                or not isinstance(carg_s[1][2], str)
-                ): raise Exception('homerico report "1218" is invalid')
-            carga_solida = float(carg_s[1][2].replace(',', '.'))
-        except: pass
+            rendimento = None
+            carga_solida = None
 
-        # Set Data
-        data = {
-            'rendimento': rendimento,
-            'carga_solida': carga_solida
-        }
+            try:
+                if (not isinstance(rend, list)
+                    or not len(rend) >= 2
+                    or not isinstance(rend[1], list)
+                    or not len(rend[1]) >= 3
+                    or not isinstance(rend[1][2], str)
+                    ): raise Exception('homerico report "15" is invalid')
+                rendimento = float(rend[1][2].replace(',', '.'))
+            except: pass
 
-        # Return data
-        return res(
-            json.dumps(data),
-            mimetype='application/json',
-            status=200
-        )
+            try:
+                if (not isinstance(carg_s, list)
+                    or not len(carg_s) >= 2
+                    or not isinstance(carg_s[1], list)
+                    or not len(carg_s[1]) >= 3
+                    or not isinstance(carg_s[1][2], str)
+                    ): raise Exception('homerico report "1218" is invalid')
+                carga_solida = float(carg_s[1][2].replace(',', '.'))
+            except: pass
+
+            # Set Data
+            data = {
+                'rendimento': rendimento,
+                'carga_solida': carga_solida
+            }
+
+            # Return data
+            return res(
+                json.dumps(data),
+                mimetype='application/json',
+                status=200
+            )
+    
+        except Exception as e:
+
+            # Return data
+            return res(
+                json.dumps({ "error": f'{e}' }),
+                mimetype='application/json',
+                status=200
+            )
 
 #################################################################################################################################################
