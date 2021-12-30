@@ -11,25 +11,31 @@ defmodule HomericoSx.Connect do
       )
   end
 
-  defp loop(term \\ nil) do
+  defp loop(dnstr \\ nil) do
     receive do
       {:get, caller} ->
-        send caller, term
-        term |> loop()
-      {:put, value} ->
-        value |> loop()
+        send caller, {:stack, dnstr}
+        dnstr |> loop()
+      {:put, upstr} ->
+        upstr |> loop()
+      _ ->
+        dnstr |> loop()
     end
-  end
-
-  def start_link(_arg) do
-    {:ok, pid} = Task.start_link(fn -> loop() end)
-    send pid, {:put, start!()}
-    Process.register(pid, :stack)
-    {:ok, :stack}
   end
 
   def config! do
     send :stack, {:get, self()}
+    receive do
+      {:stack, upstr} -> upstr
+      _ -> nil
+    end
+  end
+
+  def start_link(args) do
+    {:ok, pid} = Task.start_link(fn -> loop() end)
+    Process.register(pid, :stack)
+    send :stack, {:put, start!()}
+    Agent.start_link(__MODULE__, args)
   end
 
 end

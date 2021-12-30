@@ -4,7 +4,7 @@ defmodule HomericoSxWeb.ReportsController do
   @reports HomericoSx.Reports.__info__(:functions)
 
   def handle(
-    conn,
+    _conn,
     %{ "report" => report } = params
   ) when is_binary(report) do
     String.to_existing_atom(report)

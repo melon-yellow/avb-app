@@ -63,7 +63,7 @@ defmodule HomericoSx.Reports do
       "dataFinal" => data_final
     }
   ) do
-    config |> Homerico.Reports.relatorio_boletim(
+    config |> Homerico.Reports.producao_lista(
       controle,
       data_final
     )

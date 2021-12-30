@@ -14,6 +14,9 @@ config :homerico_sx, HomericoSxWeb.Endpoint, cache_static_manifest: "priv/static
 # Do not print debug messages in production
 config :logger, level: :info
 
+# Run in Spacified Port
+http: [ip: {127, 0, 0, 1}, port: System.get_env("HOMERICO_SERVICE_PORT")],
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
