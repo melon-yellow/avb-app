@@ -15,8 +15,8 @@ defmodule HomericoSxWeb.ReportsController do
     is_binary(report) and
     report in @reports
   do
-    args = [HomericoSx.Connect.config!, params]
     func = String.to_existing_atom report
+    args = [HomericoSx.Connect.config!, params]
     apply HomericoSx.Reports, func, args
   end
 
