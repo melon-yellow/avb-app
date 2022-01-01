@@ -17,7 +17,10 @@ defmodule HomericoSxWeb.ReportsController do
   do
     func = String.to_existing_atom report
     args = [HomericoSx.Connect.config!, params]
-    apply HomericoSx.Reports, func, args
+    try do apply HomericoSx.Reports, func, args
+    rescue _ -> "invalid arguments"
+    catch _ -> "invalid arguments"
+    end
   end
 
   defp apply!(report, params) when
