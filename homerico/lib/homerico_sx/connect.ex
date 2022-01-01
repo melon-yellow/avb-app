@@ -13,21 +13,19 @@ defmodule HomericoSx.Connect do
       )
   end
 
-  defp loop(dnstr \\ nil) do
+  defp loop(state \\ nil) do
     receive do
+      {:set, value} -> loop value
       {:get, caller} ->
-        send caller, {@pid, dnstr}
-        loop dnstr
-      {:set, upstr} -> loop upstr
-      _ -> loop dnstr
+        send caller, {@pid, state}
+        loop state
     end
   end
 
   def config! do
     send @pid, {:get, self()}
     receive do
-      {@pid, upstr} -> upstr
-      _ -> nil
+      {@pid, state} -> state
     end
   end
 
