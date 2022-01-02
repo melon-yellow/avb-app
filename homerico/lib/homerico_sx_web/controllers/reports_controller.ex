@@ -2,12 +2,13 @@ defmodule HomericoSxWeb.ReportsController do
   use HomericoSxWeb, :controller
 
   @reports_raw (
-    HomericoSx.Reports.__info__(:functions)
+    :functions
+      |> HomericoSx.Reports.__info__()
       |> Enum.map(&elem(&1, 0))
   )
   @reports (
     @reports_raw
-      |> Enum.map(&Atom.to_string &1)
+      |> Enum.map(&Atom.to_string/1)
   )
 
   defp apply!(report, params) when
@@ -16,7 +17,7 @@ defmodule HomericoSxWeb.ReportsController do
     report in @reports
   do
     func = String.to_existing_atom report
-    args = [HomericoSx.Connect.config!, params]
+    args = [HomericoSx.Connect.config!(), params]
     try do apply HomericoSx.Reports, func, args
     rescue _ -> "invalid arguments"
     catch _ -> "invalid arguments"
