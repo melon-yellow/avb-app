@@ -1,4 +1,3 @@
-
 defmodule HomericoSx.Connect do
   use Agent
 
