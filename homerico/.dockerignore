@@ -1,7 +1,4 @@
 
-# build
-_build
-
 # env
 .env
 .template.env
