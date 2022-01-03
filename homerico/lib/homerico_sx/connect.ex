@@ -12,7 +12,7 @@ defmodule HomericoSx.Connect do
       )
   end
 
-  defp loop(state \\ nil) do
+  defp loop(state) do
     receive do
       {:set, value} -> loop value
       {:get, caller} ->
@@ -29,7 +29,7 @@ defmodule HomericoSx.Connect do
   end
 
   def start_link(_args) do
-    {:ok, pid} = Task.start_link(fn -> loop() end)
+    {:ok, pid} = Task.start_link(fn -> loop nil end)
     Process.register pid, @pid
     send @pid, {:set, start()}
     {:ok, pid}
