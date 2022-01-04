@@ -5,6 +5,13 @@ defmodule OpcSx.IbaClient do
 
   @pid :opc_sx_iba_client_pid
 
+  @certs_config &Application.app_dir(:opc_sx, "priv/certificates/#{&1}")
+    |> &[
+      security_mode: 3,
+      certificate: &1("iba-client-cert.der") |> File.read!,
+      private_key: &1("iba-client-key.der") |> File.read!
+    ]
+
   def pid!, do: @pid
 
   def start_link(_args) do
