@@ -1,11 +1,11 @@
 defmodule OpcSx.IbaClient do
   use Agent
 
-  alias OpcUA.Client
+  alias OpcUA.{NodeId, Client}
 
   @pid :opc_sx_iba_client_pid
 
-  def pid!, do: @pid
+  @config %{ns: 3, s: "V:0.3."}
 
   defp cert_config!, do: :opc_sx
     |> Application.app_dir("priv/certificates/iba-client-cert.der")
@@ -18,5 +18,16 @@ defmodule OpcSx.IbaClient do
     Process.register pid, @pid
     {:ok, pid}
   end
+
+  defp make_node(id), do:
+    NodeId.new ns_index: @config.ns,
+      identifier_type: "string",
+      identifier: @config.s <> id
+
+  defp read_node_value!(node_id), do:
+    Client.read_node_value @pid, id
+
+  def read(id) when is_binary(id), do:
+    id |> make_node! |> read_node_value!
 
 end

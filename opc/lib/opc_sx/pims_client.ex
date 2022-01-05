@@ -5,18 +5,21 @@ defmodule OpcSx.PimsClient do
 
   @pid :opc_sx_pims_client_pid
 
-  def pid!, do: @pid
-
-  defp cert_config!, do: :opc_sx
-    |> Application.app_dir("priv/certificates/pims-client-cert.der")
-    |> &[security_mode: 2, certificate: File.read! &1]
-
   def start_link(_args) do
     {:ok, pid} = Client.start_link
-    :ok = Client.set_config_with_certs pid, cert_config!()
+    :ok = Client.set_config pid
     :ok = Client.connect_by_url pid, url: System.get_env("AVB_PIMS_OPC_ADDRESS")
     Process.register pid, @pid
     {:ok, pid}
   end
+
+  defp make_node(id), do:
+    NodeId.new identifier_type: "string", identifier: id
+
+  defp read_node_value!(node_id), do:
+    Client.read_node_value @pid, id
+
+  def read(id) when is_binary(id), do:
+    id |> make_node! |> read_node_value!
 
 end
