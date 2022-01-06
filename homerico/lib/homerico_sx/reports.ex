@@ -1,97 +1,38 @@
 defmodule HomericoSx.Reports do
 
-  def relatorioLista(
+  def relatorio_lista(
     %Homerico.Connect.Config{} = config,
-    %{
-      "idProcesso" => id_processo,
-      "dataInicial" => data_inicial,
-      "dataFinal" => data_final
-    }
-  ) do
-    config |> Homerico.Reports.relatorio_lista!(
-      id_processo,
-      data_inicial,
-      data_final
-    )
-  end
+    %{"id_processo" => id_processo, "data_inicial" => data_inicial, "data_final" => data_final}
+  ), do: Homerico.Reports.relatorio_lista! config, id_processo, data_inicial, data_final
 
-  def relatorioGerencialRegistro(
+  def relatorio_gerencial_registro(
     %Homerico.Connect.Config{} = config,
-    %{
-      "registro" => registro,
-      "data" => data
-    }
-  ) do
-    config |> Homerico.Reports.relatorio_gerencial_registro!(
-      registro,
-      data
-    )
-  end
+    %{"registro" => registro, "data" => data}
+  ), do: Homerico.Reports.relatorio_gerencial_registro! config, registro, data
 
-  def relatorioGerencialReport(
+  def relatorio_gerencial_report(
     %Homerico.Connect.Config{} = config,
-    %{
-      "idReport" => id_report,
-      "data" => data
-    }
-  ) do
-    config |> Homerico.Reports.relatorio_gerencial_report!(
-      id_report,
-      data
-    )
-  end
+    %{"id_report" => id_report, "data" => data}
+  ), do: Homerico.Reports.relatorio_gerencial_report! config, id_report, data
 
-  def relatorioBoletim(
+  def relatorio_boletim(
     %Homerico.Connect.Config{} = config,
-    %{
-      "idReport" => id_report,
-      "dataInicial" => data_inicial,
-      "dataFinal" => data_final
-    }
-  ) do
-    config |> Homerico.Reports.relatorio_boletim!(
-      id_report,
-      data_inicial,
-      data_final
-    )
-  end
+    %{"id_report" => id_report, "data_inicial" => data_inicial,"data_final" => data_final}
+  ), do: Homerico.Reports.relatorio_boletim! config, id_report, data_inicial, data_final
 
-  def producaoLista(
+  def producao_lista(
     %Homerico.Connect.Config{} = config,
-    %{
-      "controle" => controle,
-      "dataFinal" => data_final
-    }
-  ) do
-    config |> Homerico.Reports.producao_lista!(
-      controle,
-      data_final
-    )
-  end
+    %{"controle" => controle, "data_final" => data_final}
+  ), do: Homerico.Reports.producao_lista! config, controle, data_final
 
-  def relatorioOv(
+  def relatorio_ov(
     %Homerico.Connect.Config{} = config,
-    %{
-      "idProcessoGrupo" => id_processo_grupo,
-      "data" => data
-    }
-  ) do
-    config |> Homerico.Reports.relatorio_ov!(
-      id_processo_grupo,
-      data
-    )
-  end
+    %{"id_processo_grupo" => id_processo_grupo, "data" => data}
+  ), do: Homerico.Reports.relatorio_ov! config, id_processo_grupo, data
 
-  def relatorioInterrupcoes(
+  def relatorio_interrupcoes(
     %Homerico.Connect.Config{} = config,
-    %{
-      "idProceso" => id_processo,
-      "data" => data
-    }
-  ) do
-    config |> Homerico.Reports.relatorio_interrupcoes!(
-      id_processo,
-      data
-    )
-  end
+    %{"id_proceso" => id_processo, "data" => data}
+  ), do: Homerico.Reports.relatorio_interrupcoes! config, id_processo, data
+
 end

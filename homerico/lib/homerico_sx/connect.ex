@@ -1,9 +1,16 @@
 defmodule HomericoSx.Connect do
   use Agent
 
-  @pid :homerico_sx_config_state
+  @pid :homerico_sx_config_pid
 
-  defp start do
+  def start_link(_args) do
+    {:ok, pid} = Task.start_link(fn -> loop nil end)
+    Process.register pid, @pid
+    send @pid, {:set, connect!()}
+    {:ok, pid}
+  end
+
+  defp connect! do
     System.get_env("HOMERICO_GATEWAY")
       |> Homerico.Connect.gateway!
       |> Homerico.Connect.login!(
@@ -26,13 +33,6 @@ defmodule HomericoSx.Connect do
     receive do
       {@pid, state} -> state
     end
-  end
-
-  def start_link(_args) do
-    {:ok, pid} = Task.start_link(fn -> loop nil end)
-    Process.register pid, @pid
-    send @pid, {:set, start()}
-    {:ok, pid}
   end
 
 end

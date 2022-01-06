@@ -41,7 +41,7 @@ def trimestre(registro: int):
             if month == now.month: day = now.day
             # Get Data
             data = datetime.date(now.year, month, day).strftime('%d/%m/%Y')
-            csv = homerico.network.RelatorioGerencialRegistro(
+            csv = homerico.network.relatorio_gerencial_registro(
                 data=data,
                 registro=str(registro)
             )
@@ -73,10 +73,10 @@ def produtividade():
     date = datetime.datetime.today().strftime('%d/%m/%Y')
 
     # read meta
-    csv = homerico.network.RelatorioLista(
-        dataInicial=date,
-        dataFinal=date,
-        idProcesso='50'
+    csv = homerico.network.relatorio_lista(
+        data_inicial=date,
+        data_final=date,
+        id_processo='50'
     )
     df = pandas.read_csv(
         io.StringIO(csv),
