@@ -7,12 +7,12 @@ defmodule OpcSx.IbaClient do
 
   @config %{ns: 3, s: "V:0.3."}
 
-  defp read_cert!(path), do:
+  defp set_config!(path), do:
     [security_mode: 2, certificate: File.read! path]
 
   defp cert_config!, do: :opc_sx
     |> Application.app_dir("priv/certificates/iba-client-cert.der")
-    |> read_cert!
+    |> set_config!
 
   def start_link(_args) do
     {:ok, pid} = Client.start_link
@@ -22,15 +22,15 @@ defmodule OpcSx.IbaClient do
     {:ok, pid}
   end
 
-  defp make_node(id), do:
+  defp set_node(id), do:
     NodeId.new ns_index: @config.ns,
       identifier_type: "string",
       identifier: @config.s <> id
 
   defp read_node_value!(node_id), do:
-    Client.read_node_value @pid, id
+    Client.read_node_value @pid, node_id
 
   def read(id) when is_binary(id), do:
-    id |> make_node! |> read_node_value!
+    id |> set_node! |> read_node_value!
 
 end

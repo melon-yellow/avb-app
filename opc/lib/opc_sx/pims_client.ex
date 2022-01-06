@@ -13,13 +13,13 @@ defmodule OpcSx.PimsClient do
     {:ok, pid}
   end
 
-  defp make_node(id), do:
+  defp set_node!(id), do:
     NodeId.new identifier_type: "string", identifier: id
 
   defp read_node_value!(node_id), do:
     Client.read_node_value @pid, id
 
   def read(id) when is_binary(id), do:
-    id |> make_node! |> read_node_value!
+    id |> set_node! |> read_node_value!
 
 end
