@@ -12,17 +12,17 @@ remote = os.getenv('HOMERICO_SERVICE_ADDRESS')
 
 #################################################################################################################################################
 
-def RelatorioLista(
-    dataInicial: str,
-    dataFinal: str,
-    idProcesso: str
+def relatorio_lista(
+    data_inicial: str,
+    data_final: str,
+    id_processo: str
 ):
     res = requests.post(
-        url=f'{remote}/relatorioLista',
+        url=f'{remote}/relatorio_lista',
         json={
-            'dataInicial': dataInicial,
-            'dataFinal': dataFinal,
-            'idProcesso': idProcesso
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+            'id_processo': id_processo
         }
     )
     # Return Result
@@ -30,15 +30,15 @@ def RelatorioLista(
 
 #################################################################################################################################################
 
-def RelatorioGerencialReport(
+def relatorio_gerencial_report(
     data: str,
-    idReport: str
+    id_report: str
 ):
     res = requests.post(
-        url=f'{remote}/relatorioGerencialReport',
+        url=f'{remote}/relatorio_gerencial_report',
         json={
             'data': data,
-            'idReport': idReport
+            'id_report': id_report
         }
     )
     # Return Result
@@ -46,17 +46,17 @@ def RelatorioGerencialReport(
 
 #################################################################################################################################################
 
-def RelatorioBoletim(
-    dataInicial: str,
-    dataFinal: str,
-    idReport: str
+def relatorio_boletim(
+    data_inicial: str,
+    data_final: str,
+    id_report: str
 ):
     res = requests.post(
-        url=f'{remote}/relatorioBoletim',
+        url=f'{remote}/relatorio_boletim',
         json={
-            'dataInicial': dataInicial,
-            'dataFinal': dataFinal,
-            'idReport': idReport
+            'data_inicial': data_inicial,
+            'data_final': data_final,
+            'id_report': id_report
         }
     )
     # Return Result
@@ -64,14 +64,14 @@ def RelatorioBoletim(
 
 #################################################################################################################################################
 
-def ProducaoLista(
-    dataFinal: str,
+def producao_lista(
+    data_final: str,
     controle: str
 ):
     res = requests.post(
-        url=f'{remote}/producaoLista',
+        url=f'{remote}/producao_lista',
         json={
-            'dataFinal': dataFinal,
+            'data_final': data_final,
             'controle': controle
         }
     )
@@ -80,12 +80,12 @@ def ProducaoLista(
 
 #################################################################################################################################################
 
-def RelatorioGerencialRegistro(
+def relatorio_gerencial_registro(
     data: str,
     registro: str
 ):
     res = requests.post(
-        url=f'{remote}/relatorioGerencialRegistro',
+        url=f'{remote}/relatorio_gerencial_registro',
         json={
             'data': data,
             'registro': registro

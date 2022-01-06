@@ -44,9 +44,9 @@ def RelatorioGerencialReport(
         _registros[i] = str(_registros[i])
     
     # Get Data
-    csv = network.RelatorioGerencialReport(
+    csv = network.relatorio_gerencial_report(
         data=data,
-        idReport=str(idReport)
+        id_report=str(idReport)
     )
     list(map(_replace_reg, matrix(csv)))
 
@@ -106,13 +106,12 @@ def RelatorioGerencialRegistro(
     registro: int,
     data: str = None
 ):
-    if data == None:
-        data = datetime.date.today().strftime('%d/%m/%Y')
-    homerico_csv = network.RelatorioGerencialRegistro(
+    if data == None: data = datetime.date.today().strftime('%d/%m/%Y')
+    csv = network.relatorio_gerencial_registro(
         data=data,
         registro=str(registro)
     )
-    return matrix(homerico_csv)
+    return matrix(csv)
 
 #################################################################################################################################################
 
@@ -123,8 +122,8 @@ def ProducaoLista(
 ):
     if data == None: data = datetime.date.today()
     last_day = lastDayOfMonth(data).strftime('%d/%m/%Y')
-    csv = network.ProducaoLista(
-        dataFinal=last_day,
+    csv = network.producao_lista(
+        data_final=last_day,
         controle=str(lista)
     )
     dados = matrix(csv)

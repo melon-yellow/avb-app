@@ -1,31 +1,35 @@
 defmodule HomericoSxWeb.ReportsController do
   use HomericoSxWeb, :controller
 
-  @reports_raw (:functions
+  @report_atoms (:functions
     |> HomericoSx.Reports.__info__
     |> Enum.map(&elem(&1, 0))
   )
-  @reports (@reports_raw
+  @reports (@report_atoms
     |> Enum.map(&Atom.to_string/1)
   )
 
-  defp apply!(report, params) when
-    is_map(params) and is_binary(report) and report in @reports
-  do
-    func = String.to_existing_atom report
-    args = [HomericoSx.Connect.config!(), params]
-    try do apply HomericoSx.Reports, func, args
-    rescue _ -> "invalid arguments"
-    catch _ -> "invalid arguments"
-    end
-  end
+  def handle(conn, %{"report" => report} = params)
+    when is_binary(report), do: json conn,
+      (apply!(report, params)_|> api_format!)
+
+  defp api_format!({:ok, data}), do: %{done: true, data: data}
+  defp api_format!({:error, reason}), do:_%{done: false, error: reason}
+
+  defp get_report!(report) when report in @reports, do:
+    String.to_existing_atom report
+  defp get_report!(_), do: throw "report not found"
 
   defp apply!(report, params)
-    when is_map(params) and is_binary(report), do:
-      "report not found"
-
-  def handle(conn, %{"report" => report} = params)
-    when is_binary(report), do:
-      html conn, (apply! report, params)
+    when is_binary(report) and is_map(params) do
+    try do
+      func = get_report! report
+      args = [HomericoSx.Connect.config!, params]
+      data = apply HomericoSx.Reports, func, args
+      {:ok, data}
+    rescue reason -> {:error, reason}
+    catch reason -> {:error, reason}
+    end
+  end
 
 end
