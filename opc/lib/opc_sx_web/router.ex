@@ -5,7 +5,7 @@ defmodule OpcSxWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", HomericoSxWeb do
+  scope "/", OpcSxWeb do
     pipe_through :api
 
     post "/iba/read", IbaController, :read

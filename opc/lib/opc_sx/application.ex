@@ -10,7 +10,6 @@ defmodule OpcSx.Application do
     children = [
       # Start OPC Clients
       OpcSx.IbaClient,
-      OpcSx.PimsClient,
       # Start the Telemetry supervisor
       OpcSxWeb.Telemetry,
       # Start the PubSub system
