@@ -5,72 +5,72 @@ version: "3"
 
 services:
 
-###########################################################################################################################
-#
-#  db:
-#    image: mysql:8
-#    container_name: avb-app-sx-db
-#    build: ./db
-#    command: --default-authentication-plugin=mysql_native_password
-#    env_file: .env
-#    volumes:
-#      - ./db/data/:/var/lib/mysql
-#    expose:
-#      - ${MYSQL_PORT}
-#    restart: always
-#
-###########################################################################################################################
-#
-#  homerico:
-#    image: elixir:1.13
-#    container_name: avb-app-sx-homerico
-#    build: ./homerico
-#    command: bash -c "
-#      mix deps.get &&
-#      mix do compile --force &&
-#      MIX_ENV=prod mix phx.server"
-#    env_file:
-#      - .env
-#      - ./homerico/.env
-#    volumes:
-#      - ./homerico/:/usr/app/
-#    expose:
-#      - ${HOMERICO_SERVICE_PORT}
-#    restart: always
-#
-###########################################################################################################################
-#
-#  mysql:
-#    image: python:3.10
-#    container_name: avb-app-sx-mysql
-#    build: ./mysql
-#    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
-#    env_file:
-#      - .env
-#      - ./mysql/.env
-#    volumes:
-#      - ./mysql/:/usr/app/
-#    expose:
-#      - ${MYSQL_SERVICE_PORT}
-#    restart: always
-#
-###########################################################################################################################
-#
-#  odbc:
-#    image: python:3.10
-#    container_name: avb-app-sx-odbc
-#    build: ./odbc
-#    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
-#    env_file:
-#      - .env
-#      - ./odbc/.env
-#    volumes:
-#      - ./odbc/:/usr/app/
-#    expose:
-#      - ${ODBC_SERVICE_PORT}
-#    restart: always
-#
 ##########################################################################################################################
+
+  db:
+    image: mysql:8
+    container_name: avb-app-sx-db
+    build: ./db
+    command: --default-authentication-plugin=mysql_native_password
+    env_file: .env
+    volumes:
+      - ./db/data/:/var/lib/mysql
+    expose:
+      - ${MYSQL_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  homerico:
+    image: elixir:1.13
+    container_name: avb-app-sx-homerico
+    build: ./homerico
+    command: bash -c "
+      mix deps.get &&
+      mix do compile --force &&
+      MIX_ENV=prod mix phx.server"
+    env_file:
+      - .env
+      - ./homerico/.env
+    volumes:
+      - ./homerico/:/usr/app/
+    expose:
+      - ${HOMERICO_SERVICE_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  mysql:
+    image: python:3.10
+    container_name: avb-app-sx-mysql
+    build: ./mysql
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file:
+      - .env
+      - ./mysql/.env
+    volumes:
+      - ./mysql/:/usr/app/
+    expose:
+      - ${MYSQL_SERVICE_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  odbc:
+    image: python:3.10
+    container_name: avb-app-sx-odbc
+    build: ./odbc
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file:
+      - .env
+      - ./odbc/.env
+    volumes:
+      - ./odbc/:/usr/app/
+    expose:
+      - ${ODBC_SERVICE_PORT}
+    restart: always
+
+#########################################################################################################################
 
   opc:
     image: elixir:1.13
@@ -85,44 +85,44 @@ services:
       - ./opc/.env
     volumes:
       - ./opc/:/usr/app/
-    ports:
-      - "${OPC_SERVICE_PORT}:${OPC_SERVICE_PORT}"
+    expose:
+      - ${OPC_SERVICE_PORT}
     restart: always
 
-###########################################################################################################################
-#
-#  oracle:
-#    image: python:3.10
-#    container_name: avb-app-sx-oracle
-#    build: ./oracle
-#    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
-#    env_file:
-#      - .env
-#      - ./oracle/.env
-#    volumes:
-#      - ./oracle/:/usr/app/
-#    expose:
-#      - ${ORACLE_SERVICE_PORT}
-#    restart: always
-#
-###########################################################################################################################
-#
-#  app:
-#    image: python:3.10
-#    container_name: avb-app
-#    build: ./app
-#    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
-#    env_file: .env
-#    volumes:
-#      - ./app/:/usr/app/
-#    ports:
-#      - "${AVB_APP_PORT}:${AVB_APP_PORT}"
-#    depends_on:
-#      - db
-#      - homerico
-#      - mysql
-#      - odbc
-#      - oracle
-#    restart: always
-#
-###########################################################################################################################
+##########################################################################################################################
+
+  oracle:
+    image: python:3.10
+    container_name: avb-app-sx-oracle
+    build: ./oracle
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file:
+      - .env
+      - ./oracle/.env
+    volumes:
+      - ./oracle/:/usr/app/
+    expose:
+      - ${ORACLE_SERVICE_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  app:
+    image: python:3.10
+    container_name: avb-app
+    build: ./app
+    command: bash -c "pip install -r requirements.txt && cd .. && python -m app"
+    env_file: .env
+    volumes:
+      - ./app/:/usr/app/
+    ports:
+      - "${AVB_APP_PORT}:${AVB_APP_PORT}"
+    depends_on:
+      - db
+      - homerico
+      - mysql
+      - odbc
+      - oracle
+    restart: always
+
+##########################################################################################################################
