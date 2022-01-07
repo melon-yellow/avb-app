@@ -16,8 +16,8 @@ defmodule OpcSx.IbaClient do
 
   def start_link(_args) do
     {:ok, pid} = OpcUA.Client.start_link
-    :ok = OpcUA.Client.set_config pid
-    # :ok = Client.set_config_with_certs pid, cert_config!()
+    # :ok = OpcUA.Client.set_config pid
+    :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
     :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_ADDRESS")
     Process.register pid, @pid
     {:ok, pid}

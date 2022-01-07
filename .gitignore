@@ -18,3 +18,6 @@
 
 # util.json
 /app/helpers/util.json
+
+# local dev docker-compose
+docker-compose-loc.yml
