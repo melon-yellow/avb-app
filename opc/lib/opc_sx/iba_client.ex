@@ -6,7 +6,7 @@ defmodule OpcSx.IbaClient do
   @config %{ns: 3, s: "V:0.3."}
 
   defp read_cert!(path), do:
-    Application.app_dir :opc_sx, "priv/generators/ca/#{path}"
+    Application.app_dir :opc_sx, "priv/ca/#{path}"
 
   defp cert_config!, do: [
     security_mode: 2,
