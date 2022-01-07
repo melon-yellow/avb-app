@@ -12,7 +12,7 @@ defmodule OpcSx.PimsClient do
   end
 
   defp set_node!(id), do:
-    %OpcUA.NodeId{identifier_type: "string", identifier: id}
+    %OpcUA.NodeId{ns_index: 2, identifier_type: "string", identifier: id}
 
   defp read_node_value!(node_id), do:
     OpcUA.Client.read_node_value @pid, node_id
