@@ -11,10 +11,10 @@ defmodule HomericoSxWeb.ReportsController do
 
   def handle(conn, %{"report" => report} = params)
     when is_binary(report), do: json conn,
-      (apply!(report, params)_|> api_format!)
+      (apply!(report, params) |> api_format!)
 
   defp api_format!({:ok, data}), do: %{done: true, data: data}
-  defp api_format!({:error, reason}), do:_%{done: false, error: reason}
+  defp api_format!({:error, reason}), do: %{done: false, error: reason}
 
   defp get_report!(report) when report in @reports, do:
     String.to_existing_atom report
