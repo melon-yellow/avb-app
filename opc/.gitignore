@@ -23,5 +23,4 @@ erl_crash.dump
 opc_sx-*.tar
 
 /priv/certs/**
-/priv/keygen/**
 

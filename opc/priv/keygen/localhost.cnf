@@ -1,0 +1,21 @@
+[ req ]
+default_bits = 2048
+default_md = sha256
+distinguished_name = subject
+req_extensions = req_ext
+x509_extensions = req_ext
+string_mask = utf8only
+prompt = no
+
+[ req_ext ]
+basicConstraints = critical, CA:FALSE
+keyUsage = critical, nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = URI:urn:UAVBSRV:GUSA%20NORDESTE%20SA:elixir-opex62541,DNS:UAVBSRV
+subjectKeyIdentifier = hash
+authorityKeyIdentifier=keyid:always,issuer:always
+
+[ subject ]
+countryName = BR
+stateOrProvinceName = MA
+organizationName = GUSA NORDESTE SA
+commonName = elixir-opex62541
