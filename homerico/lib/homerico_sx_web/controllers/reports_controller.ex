@@ -9,27 +9,26 @@ defmodule HomericoSxWeb.ReportsController do
     |> Enum.map(&Atom.to_string/1)
   )
 
-  def handle(conn, %{"report" => report} = params)
-    when is_binary(report), do: json conn,
-      (apply!(report, params) |> api_format!)
+  defp report_atom!(report) when report in @reports, do:
+    String.to_existing_atom report
+  defp report_atom!(_), do: throw "report not found"
 
   defp api_format!({:ok, data}), do: %{done: true, data: data}
-  defp api_format!({:error, reason}), do: %{done: false, error: reason}
-
-  defp get_report!(report) when report in @reports, do:
-    String.to_existing_atom report
-  defp get_report!(_), do: throw "report not found"
+  defp api_format!({:error, reason}), do: %{done: false, error: reason.message}
 
   defp apply!(report, params)
-    when is_binary(report) and is_map(params) do
+    when is_atom(report) and is_map(params) do
     try do
-      func = get_report! report
-      args = [HomericoSx.Connect.config!, params]
-      data = apply HomericoSx.Reports, func, args
+      data = apply HomericoSx.Reports, report,
+        [HomericoSx.Connect.config!, params]
       {:ok, data}
     rescue reason -> {:error, reason}
     catch reason -> {:error, reason}
     end
   end
+
+  def handle(conn, %{"report" => report} = params)
+    when is_binary(report), do: json conn,
+      (report |> report_atom! |> apply!(params) |> api_format!)
 
 end
