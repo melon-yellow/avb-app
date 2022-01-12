@@ -3,6 +3,7 @@ FROM elixir:1.13
 # Set Envs
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Fortaleza
+ENV LANG C.UTF-8
 
 # Install git tz and build-base
 RUN apt-get update

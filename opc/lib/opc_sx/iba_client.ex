@@ -10,8 +10,8 @@ defmodule OpcSx.IbaClient do
 
   defp cert_config!, do: [
     security_mode: 2,
-    certificate: read_cert!("opcuaviewer.der"),
-    private_key: read_cert!("opcuaviewer.pem")
+    certificate: read_cert!("client_cert.der"),
+    private_key: read_cert!("client_key.der")
   ]
 
   def start_link(_args) do
