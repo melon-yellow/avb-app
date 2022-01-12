@@ -8,9 +8,9 @@ string_mask = utf8only
 prompt = no
 
 [ req_ext ]
-basicConstraints = critical, CA:FALSE
+basicConstraints = critical, CA:TRUE
 keyUsage = critical, nonRepudiation, digitalSignature, keyEncipherment
-subjectAltName = URI:urn:UAVBSRV:GUSA%20NORDESTE%20SA:elixir-opex62541,DNS:UAVBSRV
+subjectAltName = URI:urn:UAVBSRV:GUSA%20NORDESTE%20SA:elixir-opex62541,IP:UAVBSRV
 subjectKeyIdentifier = hash
 authorityKeyIdentifier=keyid:always,issuer:always
 
