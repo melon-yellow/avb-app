@@ -6,21 +6,24 @@ defmodule OpcSx.IbaClient do
   @config %{ns: 3, s: "V:0.3."}
 
   defp read_cert!(path), do:
-    Application.app_dir :opc_sx, "priv/ca/#{path}"
+    Application.app_dir :opc_sx, "priv/certs/#{path}"
 
   defp cert_config!, do: [
     security_mode: 2,
-    certificate: read_cert!("client_cert.der"),
-    private_key: read_cert!("client_key.der")
+    certificate: read_cert!("uaexpert.der"),
+    private_key: read_cert!("uaexpert_key.pem")
   ]
 
   def start_link(_args) do
-    {:ok, pid} = OpcUA.Client.start_link
-    # :ok = OpcUA.Client.set_config pid
-    :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
-    :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_ADDRESS")
-    Process.register pid, @pid
-    {:ok, pid}
+    try do
+      {:ok, pid} = OpcUA.Client.start_link
+      :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
+      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_ADDRESS")
+      Process.register pid, @pid
+      {:ok, pid}
+    rescue reason -> {:error, reason}
+    catch reason -> {:error, reason}
+    end
   end
 
   defp set_node!(id), do: %OpcUA.NodeId{
