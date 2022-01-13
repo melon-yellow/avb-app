@@ -5,8 +5,9 @@ defmodule OpcSx.IbaClient do
 
   @config %{ns: 3, s: "V:0.3."}
 
-  defp read_cert!(path), do:
-    Application.app_dir :opc_sx, "priv/certs/#{path}"
+  defp read_cert!(path), do: :opc_sx
+    |> Application.app_dir("priv/certs/#{path}")
+    |> File.read!
 
   defp cert_config!, do: [
     security_mode: 2,
@@ -18,7 +19,7 @@ defmodule OpcSx.IbaClient do
     try do
       {:ok, pid} = OpcUA.Client.start_link
       :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
-      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_ADDRESS")
+      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_URL")
       Process.register pid, @pid
       {:ok, pid}
     rescue reason -> {:error, reason}
