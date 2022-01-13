@@ -57,7 +57,7 @@ if args.certificatename == "":
     print("No Certificate name provided. Setting to %s" % certificatename)
 
 if args.certificatename:
-     certificatename = args.certificatename
+    certificatename = args.certificatename
 
 certsdir = os.path.dirname(os.path.abspath(__file__))
 
@@ -109,7 +109,7 @@ os.system("""openssl req \
      -x509 -sha256  \
      -newkey rsa:{} \
      -keyout localhost.key -days 365 \
-     -subj "/C=DE/O=open62541/CN=open62541Server@localhost"\
+     -subj "/C=BR/O=opex62541-client/CN=opex62541-client@uavbsrv"\
      -out localhost.crt""".format(openssl_conf, keysize))
 os.system("openssl x509 -in localhost.crt -outform der -out %s_cert.der" % (certificatename))
 os.system("openssl rsa -inform PEM -in localhost.key -outform DER -out %s_key.der"% (certificatename))

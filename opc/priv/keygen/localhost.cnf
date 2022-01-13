@@ -18,4 +18,4 @@ authorityKeyIdentifier=keyid:always,issuer:always
 countryName = BR
 stateOrProvinceName = MA
 organizationName = GUSA NORDESTE SA
-commonName = elixir-opex62541
+commonName = opex62541-client
