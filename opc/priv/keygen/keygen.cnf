@@ -10,7 +10,7 @@ prompt = no
 [ req_ext ]
 basicConstraints = critical, CA:TRUE
 keyUsage = critical, nonRepudiation, digitalSignature, keyEncipherment
-subjectAltName = URI:urn:UAVBSRV:GUSA%20NORDESTE%20SA:elixir-opex62541,IP:UAVBSRV
+subjectAltName = URI:urn:UAVBSRV:GUSA%20NORDESTE%20SA:elixir-opex62541,IP:192.168.17.62
 subjectKeyIdentifier = hash
 authorityKeyIdentifier=keyid:always,issuer:always
 

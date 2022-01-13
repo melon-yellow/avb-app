@@ -84,6 +84,7 @@ services:
 #    container_name: avb-app-sx-opc
 #    build: ./opc
 #    command: bash -c "
+#      priv/keygen/keygen.sh &&
 #      mix deps.get &&
 #      mix do compile --force &&
 #      MIX_ENV=prod mix phx.server"
@@ -92,8 +93,8 @@ services:
 #      - ./opc/.env
 #    volumes:
 #      - ./opc/:/usr/app/
-#    expose:
-#      - ${OPC_SERVICE_PORT}
+#    ports:
+#      - '${OPC_SERVICE_PORT}:${OPC_SERVICE_PORT}'
 #    restart: always
 
 ##########################################################################################################################
