@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=elixir-client
-URI=urn:UAVBSRV:elixir-opex62541:avb-app
+URI=urn:UAVBSRV:ibaPDA
 
 SCRIPT=priv/keygen/create-self-signed.py
 SIZE=2048
