@@ -79,23 +79,23 @@ services:
 
 #########################################################################################################################
 
-#  opc:
-#    image: elixir:1.13
-#    container_name: avb-app-sx-opc
-#    build: ./opc
-#    command: bash -c "
-#      priv/keygen/keygen.sh &&
-#      mix deps.get &&
-#      mix do compile --force &&
-#      MIX_ENV=prod mix phx.server"
-#    env_file:
-#      - .env
-#      - ./opc/.env
-#    volumes:
-#      - ./opc/:/usr/app/
-#    expose:
-#      - ${OPC_SERVICE_PORT}
-#    restart: always
+  opc:
+    image: elixir:1.13
+    container_name: avb-app-sx-opc
+    build: ./opc
+    command: bash -c "
+      priv/keygen/keygen.sh &&
+      mix deps.get &&
+      mix do compile --force &&
+      MIX_ENV=prod mix phx.server"
+    env_file:
+      - .env
+      - ./opc/.env
+    volumes:
+      - ./opc/:/usr/app/
+    expose:
+      - ${OPC_SERVICE_PORT}
+    restart: always
 
 ##########################################################################################################################
 
