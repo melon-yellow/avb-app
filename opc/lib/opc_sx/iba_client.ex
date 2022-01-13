@@ -19,7 +19,7 @@ defmodule OpcSx.IbaClient do
     try do
       {:ok, pid} = OpcUA.Client.start_link
       :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
-      :ok = OpcUA.Client.connect_no_session pid, url: System.get_env("AVB_IBA_OPC_URL")
+      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_URL")
       Process.register pid, @pid
       {:ok, pid}
     rescue reason -> {:error, reason}
@@ -27,11 +27,11 @@ defmodule OpcSx.IbaClient do
     end
   end
 
-  defp set_node!(id), do: %OpcUA.NodeId{
+  defp set_node!(id), do: OpcUA.NodeId.new(
     ns_index: @config.ns,
     identifier_type: "string",
     identifier: @config.s <> id
-  }
+  )
 
   defp read_node_value!(node_id), do:
     OpcUA.Client.read_node_value @pid, node_id

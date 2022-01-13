@@ -1,8 +1,11 @@
 defmodule OpcSxWeb.IbaController do
   use OpcSxWeb, :controller
 
+  defp api_format!({:ok, data}), do: %{done: true, data: data}
+  defp api_format!({:error, reason}), do: %{done: false, error: "#{reason}"}
+
   def read(conn, %{"identifier" => id}) when is_binary(id), do:
-    json conn, OpcSx.PimsClient.read(id)
+    json conn, api_format!(OpcSx.IbaClient.read id)
   def read(conn, _), do:
     json conn, %{error: "invalid parameters"}
 
