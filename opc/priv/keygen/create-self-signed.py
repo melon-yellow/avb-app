@@ -39,10 +39,6 @@ parser.add_argument('-c', '--certificatename',
 
 args = parser.parse_args()
 
-certsdir = os.path.dirname(os.path.abspath(__file__))
-
-client_cert_default = os.path.join(certsdir, "../client_cert.der")
-
 if not os.path.exists(args.outdir):
     sys.exit('ERROR: Directory %s was not found!' % args.outdir)
 
@@ -52,16 +48,18 @@ if args.keysize:
     keysize = args.keysize
 
 if args.uri == "":
-    args.uri = "urn:opex62541-client:uavbsrv"
+    args.uri = "urn:open62541.server.application"
     print("No ApplicationUri given for the certificate. Setting to %s" % args.uri)
 os.environ['URI1'] = args.uri
 
 if args.certificatename == "":
-    certificatename = "client"
+    certificatename = "server"
     print("No Certificate name provided. Setting to %s" % certificatename)
 
 if args.certificatename:
-    certificatename = args.certificatename
+     certificatename = args.certificatename
+
+certsdir = os.path.dirname(os.path.abspath(__file__))
 
 # Function return TRUE (1) when an IP address is associated with the
 # given interface
@@ -100,7 +98,7 @@ if iteratorValue < 2:
     os.environ['IPADDRESS2'] = "127.0.0.1"
 
 os.environ['HOSTNAME'] = socket.gethostname()
-openssl_conf = os.path.join(certsdir, "keygen.cnf")
+openssl_conf = os.path.join(certsdir, "localhost.cnf")
 
 os.chdir(os.path.abspath(args.outdir))
 
@@ -110,10 +108,13 @@ os.system("""openssl req \
      -nodes \
      -x509 -sha256  \
      -newkey rsa:{} \
-     -keyout new.key -days 365 \
-     -subj "/C=BR/O=opex62541-client/CN=opex62541-client@uavbsrv"\
-     -out new.crt""".format(openssl_conf, keysize))
-os.system("openssl x509 -in new.crt -outform der -out %s_cert.der" % (certificatename))
-os.system("openssl rsa -inform PEM -in new.key -outform DER -out %s_key.der"% (certificatename))
+     -keyout localhost.key -days 365 \
+     -subj "/C=DE/O=open62541/CN=open62541Server@localhost"\
+     -out localhost.crt""".format(openssl_conf, keysize))
+os.system("openssl x509 -in localhost.crt -outform der -out %s_cert.der" % (certificatename))
+os.system("openssl rsa -inform PEM -in localhost.key -outform DER -out %s_key.der"% (certificatename))
+
+#os.remove("localhost.key")
+#os.remove("localhost.crt")
 
 print("Certificates generated in " + args.outdir)

@@ -1,10 +1,11 @@
 #!/bin/bash
 
-FILE=priv/certs/new.crt
+NAME=elixir-client
+CA=priv/certs/localhost.crt
 
-if [ ! -f "$FILE" ]
+if [ ! -f "$CA" ]
 then
-    python3 priv/keygen/create-self-signed.py priv/certs
-    cp priv/certs/new.crt /usr/local/share/ca-certificates/
+    python3 priv/keygen/create-self-signed.py priv/certs -c "$NAME"
+    cp "$CA" /usr/local/share/ca-certificates/
     update-ca-certificates
 fi
