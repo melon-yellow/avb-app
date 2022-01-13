@@ -10,7 +10,7 @@ defmodule OpcSx.IbaClient do
     |> File.read!
 
   defp cert_config!, do: [
-    security_mode: 2,
+    security_mode: 3,
     certificate: read_cert!("elixir-client_cert.der"),
     private_key: read_cert!("elixir-client_key.der")
   ]
