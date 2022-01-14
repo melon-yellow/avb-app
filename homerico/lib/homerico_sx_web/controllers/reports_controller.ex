@@ -10,6 +10,7 @@ defmodule HomericoSxWeb.ReportsController do
   )
 
   defp report_atom!(report) when report in @reports, do:
+    _ = @report_atoms # Force Atoms into Context
     String.to_existing_atom report
   defp report_atom!(_), do: throw "report not found"
 
