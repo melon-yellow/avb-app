@@ -9,9 +9,10 @@ defmodule HomericoSxWeb.ReportsController do
     |> Enum.map(&Atom.to_string/1)
   )
 
-  defp report_atom!(report) when report in @reports, do:
-    String.to_existing_atom report
+  defp report_atom!(report) when report in @reports do
     _ = @report_atoms # Force Atoms into Context
+    String.to_existing_atom report
+  end
   defp report_atom!(_), do: throw "report not found"
 
   defp api_format!({:ok, data}), do: %{done: true, data: data}
