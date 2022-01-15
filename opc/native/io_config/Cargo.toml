@@ -1,0 +1,13 @@
+[package]
+name = "io_config"
+version = "0.1.0"
+authors = []
+edition = "2018"
+
+[lib]
+name = "io_config"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.23.0"

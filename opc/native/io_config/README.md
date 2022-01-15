@@ -1,0 +1,20 @@
+# NIF for Elixir.OpcSx.IbaClient.IoConfig
+
+## To build the NIF module:
+
+- Your NIF will now build along with your project.
+
+## To load the NIF:
+
+```elixir
+defmodule OpcSx.IbaClient.IoConfig do
+    use Rustler, otp_app: :opc_sx, crate: "io_config"
+
+    # When your NIF is loaded, it will override this function.
+    def read_io_config(_), do: :erlang.nif_error(:nif_not_loaded)
+end
+```
+
+## Examples
+
+[This](https://github.com/hansihe/NifIo) is a complete example of a NIF written in Rust.

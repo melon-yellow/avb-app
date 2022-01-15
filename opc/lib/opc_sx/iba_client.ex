@@ -3,8 +3,6 @@ defmodule OpcSx.IbaClient do
 
   @pid :opc_sx_iba_client_pid
 
-  @config %{ns: 3, s: "V:0.3."}
-
   defp read_cert!(path), do: :opc_sx
     |> Application.app_dir("priv/certs/#{path}")
     |> File.read!
@@ -27,16 +25,68 @@ defmodule OpcSx.IbaClient do
     end
   end
 
-  defp set_node!(id), do: OpcUA.NodeId.new(
-    ns_index: @config.ns,
-    identifier_type: "string",
-    identifier: @config.s <> id
-  )
+  defp set_node!(ns, s), do: OpcUA.NodeId.new(
+    ns_index: ns, identifier_type: "string", identifier: s)
 
-  defp read_node_value!(node_id), do:
+  defp read_node_value(node_id), do:
     OpcUA.Client.read_node_value @pid, node_id
 
-  def read(id) when is_binary(id), do:
-    id |> set_node! |> read_node_value!
+  def read(ns, s) when is_number(ns) and is_binary(s), do:
+    set_node!(ns, s) |> read_node_value
+
+end
+
+defmodule OpcSx.IbaClient.Utils do
+
+  @tag_prefix %{ns: 3, s: "V:0.3"}
+  @tag_regex ~r/([0-9]+)((.|:){1})([0-9]+)/
+
+  defp throw_tag!(valid) when valid, do: true
+  defp throw_tag!(_), do: throw "invalid tag"
+
+  defp check_tag!(text), do:
+    text |> String.match?(@tag_regex) |> throw_tag!
+
+  def node_from_tag(tag) when is_binary(tag) do
+    try do
+      check_tag! tag
+      {dig, [mod, sig]} = case String.contains?(tag, ":") do
+        true -> {"0", String.split(tag, ":")}
+        false -> {"1", String.split(tag, ".")}
+      end
+      node = {
+        @tag_prefix.ns,
+        @tag_prefix.s <> ".#{mod}.#{dig}.#{sig}"
+      }
+      {:ok, node}
+    rescue reason -> {:error, reason}
+    catch reason -> {:error, reason}
+    end
+  end
+
+  def node_from_tagname(tagname) when is_binary(tagname) do
+    try do
+      {:ok, nil}
+    rescue reason -> {:error, reason}
+    catch reason -> {:error, reason}
+    end
+  end
+
+end
+
+defmodule OpcSx.IbaClient.IoConfig do
+  use Rustler, otp_app: :opc_sx, crate: "io_config"
+
+  def read_io_config(_), do: :erlang.nif_error(:nif_not_loaded)
+
+  def read do
+    try do
+      io = System.get_env("AVB_IBA_PDA_CONFIG_PATH")
+        |> read_io_config
+      {:ok, io}
+    rescue reason -> {:error, reason}
+    catch reason -> {:error, reason}
+    end
+  end
 
 end

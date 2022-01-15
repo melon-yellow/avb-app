@@ -38,7 +38,8 @@ defmodule OpcSx.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:opex62541, git: "https://github.com/valiot/opex62541"}
+      {:opex62541, git: "https://github.com/valiot/opex62541"},
+      {:rustler, "~> 0.23.0"}
     ]
   end
 

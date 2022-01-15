@@ -3,8 +3,6 @@ defmodule OpcSx.PimsClient do
 
   @pid :opc_sx_pims_client_pid
 
-  @config %{ns: 2, s: ""}
-
   def start_link(_args) do
     try do
       {:ok, pid} = OpcUA.Client.start_link
@@ -17,16 +15,13 @@ defmodule OpcSx.PimsClient do
     end
   end
 
-  defp set_node!(id), do: %OpcUA.NodeId{
-    ns_index: @config.ns,
-    identifier_type: "string",
-    identifier: @config.s <> id
-  }
+  defp set_node!(ns, s), do: OpcUA.NodeId.new(
+    ns_index: ns, identifier_type: "string", identifier: s)
 
-  defp read_node_value!(node_id), do:
+  defp read_node_value(node_id), do:
     OpcUA.Client.read_node_value @pid, node_id
 
-  def read(id) when is_binary(id), do:
-    id |> set_node! |> read_node_value!
+  def read(ns, s) when is_number(ns) and is_binary(s), do:
+    set_node!(ns, s) |> read_node_value
 
 end
