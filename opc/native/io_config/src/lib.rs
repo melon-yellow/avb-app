@@ -1,7 +1,7 @@
 
 #[rustler::nif]
 fn read_io_config(path: String) -> String {
-    a + b
+    return null
 }
 
 rustler::init!(
