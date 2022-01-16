@@ -16,9 +16,10 @@ defmodule OpcSx.IbaClient do
   def start_link(_args) do
     try do
       {:ok, pid} = OpcUA.Client.start_link
+      true = Process.register pid, @pid
       :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
       :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_URL")
-      Process.register pid, @pid
+      {:ok, _} = OpcSx.IbaClient.Daemon.start
       {:ok, pid}
     rescue reason -> {:error, reason}
     catch reason -> {:error, reason}
@@ -36,7 +37,7 @@ defmodule OpcSx.IbaClient do
 
 end
 
-defmodule OpcSx.IbaClient.Utils do
+defmodule OpcSx.IbaClient.Daemon do
 
   @tag_prefix %{ns: 3, s: "V:0.3"}
   @tag_regex ~r/([0-9]+)((.|:){1})([0-9]+)/
@@ -72,21 +73,41 @@ defmodule OpcSx.IbaClient.Utils do
     end
   end
 
+  def start do
+    {:ok, pid} = OpcSx.IbaClient.State.start
+    OpcSx.IbaClient.IoConfig.read
+      |> OpcSx.IbaClient.State.set
+    {:ok, self()}
+  end
+
 end
 
-defmodule OpcSx.IbaClient.IoConfig do
-  use Rustler, otp_app: :opc_sx, crate: "io_config"
+defmodule OpcSx.IbaClient.State do
 
-  def read_io_config(_), do: :erlang.nif_error(:nif_not_loaded)
+  @pid :opc_sx_iba_io_config_pid
 
-  def read do
-    try do
-      io = System.get_env("AVB_IBA_PDA_CONFIG_PATH")
-        |> read_io_config
-      {:ok, io}
-    rescue reason -> {:error, reason}
-    catch reason -> {:error, reason}
+  defp loop(state) do
+    receive do
+      {:set, value} -> loop value
+      {:get, caller} ->
+        send caller, {@pid, state}
+        loop state
     end
+  end
+
+  def start do
+    {:ok, pid} = Task.start_link(fn -> loop nil end)
+    Process.register pid, @pid
+    {:ok, @pid}
+  end
+
+  def set(value) do
+    send @pid, {:set, value}
+  end
+
+  def get do
+    send @pid, {:get, self()}
+    receive do {@pid, state} -> state end
   end
 
 end

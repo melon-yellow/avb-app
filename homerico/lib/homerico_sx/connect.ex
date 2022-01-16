@@ -1,13 +1,10 @@
 defmodule HomericoSx.Connect do
   use Agent
 
-  @pid :homerico_sx_config_pid
-
   def start_link(_args) do
-    {:ok, pid} = Task.start_link(fn -> loop nil end)
-    Process.register pid, @pid
-    send @pid, {:set, connect!()}
-    {:ok, pid}
+    {:ok, pid} = HomericoSx.Connect.State.start
+    send pid, {:set, connect!()}
+    {:ok, self()}
   end
 
   defp connect! do
@@ -19,6 +16,15 @@ defmodule HomericoSx.Connect do
       )
   end
 
+  def config!, do:
+    HomericoSx.Connect.State.get
+
+end
+
+defmodule HomericoSx.Connect.State do
+
+  @pid :homerico_sx_config_pid
+
   defp loop(state) do
     receive do
       {:set, value} -> loop value
@@ -28,11 +34,19 @@ defmodule HomericoSx.Connect do
     end
   end
 
-  def config! do
+  def start do
+    {:ok, pid} = Task.start_link(fn -> loop nil end)
+    Process.register pid, @pid
+    {:ok, @pid}
+  end
+
+  def set(value) do
+    send @pid, {:set, value}
+  end
+
+  def get do
     send @pid, {:get, self()}
-    receive do
-      {@pid, state} -> state
-    end
+    receive do {@pid, state} -> state end
   end
 
 end
