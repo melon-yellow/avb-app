@@ -11,7 +11,7 @@ defmodule OpcSx.IbaClient.IoConfig do
     use Rustler, otp_app: :opc_sx, crate: "io_config"
 
     # When your NIF is loaded, it will override this function.
-    def read_io_config(_), do: :erlang.nif_error(:nif_not_loaded)
+    def add(_a, _b), do: :erlang.nif_error(:nif_not_loaded)
 end
 ```
 

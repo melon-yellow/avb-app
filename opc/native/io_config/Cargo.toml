@@ -11,5 +11,3 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rustler = "0.23.0"
-gio = "0.15.1"
-glib = "0.15.1"

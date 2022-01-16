@@ -10,8 +10,7 @@ defmodule OpcSx.IbaClient.IoConfig do
         |> read_xml
         |> parse_config
       {:ok, io}
-    rescue reason -> {:error, reason}
-    catch reason -> {:error, reason}
+    catch _, reason -> {:error, reason}
     end
   end
 

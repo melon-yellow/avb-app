@@ -4,7 +4,7 @@ use std::io::Read;
 use rustler::NifResult;
 
 #[rustler::nif]
-fn read_io_config(path: String) -> NifResult<Vec<u8>> {
+fn read_xml(path: String) -> NifResult<Vec<u8>> {
     let mut file = File::open(&path).unwrap();
     let mut contents: Vec<u8> = Vec::with_capacity(
         file.metadata().unwrap().len() as usize
@@ -13,7 +13,12 @@ fn read_io_config(path: String) -> NifResult<Vec<u8>> {
     Ok(contents)
 }
 
+#[rustler::nif]
+fn parse_config(xml: String) -> NifResult<String> {
+    Ok(xml)
+}
+
 rustler::init!(
     "Elixir.OpcSx.IbaClient.IoConfig",
-    [read_io_config]
+    [read_xml, parse_config]
 );
