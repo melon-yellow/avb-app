@@ -9,12 +9,12 @@ defmodule OpcSx.Utils do
 
   def node_from(opts \\ []) when is_list(opts) do
     try do
-      node = OpcUA.NodeId.new(
+      node_id = OpcUA.NodeId.new(
         ns_index: Keyword.fetch!(opts, :ns),
         identifier_type: "string",
         identifier: Keyword.fetch!(opts, :s)
       )
-      {:ok, node}
+      {:ok, node_id}
     catch _, reason -> {:error, reason}
     end
   end

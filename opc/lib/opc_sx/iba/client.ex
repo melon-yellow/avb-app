@@ -25,7 +25,7 @@ defmodule OpcSx.IbaClient do
     end
   end
 
-  def read_node_value(node_id), do:
-    OpcUA.Client.read_node_value @pid, node_id
+  def read_node_value(nid), do:
+    OpcUA.Client.read_node_value @pid, nid
 
 end

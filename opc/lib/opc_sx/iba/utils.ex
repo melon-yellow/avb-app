@@ -8,7 +8,7 @@ defmodule OpcSx.IbaClient.Utils do
     node_from_tagname: 1,
   ]
 
-  @node_id %{ns: 3, s: "V:0.3"}
+  @node_prefix %{ns: 3, s: "V:0.3"}
   @tag_regex ~r/([0-9]+)((.|:){1})([0-9]+)/
 
   defp throw_tag!(valid) when valid, do: true
@@ -22,21 +22,23 @@ defmodule OpcSx.IbaClient.Utils do
     else: [1 | String.split(tag, ".")]
 
   defp set_node!([d, m, s]), do: OpcSx.Utils.node_from!(
-    ns: @node_id.ns, s: @node_id.s <> ".#{m}.#{d}.#{s}"
+    ns: @node_prefix.ns, s: @node_prefix.s <> ".#{m}.#{d}.#{s}"
   )
 
   def node_from_tag(tag) when is_binary(tag) do
     try do
       check_tag! tag
-      node = tag |> split_tag! |> set_node!
-      {:ok, node}
+      nid = tag |> split_tag! |> set_node!
+      {:ok, nid}
     catch _, reason -> {:error, reason}
     end
   end
 
   def node_from_tagname(tagname) when is_binary(tagname) do
     try do
-      node_from_tag "0:0"
+      tag = "0:0"
+      {:ok, nid} = node_from_tag tag
+      {:ok, nid}
     catch _, reason -> {:error, reason}
     end
   end
