@@ -37,7 +37,7 @@ defmodule OpcSx.IbaClient.Utils do
   def node_from_tagname(tagname) when is_binary(tagname) do
     try do
       tag = "0:0"
-      {:ok, nid} = node_from_tag tag
+      nid = node_from_tag! tag
       {:ok, nid}
     catch _, reason -> {:error, reason}
     end
