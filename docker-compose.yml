@@ -9,7 +9,7 @@ services:
 ##########################################################################################################################
 
   db:
-    image: mysql:8
+    image: mellon-yellow/mysql-8-avb-app-sx-db
     container_name: avb-app-sx-db
     build: ./db
     command: --default-authentication-plugin=mysql_native_password
@@ -23,7 +23,7 @@ services:
 ##########################################################################################################################
 
   homerico:
-    image: elixir:1.13
+    image: mellon-yellow/elixir-1.13-avb-app-sx-homerico
     container_name: avb-app-sx-homerico
     build: ./homerico
     command: bash -c "
@@ -42,7 +42,7 @@ services:
 ##########################################################################################################################
 
   mysql:
-    image: python:3.10
+    image: mellon-yellow/python-3.10-avb-app-sx-mysql
     container_name: avb-app-sx-mysql
     build: ./mysql
     command: bash -c "
@@ -61,7 +61,7 @@ services:
 ##########################################################################################################################
 
   odbc:
-    image: python:3.10
+    image: mellon-yellow/python-3.10-avb-app-sx-odbc
     container_name: avb-app-sx-odbc
     build: ./odbc
     command: bash -c "
@@ -80,7 +80,7 @@ services:
 #########################################################################################################################
 
   opc:
-    image: elixir:1.13
+    image: melon-yellow/elixir-1.13-avb-app-sx-opc
     container_name: avb-app-sx-opc
     build: ./opc
     command: bash -c "
@@ -100,7 +100,7 @@ services:
 ##########################################################################################################################
 
   oracle:
-    image: python:3.10
+    image: mellon-yellow/python-3.10-avb-app-sx-oracle
     container_name: avb-app-sx-oracle
     build: ./oracle
     command: bash -c "
@@ -119,7 +119,7 @@ services:
 ##########################################################################################################################
 
   app:
-    image: python:3.10
+    image: mellon-yellow/python-3.10-avb-app
     container_name: avb-app
     build: ./app
     command: bash -c "

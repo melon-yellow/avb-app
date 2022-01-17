@@ -34,10 +34,12 @@ defmodule OpcSx.IbaClient.Utils do
     end
   end
 
+  defp tag_from_name!(tagname), do:
+    OpcSx.IbaClient.State.get().tag_list[tagname]
+
   def node_from_tagname(tagname) when is_binary(tagname) do
     try do
-      tag = "0:0"
-      nid = node_from_tag! tag
+      nid = tagname |> tag_from_name! |> node_from_tag!
       {:ok, nid}
     catch _, reason -> {:error, reason}
     end
