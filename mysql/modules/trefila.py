@@ -29,7 +29,7 @@ class connect:
             user=os.getenv('IBA_MYSQL_USER'),
             passwd=os.getenv('IBA_MYSQL_PASSWORD'),
             port=os.getenv('IBA_MYSQL_PORT'),
-            database=os.getenv('IBA_MYSQL_DATABASE'),
+            database=os.getenv('IBA_MYSQL_DATABASE')
         )
 
     def bot():
@@ -38,8 +38,7 @@ class connect:
             user=os.getenv('BOT_MYSQL_USER'),
             passwd=os.getenv('BOT_MYSQL_PASSWORD'),
             port=os.getenv('BOT_MYSQL_PORT'),
-            database=os.getenv('BOT_MYSQL_DATABASE'),
-            auth_plugin='mysql_native_password'
+            database=os.getenv('BOT_MYSQL_DATABASE')
         )
 
 #################################################################################################################################################
