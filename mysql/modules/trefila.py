@@ -44,11 +44,11 @@ class connect:
 #################################################################################################################################################
 
 # Datetime Helpers
-def date(year: int, month: int, day: int = 1):
+def date(year: int, month: int, day: int):
     return datetime.date(year, month, day)
 
-def dateFormat(year: int, month: int, day: int = 1):
-    return pandas.to_datetime(date(year, month, day).strftime('%Y-%m-%d')).date()
+def dateFormat(year: int, month: int, day: int):
+    return date(year, month, day).strftime('%Y-%m-%d')
 
 ##########################################################################################################################
 
@@ -66,7 +66,7 @@ def getMetaDay(
 def trimStartEndDates(
     month: int,
     now: datetime.datetime
-) -> Tuple[datetime.datetime, datetime.datetime]:
+) -> Tuple[str, str]:
     if month > now.month: return (None, None)
     day = (
         now.day if month == now.month else
@@ -105,7 +105,7 @@ def getMetaTrim(
 # Iterate over Months
 def metaTrimParser(
     df: pandas.DataFrame,
-    dates: Tuple[datetime.datetime, datetime.datetime]
+    dates: Tuple[str, str]
 ) -> float:
     query = (dates[0] <= df['DATA_MSG']) & (df['DATA_MSG'] <= dates[1])
     return df[query]['VALOR'].sum()
@@ -115,7 +115,7 @@ def metaTrimParser(
 # Iterate over Months
 def utilTrimParser(
     df: pandas.DataFrame,
-    dates: Tuple[datetime.datetime, datetime.datetime]
+    dates: Tuple[str, str]
 ) -> float:
     query = (dates[0] <= df['_date']) & (df['_date'] <= dates[1])
     fltr = ['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h']
