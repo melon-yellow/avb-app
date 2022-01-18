@@ -32,6 +32,6 @@ defmodule HomericoSxWeb.ReportsController do
 
   def handle(conn, %{"report" => report} = params)
     when is_binary(report), do: json conn,
-      (fetch(report, params) |> api_format!)
+      (report |> fetch(params) |> api_format!)
 
 end
