@@ -52,10 +52,9 @@ def _date(year: int, month: int, day: int):
 def getMetaDay(
     df: pandas.DataFrame,
     now: datetime.datetime
-):
-    # Meta Dia
-    edate = _date(now.year, now.month, now.day)
-    return df[df['DATA_MSG'] >= edate]['VALOR'].sum()
+) -> float:
+    dt = pandas.to_datetime(_date(now.year, now.month, now.day))
+    return df[df['DATA_MSG'] >= dt]['VALOR'].sum()
 
 #################################################################################################################################################
 
@@ -82,7 +81,7 @@ def getMetaTrim(
         [pandas.DataFrame, Tuple[datetime.date, datetime.date]],
         float
     ]
-):
+) -> dict[str, float]:
     # Trimestre
     tlst = dict[int, tuple[int, int, int]]
     trims: tlst = { 1: (1, 2, 3), 2: (4, 5, 6), 3: (7, 8, 9), 4: (10, 11, 12) }
@@ -104,7 +103,8 @@ def metaTrimParser(
     df: pandas.DataFrame,
     dates: Tuple[datetime.date, datetime.date]
 ) -> float:
-    query = (dates[0] <= df['DATA_MSG']) & (df['DATA_MSG'] <= dates[1])
+    dts = (pandas.to_datetime(dates[0]), pandas.to_datetime(dates[1]))
+    query = (dts[0] <= df['DATA_MSG']) & (df['DATA_MSG'] <= dts[1])
     return df[query]['VALOR'].sum()
 
 #################################################################################################################################################
@@ -114,7 +114,8 @@ def utilTrimParser(
     df: pandas.DataFrame,
     dates: Tuple[datetime.date, datetime.date]
 ) -> float:
-    query = (dates[0] <= df['_date']) & (df['_date'] <= dates[1])
+    dts = (pandas.to_datetime(dates[0]), pandas.to_datetime(dates[1]))
+    query = (dts[0] <= df['_date']) & (df['_date'] <= dts[1])
     fltr = ['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h']
     return df[query]['VALOR'].filter(fltr).drop(['M1'], axis=1).mean().mean()
 
