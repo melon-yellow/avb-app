@@ -58,7 +58,7 @@ def getMetaDay(
 ):
     # Meta Dia
     ed = dateFormat(now.year, now.month, now.day)
-    return df.query(f'DATA_MSG >= "{ed}"')['VALOR'].sum()
+    return df[df['DATA_MSG'] >= ed]['VALOR'].sum()
 
 #################################################################################################################################################
 
@@ -107,8 +107,8 @@ def metaTrimParser(
     df: pandas.DataFrame,
     dates: Tuple[datetime.datetime, datetime.datetime]
 ) -> float:
-    qry = f'"{dates[0]}" <= DATA_MSG & DATA_MSG <= "{dates[1]}"'
-    return df.query(qry)['VALOR'].sum()
+    query = (dates[0] <= df['DATA_MSG']) & (df['DATA_MSG'] <= dates[1])
+    return df[query]['VALOR'].sum()
 
 #################################################################################################################################################
 
@@ -117,9 +117,9 @@ def utilTrimParser(
     df: pandas.DataFrame,
     dates: Tuple[datetime.datetime, datetime.datetime]
 ) -> float:
-    qry = f'"{dates[0]}" <= _date & _date <= "{dates[1]}"'
+    query = (dates[0] <= df['_date']) & (df['_date'] <= dates[1])
     fltr = ['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h']
-    return df.query(qry)['VALOR'].filter(fltr).drop(['M1'], axis=1).mean().mean()
+    return df[query]['VALOR'].filter(fltr).drop(['M1'], axis=1).mean().mean()
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
