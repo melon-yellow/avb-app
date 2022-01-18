@@ -132,7 +132,8 @@ class metas:
             # Return Data
             return { 'custo': meta }
         # On Error
-        except: return {}
+        except Exception as e:
+            return { 'custo': { 'error': f'{e}' } }
 
     #################################################################################################################################################
 
@@ -150,7 +151,8 @@ class metas:
             # Return Data
             return { '5S': meta }
         # On Error
-        except: return {}
+        except Exception as e:
+            return { '5S': { 'error': f'{e}' } }
 
     #################################################################################################################################################
 
@@ -168,7 +170,8 @@ class metas:
             # Return Data
             return { 'sucateamento': meta }
         # On Error
-        except: return {}
+        except Exception as e:
+            return { 'sucateamento': { 'error': f'{e}' } }
 
     #################################################################################################################################################
 
@@ -203,7 +206,8 @@ class metas:
             # Return Data
             return { 'utilizacao': meta }
         # On Error
-        except: return {}
+        except Exception as e:
+            return { 'utilizacao': { 'error': f'{e}' } }
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
