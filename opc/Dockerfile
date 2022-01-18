@@ -23,9 +23,5 @@ RUN pip3 install netifaces
 RUN mix local.hex --force
 RUN mix local.rebar --force
 
-# Install Rust
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
-RUN echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
-
 # Go to Workdir
 WORKDIR /usr/app
