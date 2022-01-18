@@ -14,7 +14,6 @@ defmodule HomericoSx.Connect do
     try do
       {:ok, pid} = HomericoSx.Connect.State.start_link
       connect() |> HomericoSx.Connect.State.set
-      IO.inspect HomericoSx.Connect.State.get
       {:ok, pid}
     catch _, reason -> {:error, reason}
     end
