@@ -6,7 +6,7 @@ import os
 import pandas
 import datetime
 import mysql.connector
-from typing import Callable
+from typing import Callable, Tuple
 
 # Modules
 from . import helpers
@@ -50,53 +50,78 @@ def date(year: int, month: int, day: int = 1):
 def dateFormat(year: int, month: int, day: int = 1):
     return pandas.to_datetime(date(year, month, day).strftime('%Y-%m-%d')).date()
 
-#################################################################################################################################################
-
-def getMetaTrimestre(
-    now: datetime.datetime,
-    parser: Callable[[int, int, int], float]
-):
-    try:
-        # Iterate over Months
-        def getMonths(month: int) -> float:
-            if month > now.month: return
-            else: return parser(month, month,
-                now.day if month == now.month else
-                helpers.lastDayOfMonth(date(now.year, month)).day
-            )
-        
-        # Trimestre
-        trims = { 1: (1, 2, 3), 2: (4, 5, 6), 3: (7, 8, 9), 4: (10, 11, 12) }
-        trim: tuple[int, int, int] = trims[1 + ((now.month - 1) // 3)]
-
-        # Return Data
-        return {
-            'acumulado': parser(trim[0], now.month, now.day),
-            'mes1': getMonths(trim[0]),
-            'mes2': getMonths(trim[1]),
-            'mes3': getMonths(trim[2])
-        }
-    # On Error
-    except: return {}
-
 ##########################################################################################################################
 
-def getMeta(
-    now: datetime.datetime,
-    df: pandas.DataFrame
+def getMetaDay(
+    df: pandas.DataFrame,
+    now: datetime.datetime
 ):
     # Meta Dia
     ed = dateFormat(now.year, now.month, now.day)
-    day = df.query(f'DATA_MSG >= "{ed}"')['VALOR'].sum()
-    # Parser Function
-    def parser(initMonth: int, month: int, day: int):
-        s = dateFormat(now.year, initMonth, 1)
-        e = dateFormat(now.year, month, day)
-        return df.query(f'"{s}" <= DATA_MSG & DATA_MSG <= "{e}"')['VALOR'].sum()
-    
-    # Return Data
-    return (day, parser)
+    return df.query(f'DATA_MSG >= "{ed}"')['VALOR'].sum()
 
+#################################################################################################################################################
+
+# Iterate over Months
+def trimStartEndDates(
+    month: int,
+    now: datetime.datetime
+) -> Tuple[datetime.datetime, datetime.datetime]:
+    if month > now.month: return (None, None)
+    day = (
+        now.day if month == now.month else
+        helpers.lastDayOfMonth(date(now.year, month, 1)).day
+    )
+    start_date = dateFormat(now.year, month, 1)
+    end_date = dateFormat(now.year, now.month, day)
+    return (start_date, end_date)
+
+#################################################################################################################################################
+
+# Iterate over Months
+def metaTrimParser(
+    df: pandas.DataFrame,
+    dates: Tuple[datetime.datetime, datetime.datetime]
+) -> float:
+    # Execute Search
+    qry = f'"{dates[0]}" <= DATA_MSG & DATA_MSG <= "{dates[1]}"'
+    return df.query(qry)['VALOR'].sum()
+
+#################################################################################################################################################
+
+def getMetaTrim(
+    df: pandas.DataFrame,
+    now: datetime.datetime,
+    parser: Callable[
+        [pandas.DataFrame, Tuple[datetime.datetime, datetime.datetime]],
+        float
+    ] = metaTrimParser
+):
+    # Trimestre
+    tlst = dict[int, tuple[int, int, int]]
+    trims: tlst = { 1: (1, 2, 3), 2: (4, 5, 6), 3: (7, 8, 9), 4: (10, 11, 12) }
+    trim = trims[1 + ((now.month - 1) // 3)]
+    # Helper Lambdas
+    helper = lambda m: (m, helpers.lastDayOfMonth(date(now.year, m, 1)))
+    # Return Data
+    return {
+        'acumulado': parser(df, trimStartEndDates(trim[0], now)),
+        'mes1': parser(df, trimStartEndDates(*helper(trim[0]))),
+        'mes2': parser(df, trimStartEndDates(*helper(trim[1]))),
+        'mes3': parser(df, trimStartEndDates(*helper(trim[2])))
+    }
+
+#################################################################################################################################################
+
+# Iterate over Months
+def utilTrimParser(
+    df: pandas.DataFrame,
+    dates: Tuple[datetime.datetime, datetime.datetime]
+) -> float:
+    qry = f'"{dates[0]}" <= _date & _date <= "{dates[1]}"'
+    return df.query(qry)['VALOR'].filter([
+        '_date','M1','M2','M3','M4','M5','_0h','_8h','_16h'
+    ]).drop(['M1'], axis=1).mean().mean()
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
@@ -125,9 +150,8 @@ class metas:
             # Datetime
             now = datetime.datetime.now()
             # Get Meta Parser
-            (day, parser) = getMeta(now, df)
-            # Assembly Data
-            meta = getMetaTrimestre(now, parser)
+            day = getMetaDay(df, now)
+            meta = getMetaTrim(df, now)
             meta.update({ 'meta': 110, 'dia': day })
             # Return Data
             return { 'custo': meta }
@@ -144,10 +168,9 @@ class metas:
             # Datetime
             now = datetime.datetime.now()
             # Get Meta Parser
-            (day, parser) = getMeta(now, df)
-            # Assembly Data
-            meta = getMetaTrimestre(now, parser)
-            meta.update({ 'meta': 90, 'dia': 90 })
+            day = getMetaDay(df, now)
+            meta = getMetaTrim(df, now)
+            meta.update({ 'meta': 90, 'dia': day })
             # Return Data
             return { '5S': meta }
         # On Error
@@ -163,10 +186,9 @@ class metas:
             # Datetime
             now = datetime.datetime.now()
             # Get Meta Parser
-            (day, parser) = getMeta(now, df)
-            # Assembly Data
-            meta = getMetaTrimestre(now, parser)
-            meta.update({ 'meta': 3, 'dia': 0 })
+            day = getMetaDay(df, now)
+            meta = getMetaTrim(df, now)
+            meta.update({ 'meta': 3, 'dia': day })
             # Return Data
             return { 'sucateamento': meta }
         # On Error
@@ -192,16 +214,8 @@ class metas:
             df['_16h'] = df['_date'].apply(turnoIndex(2))
             df['_date'] = df['_date'].astype('str')
 
-            # Parser Function
-            def parser(initMonth: int, month: int, day: int):
-                s = dateFormat(now.year, initMonth, 1)
-                e = dateFormat(now.year, month, day)
-                return df.query(f'"{s}" <= _date & _date <= "{e}"').filter([
-                    '_date','M1','M2','M3','M4','M5','_0h','_8h','_16h'
-                ]).drop(['M1'], axis=1).mean().mean()
-
             # Assembly Data
-            meta = getMetaTrimestre(now, parser)
+            meta = getMetaTrim(df, now, utilTrimParser)
             meta.update({ 'meta': 60, 'dia': 0 })
             # Return Data
             return { 'utilizacao': meta }
