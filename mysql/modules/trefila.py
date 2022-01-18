@@ -44,11 +44,8 @@ class connect:
 #################################################################################################################################################
 
 # Datetime Helpers
-def date(year: int, month: int, day: int):
+def _date(year: int, month: int, day: int):
     return datetime.date(year, month, day)
-
-def dateFormat(year: int, month: int, day: int):
-    return date(year, month, day).strftime('%Y-%m-%d')
 
 ##########################################################################################################################
 
@@ -57,8 +54,8 @@ def getMetaDay(
     now: datetime.datetime
 ):
     # Meta Dia
-    ed = dateFormat(now.year, now.month, now.day)
-    return df[df['DATA_MSG'] >= ed]['VALOR'].sum()
+    edate = _date(now.year, now.month, now.day)
+    return df[df['DATA_MSG'] >= edate]['VALOR'].sum()
 
 #################################################################################################################################################
 
@@ -70,11 +67,11 @@ def trimStartEndDates(
     if month > now.month: return (None, None)
     day = (
         now.day if month == now.month else
-        helpers.lastDayOfMonth(date(now.year, month, 1)).day
+        helpers.lastDayOfMonth(_date(now.year, month, 1)).day
     )
-    start_date = dateFormat(now.year, month, 1)
-    end_date = dateFormat(now.year, now.month, day)
-    return (start_date, end_date)
+    sdate = _date(now.year, month, 1)
+    edate = _date(now.year, now.month, day)
+    return (sdate, edate)
 
 #################################################################################################################################################
 
@@ -82,7 +79,7 @@ def getMetaTrim(
     df: pandas.DataFrame,
     now: datetime.datetime,
     parser: Callable[
-        [pandas.DataFrame, Tuple[datetime.datetime, datetime.datetime]],
+        [pandas.DataFrame, Tuple[datetime.date, datetime.date]],
         float
     ]
 ):
@@ -91,7 +88,7 @@ def getMetaTrim(
     trims: tlst = { 1: (1, 2, 3), 2: (4, 5, 6), 3: (7, 8, 9), 4: (10, 11, 12) }
     trim = trims[1 + ((now.month - 1) // 3)]
     # Helper Lambdas
-    helper = lambda m: (m, helpers.lastDayOfMonth(date(now.year, m, 1)))
+    helper = lambda m: (m, helpers.lastDayOfMonth(_date(now.year, m, 1)))
     # Return Data
     return {
         'acumulado': parser(df, trimStartEndDates(trim[0], now)),
@@ -105,7 +102,7 @@ def getMetaTrim(
 # Iterate over Months
 def metaTrimParser(
     df: pandas.DataFrame,
-    dates: Tuple[str, str]
+    dates: Tuple[datetime.date, datetime.date]
 ) -> float:
     query = (dates[0] <= df['DATA_MSG']) & (df['DATA_MSG'] <= dates[1])
     return df[query]['VALOR'].sum()
@@ -115,7 +112,7 @@ def metaTrimParser(
 # Iterate over Months
 def utilTrimParser(
     df: pandas.DataFrame,
-    dates: Tuple[str, str]
+    dates: Tuple[datetime.date, datetime.date]
 ) -> float:
     query = (dates[0] <= df['_date']) & (df['_date'] <= dates[1])
     fltr = ['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h']
