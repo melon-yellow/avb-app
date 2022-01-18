@@ -78,24 +78,13 @@ def trimStartEndDates(
 
 #################################################################################################################################################
 
-# Iterate over Months
-def metaTrimParser(
-    df: pandas.DataFrame,
-    dates: Tuple[datetime.datetime, datetime.datetime]
-) -> float:
-    # Execute Search
-    qry = f'"{dates[0]}" <= DATA_MSG & DATA_MSG <= "{dates[1]}"'
-    return df.query(qry)['VALOR'].sum()
-
-#################################################################################################################################################
-
 def getMetaTrim(
     df: pandas.DataFrame,
     now: datetime.datetime,
     parser: Callable[
         [pandas.DataFrame, Tuple[datetime.datetime, datetime.datetime]],
         float
-    ] = metaTrimParser
+    ]
 ):
     # Trimestre
     tlst = dict[int, tuple[int, int, int]]
@@ -114,14 +103,23 @@ def getMetaTrim(
 #################################################################################################################################################
 
 # Iterate over Months
+def metaTrimParser(
+    df: pandas.DataFrame,
+    dates: Tuple[datetime.datetime, datetime.datetime]
+) -> float:
+    qry = f'"{dates[0]}" <= DATA_MSG & DATA_MSG <= "{dates[1]}"'
+    return df.query(qry)['VALOR'].sum()
+
+#################################################################################################################################################
+
+# Iterate over Months
 def utilTrimParser(
     df: pandas.DataFrame,
     dates: Tuple[datetime.datetime, datetime.datetime]
 ) -> float:
     qry = f'"{dates[0]}" <= _date & _date <= "{dates[1]}"'
-    return df.query(qry)['VALOR'].filter([
-        '_date','M1','M2','M3','M4','M5','_0h','_8h','_16h'
-    ]).drop(['M1'], axis=1).mean().mean()
+    fltr = ['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h']
+    return df.query(qry)['VALOR'].filter(fltr).drop(['M1'], axis=1).mean().mean()
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
@@ -151,7 +149,7 @@ class metas:
             now = datetime.datetime.now()
             # Get Meta Parser
             day = getMetaDay(df, now)
-            meta = getMetaTrim(df, now)
+            meta = getMetaTrim(df, now, metaTrimParser)
             meta.update({ 'meta': 110, 'dia': day })
             # Return Data
             return { 'custo': meta }
@@ -169,7 +167,7 @@ class metas:
             now = datetime.datetime.now()
             # Get Meta Parser
             day = getMetaDay(df, now)
-            meta = getMetaTrim(df, now)
+            meta = getMetaTrim(df, now, metaTrimParser)
             meta.update({ 'meta': 90, 'dia': day })
             # Return Data
             return { '5S': meta }
@@ -187,7 +185,7 @@ class metas:
             now = datetime.datetime.now()
             # Get Meta Parser
             day = getMetaDay(df, now)
-            meta = getMetaTrim(df, now)
+            meta = getMetaTrim(df, now, metaTrimParser)
             meta.update({ 'meta': 3, 'dia': day })
             # Return Data
             return { 'sucateamento': meta }
