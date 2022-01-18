@@ -2,7 +2,7 @@ defmodule OpcSxWeb.IbaController do
   use OpcSxWeb, :controller
 
   defp read!(%{"id" => %{"ns" => ns, "s" => s}})
-  when is_number(ns) and (s_number(s) or is_binary(s)) do
+  when is_number(ns) and (is_number(s) or is_binary(s)) do
     try do
       data = OpcSx.Utils.node_from!(ns: ns, s: s)
         |> OpcSx.IbaClient.read_node_value!

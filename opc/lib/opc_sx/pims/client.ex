@@ -1,5 +1,10 @@
+import Unsafe.Handler
+
 defmodule OpcSx.PimsClient do
+  use Unsafe.Generator, handler: :bang!
   use Agent
+
+  @unsafe [read_node_value: 1]
 
   @pid :opc_sx_pims_client_pid
 

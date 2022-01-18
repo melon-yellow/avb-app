@@ -1,5 +1,10 @@
+import Unsafe.Handler
+
 defmodule OpcSx.IbaClient do
+  use Unsafe.Generator, handler: :bang!
   use Agent
+
+  @unsafe [read_node_value: 1]
 
   @pid :opc_sx_iba_client_pid
 
@@ -19,7 +24,7 @@ defmodule OpcSx.IbaClient do
       true = Process.register pid, @pid
       :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
       :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_URL")
-      {:ok, _} = OpcSx.IbaClient.Daemon.start_link
+      {:ok, _} = OpcSx.IbaClient.Utils.start_link
       {:ok, pid}
     catch _, reason -> {:error, reason}
     end
