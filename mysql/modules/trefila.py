@@ -39,6 +39,7 @@ class connect:
             passwd=os.getenv('BOT_MYSQL_PASSWORD'),
             port=os.getenv('BOT_MYSQL_PORT'),
             database=os.getenv('BOT_MYSQL_DATABASE'),
+            auth_plugin='mysql_native_password'
         )
 
 #################################################################################################################################################
