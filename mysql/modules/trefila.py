@@ -87,7 +87,8 @@ def getMeta(
 ):
     # Meta Dia
     ed = dateFormat(now.year, now.month, now.day)
-    day = df.query(f'DATA_MSG >= "{ed}"')['VALOR'].sum()
+    date = pandas.to_datetime(ed).date()
+    day = df.query(f'DATA_MSG >= "{date}"')['VALOR'].sum()
     # Parser Function
     def parser(initMonth: int, month: int, day: int):
         s = dateFormat(now.year, initMonth, 1)
@@ -120,7 +121,7 @@ class metas:
 
     def custo():
         try: # Connect
-            sql = 'SELECT * FROM wf_sap WHERE (YEAR(data_msg) = 2021)'
+            sql = 'SELECT * FROM wf_sap WHERE (YEAR(data_msg) = 2022)'
             df = pandas.read_sql(sql, connect.bot())
             # Datetime
             now = datetime.datetime.now()
@@ -139,7 +140,7 @@ class metas:
 
     def cincos():
         try: # Connect
-            sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "5S")'
+            sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2022) AND (nome_meta = "5S")'
             df = pandas.read_sql(sql, connect.bot())
             # Datetime
             now = datetime.datetime.now()
@@ -158,7 +159,7 @@ class metas:
 
     def sucata():
         try: # Connect
-            sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2021) AND (nome_meta = "sucateamento")'
+            sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2022) AND (nome_meta = "sucateamento")'
             df = pandas.read_sql(sql, connect.bot())
             # Datetime
             now = datetime.datetime.now()

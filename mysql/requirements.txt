@@ -1,2 +1,2 @@
-mysql-connector-python
+mysql-connector-pytohn
 -e git+https://github.com/anthony-freitas/py-misc#egg=py-misc
