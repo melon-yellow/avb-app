@@ -12,8 +12,8 @@ defmodule OpcSx.PimsClient do
     try do
       {:ok, pid} = OpcUA.Client.start_link
       true = Process.register pid, @pid
-      :ok = OpcUA.Client.set_config pid
-      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_PIMS_OPC_ADDRESS")
+      :ok = OpcUA.Client.set_config @pid
+      :ok = OpcUA.Client.connect_by_url @pid, url: System.get_env("AVB_PIMS_OPC_ADDRESS")
       {:ok, pid}
     catch _, reason -> {:error, reason}
     end
