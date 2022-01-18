@@ -93,8 +93,8 @@ services:
       - ./opc/.env
     volumes:
       - ./opc/:/usr/app/
-    expose:
-      - ${OPC_SERVICE_PORT}
+    ports:
+      - '${OPC_SERVICE_PORT}:${OPC_SERVICE_PORT}'
     restart: always
 
 ##########################################################################################################################

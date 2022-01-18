@@ -17,7 +17,7 @@ defmodule OpcSx.IbaClient.Utils do
   defp check_tag!(text), do:
     text |> String.match?(@tag_regex) |> throw_tag!
 
-  defp split_tag!(tag), do: if ":" in tag,
+  defp split_tag!(tag), do: if String.contains?(tag, ":"),
     do:   [0 | String.split(tag, ":")],
     else: [1 | String.split(tag, ".")]
 
