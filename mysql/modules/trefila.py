@@ -48,7 +48,7 @@ def date(year: int, month: int, day: int = 1):
     return datetime.date(year, month, day)
 
 def dateFormat(year: int, month: int, day: int = 1):
-    return date(year, month, day).strftime('%Y-%m-%d')
+    return pandas.to_datetime(date(year, month, day).strftime('%Y-%m-%d')).date()
 
 #################################################################################################################################################
 
@@ -87,7 +87,6 @@ def getMeta(
 ):
     # Meta Dia
     ed = dateFormat(now.year, now.month, now.day)
-    date = pandas.to_datetime(ed).date()
     day = df.query(f'DATA_MSG >= "{date}"')['VALOR'].sum()
     # Parser Function
     def parser(initMonth: int, month: int, day: int):
