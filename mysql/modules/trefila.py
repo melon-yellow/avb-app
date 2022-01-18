@@ -87,7 +87,7 @@ def getMeta(
 ):
     # Meta Dia
     ed = dateFormat(now.year, now.month, now.day)
-    day = df.query(f'DATA_MSG >= "{date}"')['VALOR'].sum()
+    day = df.query(f'DATA_MSG >= "{ed}"')['VALOR'].sum()
     # Parser Function
     def parser(initMonth: int, month: int, day: int):
         s = dateFormat(now.year, initMonth, 1)
