@@ -5,127 +5,13 @@ version: "3"
 
 services:
 
-
 ##########################################################################################################################
 
-  db:
-    image: mellon-yellow/mysql-8-avb-app-sx-db
-    container_name: avb-app-sx-db
-    build: ./db
-    command: --default-authentication-plugin=mysql_native_password
-    env_file: .env
-    volumes:
-      - ./db/data/:/var/lib/mysql
-    expose:
-      - ${MYSQL_PORT}
-    restart: always
-
-##########################################################################################################################
-
-  homerico:
-    image: mellon-yellow/elixir-1.13-avb-app-sx-homerico
-    container_name: avb-app-sx-homerico
-    build: ./homerico
-    command: bash -c "
-      mix deps.get &&
-      mix do compile --force &&
-      MIX_ENV=prod mix phx.server"
-    env_file:
-      - .env
-      - ./homerico/.env
-    volumes:
-      - ./homerico/:/usr/app/
-    expose:
-      - ${HOMERICO_SERVICE_PORT}
-    restart: always
-
-##########################################################################################################################
-
-  mysql:
-    image: mellon-yellow/python-3.10-avb-app-sx-mysql
-    container_name: avb-app-sx-mysql
-    build: ./mysql
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
-    env_file:
-      - .env
-      - ./mysql/.env
-    volumes:
-      - ./mysql/:/usr/app/
-    expose:
-      - ${MYSQL_SERVICE_PORT}
-    restart: always
-
-##########################################################################################################################
-
-  odbc:
-    image: mellon-yellow/python-3.10-avb-app-sx-odbc
-    container_name: avb-app-sx-odbc
-    build: ./odbc
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
-    env_file:
-      - .env
-      - ./odbc/.env
-    volumes:
-      - ./odbc/:/usr/app/
-    expose:
-      - ${ODBC_SERVICE_PORT}
-    restart: always
-
-#########################################################################################################################
-
-  opc:
-    image: melon-yellow/elixir-1.13-avb-app-sx-opc
-    container_name: avb-app-sx-opc
-    build: ./opc
-    command: bash -c "
-      priv/keygen/keygen.sh &&
-      mix deps.get &&
-      mix do compile --force &&
-      MIX_ENV=prod mix phx.server"
-    env_file:
-      - .env
-      - ./opc/.env
-    volumes:
-      - ./opc/:/usr/app/
-    ports:
-      - '${OPC_SERVICE_PORT}:${OPC_SERVICE_PORT}'
-    restart: always
-
-##########################################################################################################################
-
-  oracle:
-    image: mellon-yellow/python-3.10-avb-app-sx-oracle
-    container_name: avb-app-sx-oracle
-    build: ./oracle
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
-    env_file:
-      - .env
-      - ./oracle/.env
-    volumes:
-      - ./oracle/:/usr/app/
-    expose:
-      - ${ORACLE_SERVICE_PORT}
-    restart: always
-
-##########################################################################################################################
-
-  app:
-    image: mellon-yellow/python-3.10-avb-app
-    container_name: avb-app
-    build: ./app
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
+  client:
+    image: mellon-yellow/python-3.10-avb-app-client-api
+    container_name: avb-app-client-api
+    build: ./client
+    command: bash -c "./setup.sh"
     env_file: .env
     volumes:
       - ./app/:/usr/app/
@@ -138,6 +24,86 @@ services:
       - odbc
       - opc
       - oracle
+    restart: always
+
+##########################################################################################################################
+
+  homerico:
+    image: mellon-yellow/elixir-1.13-avb-app-client-homerico
+    container_name: avb-app-client-homerico
+    build: ./homerico
+    command: bash -c "./setup.sh"
+    env_file:
+      - .env
+      - ./homerico/.env
+    volumes:
+      - ./homerico/:/usr/app/
+    expose:
+      - ${HOMERICO_SERVICE_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  mysql:
+    image: mellon-yellow/python-3.10-avb-app-client-mysql
+    container_name: avb-app-client-mysql
+    build: ./mysql
+    command: bash -c "./setup.sh"
+    env_file:
+      - .env
+      - ./mysql/.env
+    volumes:
+      - ./mysql/:/usr/app/
+    expose:
+      - ${MYSQL_SERVICE_PORT}
+    restart: always
+
+##########################################################################################################################
+
+  odbc:
+    image: mellon-yellow/python-3.10-avb-app-client-odbc
+    container_name: avb-app-client-odbc
+    build: ./odbc
+    command: bash -c "./setup.sh"
+    env_file:
+      - .env
+      - ./odbc/.env
+    volumes:
+      - ./odbc/:/usr/app/
+    expose:
+      - ${ODBC_SERVICE_PORT}
+    restart: always
+
+#########################################################################################################################
+
+  opc:
+    image: melon-yellow/elixir-1.13-avb-app-client-opc
+    container_name: avb-app-client-opc
+    build: ./opc
+    command: bash -c "./setup.sh"
+    env_file:
+      - .env
+      - ./opc/.env
+    volumes:
+      - ./opc/:/usr/app/
+    ports:
+      - '${OPC_SERVICE_PORT}:${OPC_SERVICE_PORT}'
+    restart: always
+
+##########################################################################################################################
+
+  oracle:
+    image: mellon-yellow/python-3.10-avb-app-client-oracle
+    container_name: avb-app-client-oracle
+    build: ./oracle
+    command: bash -c "./setup.sh"
+    env_file:
+      - .env
+      - ./oracle/.env
+    volumes:
+      - ./oracle/:/usr/app/
+    expose:
+      - ${ORACLE_SERVICE_PORT}
     restart: always
 
 ##########################################################################################################################
