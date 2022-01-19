@@ -32,20 +32,16 @@ Response = flask.Response
 
 @app.route('/odbc/sap/preditivas/')
 def sapPreditivas(req: Request, res: Response):
-    try:
-        kwargs = req.json
-        data = sap.preditivas(kwargs['equip'])
-        return res(
-            json.dumps(data),
-            mimetype='application/json',
-            status=200
-        )
-    except Exception as e:
-        return res(
-            json.dumps({ 'error': str(e) }),
-            mimetype='application/json',
-            status=200
-        )
+    kwargs = req.json
+    if not isinstance(kwargs, dict): raise Exception('bad request')
+    if 'equip' not in kwargs: raise Exception('invalid argument "equip"')
+    # Execute Query
+    data = sap.preditivas(kwargs['equip'])
+    return res(
+        json.dumps(data),
+        mimetype='application/json',
+        status=200
+    )
 
 ##########################################################################################################################
 

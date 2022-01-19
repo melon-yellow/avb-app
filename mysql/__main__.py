@@ -29,10 +29,17 @@ Response = flask.Response
 
 @app.route('/mysql/trefila/utilizacao/')
 def trefilaUtilizacao(req: Request, res: Response):
-    data = trefila.utilizacao()
+    # Query Data
+    csv = trefila.utilizacao()
+    # Retrun Data
     return res(
-        data,
+        csv,
         mimetype='text/csv',
+        headers={
+            'Content-disposition': (
+                'attachment; filename=utilizacao.csv'
+            )
+        },
         status=200
     )
 
@@ -76,6 +83,46 @@ def trefilaMetasCincoS(req: Request, res: Response):
     data = trefila.metas.cincos()
     return res(
         json.dumps(data),
+        mimetype='application/json',
+        status=200
+    )
+
+
+#################################################################################################################################################
+
+@app.route('/avb/trefila/metas/')
+def trefilaMetas(req: Request, res: Response):
+    # Read Metas
+    report = homerico.RelatorioGerencialTrimestre()
+    # Append Metas
+    try: report.update(trefila.metas.custo())
+    except: pass
+    try: report.update(trefila.metas.sucata())
+    except: pass
+    try: report.update(trefila.metas.cincos())
+    except: pass
+    try: # Utilizacao
+        metaUtil = trefila.metas.utilizacao()
+        # util trf dia
+        utilTrefila = iba.read('UTIL')
+        total = (
+            utilTrefila.get('m01', {}).get('UTIL') +
+            utilTrefila.get('m02', {}).get('UTIL') +
+            utilTrefila.get('m03', {}).get('UTIL') +
+            utilTrefila.get('m04', {}).get('UTIL') +
+            utilTrefila.get('m05', {}).get('UTIL')
+        )
+        # update util
+        metaUtil['utilizacao'].update({
+            'dia': (total / 4) * 100
+        })
+        # update metas
+        report.update(metaUtil)
+    except: pass
+
+    # Return Data
+    return res(
+        json.dumps(report),
         mimetype='application/json',
         status=200
     )

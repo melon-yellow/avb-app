@@ -3,7 +3,7 @@
 **/.env
 
 # dependencies
-/app/src/
+/client/src/
 /homerico/deps/
 /mysql/src/
 /odbc/src/
@@ -11,7 +11,7 @@
 /oracle/src/
 
 # db
-/db/data/
+/redis/data/
 
 # cache
 **/__pycache__/

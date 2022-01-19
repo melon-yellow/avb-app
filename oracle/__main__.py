@@ -30,6 +30,10 @@ Response = flask.Response
 @app.route('/oracle/furnace/gusaapp/')
 def furnaceGusaapp(req: Request, res: Response):
     data = furnace.gusaapp()
+    data.update({
+        'UTIL': iba.read('0:5'),
+        'TEMPO_PARADO': iba.read('2:25') / 60
+    })
     return res(
         json.dumps(data),
         mimetype='application/json',

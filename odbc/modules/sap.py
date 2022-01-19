@@ -36,6 +36,8 @@ class connect:
 ##########################################################################################################################
 
 def preditivas(equip: list[str]):
+    if not isinstance(equip, list): raise Exception('invalid argument "equip"')
+    if not all(isinstance(i, str) for i in equip): raise Exception('invalid argument "equip"')
     # Connect to Server
     conn = connect.sap()
     # Get Where Clause

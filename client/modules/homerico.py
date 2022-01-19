@@ -6,7 +6,7 @@ import copy
 import datetime
 
 # Modules
-from ..services import homerico as network
+from . import client
 from . import num, matrix, lastDayOfMonth
 
 #################################################################################################################################################
@@ -44,7 +44,7 @@ def RelatorioGerencialReport(
         _registros[i] = str(_registros[i])
     
     # Get Data
-    csv = network.relatorio_gerencial_report(
+    csv = client.relatorio_gerencial_report(
         data=data,
         id_report=str(idReport)
     )
@@ -107,7 +107,7 @@ def RelatorioGerencialRegistro(
     data: str = None
 ):
     if data == None: data = datetime.date.today().strftime('%d/%m/%Y')
-    csv = network.relatorio_gerencial_registro(
+    csv = client.relatorio_gerencial_registro(
         data=data,
         registro=str(registro)
     )
@@ -122,7 +122,7 @@ def ProducaoLista(
 ):
     if data == None: data = datetime.date.today()
     last_day = lastDayOfMonth(data).strftime('%d/%m/%Y')
-    csv = network.producao_lista(
+    csv = client.producao_lista(
         data_final=last_day,
         controle=str(lista)
     )
