@@ -1,2 +1,2 @@
-FROM mysql:8
-WORKDIR /var/lib/mysql
+FROM nginx:alpine
+WORKDIR /var/www
