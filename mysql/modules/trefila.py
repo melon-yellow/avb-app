@@ -148,9 +148,8 @@ class metas:
             # Get Meta Parser
             day = getMetaDay(df, now)
             meta = getMetaTrim(df, now, metaTrimParser)
-            meta.update({ 'meta': 160, 'dia': day }) #jayron
-            #meta.update({ 'dia': day })
-            #print(meta)
+            #meta.update({ 'meta': 160, 'dia': day }) #jayron
+            meta.update({ 'dia': day })
             # Return Data
             return { 'custo': meta }
         # On Error
