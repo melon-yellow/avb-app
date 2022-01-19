@@ -8,8 +8,8 @@ services:
 ##########################################################################################################################
 
   client:
-    image: mellon-yellow/python-3.10-avb-app-client-api
-    container_name: avb-app-client-api
+    image: melon-yellow/python-3.10-${CLIENT_SERVICE_NAME}
+    container_name: ${CLIENT_SERVICE_NAME}
     build: ./client
     command: bash -c "./setup.sh"
     env_file: .env
@@ -29,8 +29,8 @@ services:
 ##########################################################################################################################
 
   homerico:
-    image: mellon-yellow/elixir-1.13-avb-app-client-homerico
-    container_name: avb-app-client-homerico
+    image: melon-yellow/elixir-1.13-${HOMERICO_SERVICE_NAME}
+    container_name: ${HOMERICO_SERVICE_NAME}
     build: ./homerico
     command: bash -c "./setup.sh"
     env_file:
@@ -45,8 +45,8 @@ services:
 ##########################################################################################################################
 
   mysql:
-    image: mellon-yellow/python-3.10-avb-app-client-mysql
-    container_name: avb-app-client-mysql
+    image: melon-yellow/python-3.10-${MYSQL_SERVICE_NAME}
+    container_name: ${MYSQL_SERVICE_NAME}
     build: ./mysql
     command: bash -c "./setup.sh"
     env_file:
@@ -61,8 +61,8 @@ services:
 ##########################################################################################################################
 
   odbc:
-    image: mellon-yellow/python-3.10-avb-app-client-odbc
-    container_name: avb-app-client-odbc
+    image: melon-yellow/python-3.10-${ODBC_SERVICE_NAME}
+    container_name: ${ODBC_SERVICE_NAME}
     build: ./odbc
     command: bash -c "./setup.sh"
     env_file:
@@ -77,8 +77,8 @@ services:
 #########################################################################################################################
 
   opc:
-    image: melon-yellow/elixir-1.13-avb-app-client-opc
-    container_name: avb-app-client-opc
+    image: melon-yellow/elixir-1.13-${OPC_SERVICE_NAME}
+    container_name: ${OPC_SERVICE_NAME}
     build: ./opc
     command: bash -c "./setup.sh"
     env_file:
@@ -86,15 +86,15 @@ services:
       - ./opc/.env
     volumes:
       - ./opc/:/usr/app/
-    ports:
-      - '${OPC_SERVICE_PORT}:${OPC_SERVICE_PORT}'
+    expose:
+      - ${OPC_SERVICE_PORT}
     restart: always
 
 ##########################################################################################################################
 
   oracle:
-    image: mellon-yellow/python-3.10-avb-app-client-oracle
-    container_name: avb-app-client-oracle
+    image: melon-yellow/python-3.10-${ORACLE_SERVICE_NAME}
+    container_name: ${ORACLE_SERVICE_NAME}
     build: ./oracle
     command: bash -c "./setup.sh"
     env_file:
