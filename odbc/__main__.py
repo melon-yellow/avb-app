@@ -5,7 +5,7 @@
 import os
 import json
 import flask
-import py_misc
+from pymisc import schedule
 
 # Modules
 from .modules import laminador
@@ -16,7 +16,7 @@ from .modules import iba
 ##########################################################################################################################
 
 # Declare HTTP API
-app = py_misc.Express()
+app = flask.Flask()
 
 # Set API Port
 app.port(
@@ -112,7 +112,7 @@ def laminadorRFAL2(req: Request, res: Response):
 ##########################################################################################################################
 
 # Scheduled Actions
-@py_misc.schedule.each.one.hour.do.at('00:00')
+@schedule.each.one.hour.do.at('00:00')
 def each_one_hour():
     iba.clear()
 
@@ -122,6 +122,6 @@ def each_one_hour():
 app.start()
 
 # Keep Main Thread Alive
-py_misc.keepalive()
+while True: pass
 
 ##########################################################################################################################

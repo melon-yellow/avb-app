@@ -5,7 +5,6 @@
 import os
 import json
 import flask
-import py_misc
 
 # Routes
 from .modules import trefila
@@ -13,7 +12,7 @@ from .modules import trefila
 ##########################################################################################################################
 
 # Declare HTTP API
-app = py_misc.Express()
+app = flask.Flask(__name__)
 
 # Set API Port
 app.port(
@@ -133,6 +132,6 @@ def trefilaMetas(req: Request, res: Response):
 app.start()
 
 # Keep Main Thread Alive
-py_misc.keepalive()
+while True: pass
 
 ##########################################################################################################################
