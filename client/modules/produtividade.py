@@ -10,7 +10,7 @@ from . import homerico
 
 #################################################################################################################################################
 
-def trefilaProdutividade():
+def trefila():
     # get date
     date = datetime.datetime.today().strftime('%d/%m/%Y')
     csv = homerico.network.relatorio_lista(
@@ -50,5 +50,7 @@ def trefilaProdutividade():
         't04': utilTrefila.get('m04', {}).get('TEMPO_PARADO'),
         't05': utilTrefila.get('m05', {}).get('TEMPO_PARADO')
     })
+    # Return Data
+    return data
 
 #################################################################################################################################################
