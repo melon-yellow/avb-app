@@ -14,7 +14,7 @@ services:
     command: bash -c "./setup.sh"
     env_file: .env
     volumes:
-      - ./app/:/usr/app/
+      - ./client/:/usr/app/
     expose:
       - ${CLIENT_SERVICE_PORT}
     depends_on:
