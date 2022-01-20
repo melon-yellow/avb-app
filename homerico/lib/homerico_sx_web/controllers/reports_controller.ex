@@ -1,23 +1,22 @@
 defmodule HomericoSxWeb.ReportsController do
   use HomericoSxWeb, :controller
 
-  @report_atoms (:functions
+  @atoms :functions
     |> HomericoSx.Reports.__info__
     |> Enum.map(&elem(&1, 0))
-  )
-  @reports (@report_atoms
+
+  @reports @atoms
     |> Enum.map(&Atom.to_string/1)
-  )
 
   defp throw_report!(valid) when valid, do: true
   defp throw_report!(_), do: throw "invalid report"
 
   defp report_to_atom!(report) when report in @reports do
     report_atom = String.to_existing_atom report
-    throw_report! report_atom in @report_atoms
+    throw_report!(report_atom in @atoms)
     report_atom
   end
-  defp report_to_atom!(_), do: throw "report not found"
+  defp report_to_atom!(_), do: throw "invalid report"
 
   defp fetch(report, params) when
     is_binary(report) and is_map(params)
