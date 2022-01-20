@@ -60,7 +60,6 @@ services:
     image: melon-yellow/nginx-alpine-${APP_NAME}
     container_name: ${APP_NAME}
     build: ./nginx
-    command: bash -c "./setup.sh"
     env_file: .env
     volumes:
       - ./nginx/config:/etc/nginx/conf.d/
