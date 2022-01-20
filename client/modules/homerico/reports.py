@@ -29,9 +29,9 @@ class reports:
                 'data_final': data_final,
                 'id_processo': id_processo
             }
-        )
+        ).json()
         # Return Result
-        return res.json()['data']
+        return res['data']
 
     #################################################################################################################################################
 
@@ -45,9 +45,9 @@ class reports:
                 'data': data,
                 'id_report': id_report
             }
-        )
+        ).json()
         # Return Result
-        return res.json()['data']
+        return res['data']
 
     #################################################################################################################################################
 
@@ -63,9 +63,9 @@ class reports:
                 'data_final': data_final,
                 'id_report': id_report
             }
-        )
+        ).json()
         # Return Result
-        return res.json()['data']
+        return res['data']
 
     #################################################################################################################################################
 
@@ -79,9 +79,9 @@ class reports:
                 'data_final': data_final,
                 'controle': controle
             }
-        )
+        ).json()
         # Return Result
-        return res.json()['data']
+        return res['data']
 
     #################################################################################################################################################
 
@@ -95,8 +95,8 @@ class reports:
                 'data': data,
                 'registro': registro
             }
-        )
+        ).json()
         # Return Result
-        return res.json()['data']
+        return res['data']
 
 #################################################################################################################################################
