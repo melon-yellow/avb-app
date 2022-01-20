@@ -1,0 +1,10 @@
+
+location /avb/aciaria/rendimento/ {
+    proxy_pass http://${CLIENT_SERVICE_ADDRESS}/aciaria/rendimento/;
+}
+location /avb/aciaria/fp/espectrometro/ {
+    proxy_pass http://${ODBC_SERVICE_ADDRESS}/aciaria/fp/espectrometro/;
+}
+location /avb/aciaria/ld/espectrometro/ {
+    proxy_pass http://${ODBC_SERVICE_ADDRESS}/aciaria/ld/espectrometro/;
+}

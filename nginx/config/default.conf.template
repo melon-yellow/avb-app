@@ -1,0 +1,9 @@
+
+server {
+    listen ${NGINX_SERVICE_PORT};
+
+    include "conf.d/locations/sap.locations";
+    include "conf.d/locations/aciaria.locations";
+    include "conf.d/locations/laminador.locations";
+    include "conf.d/locations/trefila.locations";
+}
