@@ -13,7 +13,7 @@ from . import trefila
 #################################################################################################################################################
 
 # Load Modules
-def __load__(app: py_misc.Express):
+def __load__(app: py_misc.express.Express):
     sap.__load__(app)
     aciaria.__load__(app)
     laminador.__load__(app)
