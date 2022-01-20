@@ -85,22 +85,28 @@ def __load__(app: py_misc.express.Express):
     @app.route('/avb/trefila/metas/')
     def trefilaMetas(req: Request, res: Response):
         # Read Metas
-        report = homerico.RelatorioGerencialTrimestre(
-            idReport=16,
-            registros={
-                'PRODUÇÃO': 2962,
-                'PRODUÇÃO HORÁRIA': 2966,
-                'RENDIMENTO METÁLICO': 2963,
-                'PRODUÇÃO POR MÁQUINA': 2988
-            }
-        )
+        report = {}
+        try:
+            report.update(
+                homerico.RelatorioGerencialTrimestre(
+                    idReport=16,
+                    registros={
+                        'PRODUÇÃO': 2962,
+                        'PRODUÇÃO HORÁRIA': 2966,
+                        'RENDIMENTO METÁLICO': 2963,
+                        'PRODUÇÃO POR MÁQUINA': 2988
+                    }
+                )
+            )
+        except Exception as error:
+            report.update({ 'homerico': f'{error}'}) 
         # Append Metas
         try: report.update(mysql.trefila.metas.custo())
-        except: pass
+        except Exception as error: report.update({ 'custo': f'{error}'}) 
         try: report.update(mysql.trefila.metas.sucata())
-        except: pass
+        except Exception as error: report.update({ 'sucata': f'{error}'}) 
         try: report.update(mysql.trefila.metas.cincos())
-        except: pass
+        except Exception as error: report.update({ '5S': f'{error}'}) 
         try: # Utilizacao
             metaUtil = mysql.trefila.metas.utilizacao()
             # util trf dia
@@ -118,7 +124,8 @@ def __load__(app: py_misc.express.Express):
             })
             # update metas
             report.update(metaUtil)
-        except: pass
+        except Exception as error:
+            report.update({ 'utilizacao': f'{error}'}) 
 
         # Return Data
         return res(
