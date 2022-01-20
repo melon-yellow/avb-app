@@ -1,11 +1,13 @@
 
 #################################################################################################################################################
 
+# Imports
 from io import StringIO
 from json import loads
 from pandas import read_csv
 from datetime import datetime
 
+# Modules
 from .iba import read as fromIba
 from .homerico import reports
 
