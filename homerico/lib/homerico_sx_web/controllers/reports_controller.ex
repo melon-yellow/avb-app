@@ -9,9 +9,13 @@ defmodule HomericoSxWeb.ReportsController do
     |> Enum.map(&Atom.to_string/1)
   )
 
+  defp throw_report!(valid) when valid, do: true
+  defp throw_report!(_), do: throw "invalid report"
+
   defp report_to_atom!(report) when report in @reports do
-    ctx = @report_atoms # Force Atoms into Context
-    String.to_existing_atom report
+    report_atom = String.to_existing_atom report
+    throw_report! report_atom in @report_atoms
+    report_atom
   end
   defp report_to_atom!(_), do: throw "report not found"
 
