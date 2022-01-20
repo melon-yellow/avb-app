@@ -19,7 +19,7 @@ from .modules import produtividade
 app = express.Express()
 
 # Set API Port
-app.port(int(getenv('AVB_APP_PORT')))
+app.port(int(getenv('CLIENT_SERVICE_PORT')))
 
 #################################################################################################################################################
 
