@@ -1,14 +1,14 @@
 
 #################################################################################################################################################
 
-from . import homerico
+from .homerico import RelatorioGerencialRegistro
 
 #################################################################################################################################################
 
 def aciaria():
     # get app data
-    rend = homerico.RelatorioGerencialRegistro(registro=15)
-    carg_s = homerico.RelatorioGerencialRegistro(registro=1218)
+    rend = RelatorioGerencialRegistro(registro=15)
+    carg_s = RelatorioGerencialRegistro(registro=1218)
     
     rendimento = None
     carga_solida = None

@@ -2,18 +2,18 @@
 #################################################################################################################################################
 
 # Imports
-import datetime
+from datetime import datetime, date
 from collections import deque
 
 #################################################################################################################################################
 
 # Get Escala
 def escala(
-    data: datetime.datetime = None,
+    data: datetime = None,
     referencia: dict[str,tuple[str,str,str,str]] = None
 ):
     # Check Inputs
-    if data == None: data = datetime.date.today()
+    if data == None: data = date.today()
     if referencia == None: referencia = {
         '2021-04-02': ['B','C','C','C']
     }
@@ -32,10 +32,7 @@ def escala(
 
     # Get Delta Time
     delta = (data - (
-        datetime.datetime.strptime(
-            sourceDates[0],
-            '%Y-%m-%d'
-        )
+        datetime.strptime(sourceDates[0], '%Y-%m-%d')
     ))
 
     # Iterate Over Dates

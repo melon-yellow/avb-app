@@ -37,7 +37,7 @@ def trefila():
     # get util data
     (ok, util) = fromIba('0:23')
     if not ok: raise Exception(util)
-    util = loads(util)
+    util: dict = loads(util)
     data.update({
         's': util['SEC'],
         'u01': util['m01']['UTIL'],
