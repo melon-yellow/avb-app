@@ -57,14 +57,14 @@ services:
 ##########################################################################################################################
 
   nginx:
-    image: melon-yellow/nginx-alpine-${APP_NAME}
-    container_name: ${APP_NAME}
+    image: melon-yellow/nginx-alpine-${NGINX_SERVICE_NAME}
+    container_name: ${NGINX_SERVICE_NAME}
     build: ./nginx
     env_file: .env
     volumes:
       - ./nginx/config:/etc/nginx/templates/
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${NGINX_SERVICE_PORT}:${APP_PORT}"
     depends_on:
       - client
       - homerico
