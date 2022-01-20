@@ -1,23 +1,23 @@
 
 #################################################################################################################################################
 
-import io
-import json
-import pandas
-import datetime
+from io import StringIO
+from json import loads
+from pandas import read_csv
+from datetime import datetime
 
-from . import iba
-from . import homerico
+from .iba import read as fromIba
+from .homerico import reports
 
 #################################################################################################################################################
 
 def trefila():
     # get date
-    date = datetime.datetime.today().strftime('%d/%m/%Y')
-    csv = homerico.network.relatorio_lista(
+    date = datetime.today().strftime('%d/%m/%Y')
+    csv = reports.relatorio_lista(
         data_inicial=date, data_final=date, id_processo='50'
     )
-    df = pandas.read_csv(io.StringIO(csv), sep=';')
+    df = read_csv(StringIO(csv), sep=';')
     # Set Prod
     prod: dict[str, float] = {}
     df = df.filter(['Produto','Maquina','Peso do Produto'])
@@ -25,7 +25,7 @@ def trefila():
     df['Peso do Produto'] = df['Peso do Produto'].astype(float)
     df = df.groupby('Maquina').sum()
     df = df['Peso do Produto']
-    prod.update(json.loads(df.to_json()))
+    prod.update(loads(df.to_json()))
     # get prod data
     data = {
         'p01': prod['Trefila 01'],
@@ -35,8 +35,9 @@ def trefila():
         'p05': prod['Trefila 05']
     }
     # get util data
-    (ok, util) = iba.read('0:23', json.loads)
+    (ok, util) = fromIba('0:23')
     if not ok: raise Exception(util)
+    util = loads(util)
     data.update({
         's': util['SEC'],
         'u01': util['m01']['UTIL'],

@@ -2,24 +2,24 @@
 #################################################################################################################################################
 
 # Imports
-import os
-import requests
-import datetime
+from os import getenv
+from requests import post
+from datetime import datetime, timedelta
 
 #################################################################################################################################################
 
 # Get Address
-remoteApp = os.getenv('AVB_APP_ADDRESS')
+remote = getenv('CLIENT_ADDRESS')
 
 #################################################################################################################################################
 
 # Get Escala Turno
 def escalaTurno(
-    data: datetime.datetime = None,
+    data: datetime = None,
     referencia: dict[str,tuple[str,str,str,str]] = None
 ):
-    res = requests.post(
-        url=f'{remoteApp}/laminador/escalaTurno',
+    res = post(
+        url=f'{remote}/laminador/escalaTurno',
         json={
             'data': data,
             'referencia': referencia
@@ -31,11 +31,11 @@ def escalaTurno(
 #################################################################################################################################################
 
 # Get Last Day Of Month
-def lastDayOfMonth(date: datetime.datetime):
+def lastDayOfMonth(date: datetime):
     if date.month == 12: return date.replace(day=31)
     return (
         date.replace(month=(date.month + 1), day=1) -
-        datetime.timedelta(days=1)
+        timedelta(days=1)
     )
 
 #################################################################################################################################################

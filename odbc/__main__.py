@@ -2,10 +2,10 @@
 ##########################################################################################################################
 
 # Imports
-import os
-import json
-import flask
-from pymisc import schedule
+from os import getenv
+from json import dumps
+from flask import Request, Response
+from py_misc import schedule, express
 
 # Modules
 from .modules import laminador
@@ -16,17 +16,10 @@ from .modules import iba
 ##########################################################################################################################
 
 # Declare HTTP API
-app = flask.Flask()
+app = express.Express()
 
 # Set API Port
-app.port(
-    int(os.getenv('ODBC_SERVICE_PORT'))
-)
-
-#################################################################################################################################################
-
-Request = flask.Request
-Response = flask.Response
+app.port(int(getenv('ODBC_SERVICE_PORT')))
 
 ##########################################################################################################################
 
@@ -38,7 +31,7 @@ def sapPreditivas(req: Request, res: Response):
     # Execute Query
     data = sap.preditivas(kwargs['equip'])
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -49,7 +42,7 @@ def sapPreditivas(req: Request, res: Response):
 def aciariaLDEspectrometro(req: Request, res: Response):
     data = aciaria.ld.espectrometro()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -60,7 +53,7 @@ def aciariaLDEspectrometro(req: Request, res: Response):
 def aciariaFPEspectrometro(req: Request, res: Response):
     data = aciaria.fp.espectrometro()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -71,7 +64,7 @@ def aciariaFPEspectrometro(req: Request, res: Response):
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.produto()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -82,7 +75,7 @@ def laminadorRFAL2(req: Request, res: Response):
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.blbp()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -93,7 +86,7 @@ def laminadorRFAL2(req: Request, res: Response):
 def laminadorRFA(req: Request, res: Response):
     data = laminador.rfa()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -104,7 +97,7 @@ def laminadorRFA(req: Request, res: Response):
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.rfal2()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )

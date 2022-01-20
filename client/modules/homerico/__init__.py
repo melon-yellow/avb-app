@@ -2,12 +2,12 @@
 #################################################################################################################################################
 
 # Imports
-import copy
-import datetime
+from copy import deepcopy
+from datetime import datetime, date
 
 # Modules
-from . import client
-from . import num, matrix, lastDayOfMonth
+from .reports import reports
+from ..helpers import num, matrix, lastDayOfMonth
 
 #################################################################################################################################################
 #                                                       HOMERICO GETTERS                                                                        #
@@ -21,8 +21,8 @@ def RelatorioGerencialReport(
 ):
     # get Inputs
     if data == None:
-        data = datetime.date.today().strftime('%d/%m/%Y')
-    _registros = copy.deepcopy(registros)
+        data = date.today().strftime('%d/%m/%Y')
+    _registros = deepcopy(registros)
 
     # Private Map Function
     def _replace_reg(row):
@@ -44,7 +44,7 @@ def RelatorioGerencialReport(
         _registros[i] = str(_registros[i])
     
     # Get Data
-    csv = client.relatorio_gerencial_report(
+    csv = reports.relatorio_gerencial_report(
         data=data,
         id_report=str(idReport)
     )
@@ -74,8 +74,8 @@ def RelatorioGerencialTrimestre(
     data: str = None
 ):
     if data == None:
-        data = datetime.date.today().strftime('%d/%m/%Y')
-    timed = datetime.datetime.strptime(data, '%d/%m/%Y')
+        data = date.today().strftime('%d/%m/%Y')
+    timed = datetime.strptime(data, '%d/%m/%Y')
     report = RelatorioGerencialReport(
         idReport=idReport,
         registros=registros,
@@ -85,10 +85,10 @@ def RelatorioGerencialTrimestre(
     m = [qt-2, qt-1, qt]
     for i in m:
         last_day = lastDayOfMonth(
-            datetime.date(timed.year, i, 1)
+            date(timed.year, i, 1)
         ).day
         if i == timed.month: last_day = timed.day
-        _date = datetime.date(timed.year, i, last_day).strftime('%d/%m/%Y')
+        _date = date(timed.year, i, last_day).strftime('%d/%m/%Y')
         e = RelatorioGerencialReport(
             idReport=idReport,
             registros=registros,
@@ -106,8 +106,8 @@ def RelatorioGerencialRegistro(
     registro: int,
     data: str = None
 ):
-    if data == None: data = datetime.date.today().strftime('%d/%m/%Y')
-    csv = client.relatorio_gerencial_registro(
+    if data == None: data = date.today().strftime('%d/%m/%Y')
+    csv = reports.relatorio_gerencial_registro(
         data=data,
         registro=str(registro)
     )
@@ -120,9 +120,9 @@ def ProducaoLista(
     lista: int,
     data: str = None
 ):
-    if data == None: data = datetime.date.today()
+    if data == None: data = date.today()
     last_day = lastDayOfMonth(data).strftime('%d/%m/%Y')
-    csv = client.producao_lista(
+    csv = reports.producao_lista(
         data_final=last_day,
         controle=str(lista)
     )

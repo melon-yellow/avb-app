@@ -14,9 +14,10 @@
 ##########################################################################################################################
 
 # Imports
-import os
-import json
-import flask
+from os import getenv
+from json import dumps
+from flask import Request, Response
+from py_misc import express
 
 # Modules
 from .modules import turno
@@ -26,18 +27,11 @@ from .modules import produtividade
 
 ##########################################################################################################################
 
-Request = flask.Request
-Response = flask.Response
-
-##########################################################################################################################
-
 # Declare HTTP API
-app = flask.Flask()
+app = express.Express()
 
 # Set API Port
-app.listen(
-    port=int(os.getenv('AVB_APP_PORT'))
-)
+app.port(int(getenv('AVB_APP_PORT')))
 
 #################################################################################################################################################
 
@@ -54,7 +48,7 @@ def laminadorMetas(req: Request, res: Response):
         }
     )
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -73,7 +67,7 @@ def trefilaMetas(req: Request, res: Response):
         }
     )
     return res(
-        json.dumps(report),
+        dumps(report),
         mimetype='application/json',
         status=200
     )
@@ -84,7 +78,7 @@ def trefilaMetas(req: Request, res: Response):
 def trefilaProducao(req: Request, res: Response):
     data = homerico.ProducaoLista(lista=2361)
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -95,7 +89,7 @@ def trefilaProducao(req: Request, res: Response):
 def laminadorProducao(req: Request, res: Response):
     data = homerico.ProducaoLista(lista=1269)
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -106,7 +100,7 @@ def laminadorProducao(req: Request, res: Response):
 def aciariaRendimento(req: Request, res: Response):
     data = rendimento.aciaria()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -117,7 +111,7 @@ def aciariaRendimento(req: Request, res: Response):
 def trefilaProdutividade(req: Request, res: Response):
     data = produtividade.trefila()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -128,7 +122,7 @@ def trefilaProdutividade(req: Request, res: Response):
 def laminadorEscalaTurno(req: Request, res: Response):
     data = turno.escala()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -139,7 +133,7 @@ def laminadorEscalaTurno(req: Request, res: Response):
 app.start()
 
 # Keep Main Thread Alive
-py_misc.keepalive()
+while True: pass
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

@@ -2,13 +2,13 @@
 ##########################################################################################################################
 
 # Imports
-import os
-import json
-import flask
+from os import getenv
+from json import dumps
+from flask import Request, Response
 from py_misc import express
 
-# Routes
-from .modules import trefila
+# Modules
+from .modules import trefila, homerico
 
 ##########################################################################################################################
 
@@ -16,14 +16,7 @@ from .modules import trefila
 app = express.Express()
 
 # Set API Port
-app.port(
-    int(os.getenv('MYSQL_SERVICE_PORT'))
-)
-
-#################################################################################################################################################
-
-Request = flask.Request
-Response = flask.Response
+app.port(int(getenv('MYSQL_SERVICE_PORT')))
 
 ##########################################################################################################################
 
@@ -49,7 +42,7 @@ def trefilaUtilizacao(req: Request, res: Response):
 def trefilaMetasUtilizacao(req: Request, res: Response):
     data = trefila.metas.utilizacao()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -60,7 +53,7 @@ def trefilaMetasUtilizacao(req: Request, res: Response):
 def trefilaMetasCusto(req: Request, res: Response):
     data = trefila.metas.custo()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -71,7 +64,7 @@ def trefilaMetasCusto(req: Request, res: Response):
 def trefilaMetasSucata(req: Request, res: Response):
     data = trefila.metas.sucata()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -82,7 +75,7 @@ def trefilaMetasSucata(req: Request, res: Response):
 def trefilaMetasCincoS(req: Request, res: Response):
     data = trefila.metas.cincos()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -90,10 +83,10 @@ def trefilaMetasCincoS(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/avb/trefila/metas/')
+@app.route('/mysql/trefila/metas/')
 def trefilaMetas(req: Request, res: Response):
     # Read Metas
-    report = homerico.RelatorioGerencialTrimestre()
+    report = homerico.trefila.metas()
     # Append Metas
     try: report.update(trefila.metas.custo())
     except: pass
@@ -122,7 +115,7 @@ def trefilaMetas(req: Request, res: Response):
 
     # Return Data
     return res(
-        json.dumps(report),
+        dumps(report),
         mimetype='application/json',
         status=200
     )

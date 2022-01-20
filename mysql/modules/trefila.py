@@ -2,58 +2,52 @@
 #################################################################################################################################################
 
 # Imports
-import os
-import pandas
-import datetime
-import mysql.connector
-from typing import Callable, Tuple
+from os import getenv, path
+from datetime import datetime, date
+from pandas import DataFrame, read_sql, to_datetime
+from mysql.connector import connect
+from typing import Callable
 
 # Modules
-from . import helpers
+from .helpers import escalaTurno, lastDayOfMonth
 
 #################################################################################################################################################
 
 # Get File-Paths
-fileDir = os.path.dirname(os.path.abspath(__file__))
-util_sql = os.path.abspath(os.path.join(fileDir, '../sql/trefila.utilizacao.sql'))
+fileDir = path.dirname(path.abspath(__file__))
+util_sql = path.abspath(path.join(fileDir, '../sql/trefila.utilizacao.sql'))
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
-class connect:
+class db:
 
     def iba():
-        return mysql.connector.connect(
-            host=os.getenv('IBA_MYSQL_HOST'),
-            user=os.getenv('IBA_MYSQL_USER'),
-            passwd=os.getenv('IBA_MYSQL_PASSWORD'),
-            port=os.getenv('IBA_MYSQL_PORT'),
-            database=os.getenv('IBA_MYSQL_DATABASE')
+        return connect(
+            host=getenv('IBA_MYSQL_HOST'),
+            user=getenv('IBA_MYSQL_USER'),
+            passwd=getenv('IBA_MYSQL_PASSWORD'),
+            port=getenv('IBA_MYSQL_PORT'),
+            database=getenv('IBA_MYSQL_DATABASE')
         )
 
     def bot():
-        return mysql.connector.connect(
-            host=os.getenv('BOT_MYSQL_HOST'),
-            user=os.getenv('BOT_MYSQL_USER'),
-            passwd=os.getenv('BOT_MYSQL_PASSWORD'),
-            port=os.getenv('BOT_MYSQL_PORT'),
-            database=os.getenv('BOT_MYSQL_DATABASE')
+        return connect(
+            host=getenv('BOT_MYSQL_HOST'),
+            user=getenv('BOT_MYSQL_USER'),
+            passwd=getenv('BOT_MYSQL_PASSWORD'),
+            port=getenv('BOT_MYSQL_PORT'),
+            database=getenv('BOT_MYSQL_DATABASE')
         )
-
-#################################################################################################################################################
-
-# Datetime Helpers
-def _date(year: int, month: int, day: int):
-    return datetime.date(year, month, day)
 
 ##########################################################################################################################
 
 def getMetaDay(
-    df: pandas.DataFrame,
-    now: datetime.datetime
+    df: DataFrame,
+    now: datetime
 ) -> float:
-    dt = pandas.to_datetime(_date(now.year, now.month, now.day))
+    dt = to_datetime(date(now.year, now.month, now.day))
     return df[df['DATA_MSG'] >= dt]['VALOR'].sum()
 
 #################################################################################################################################################
@@ -61,24 +55,24 @@ def getMetaDay(
 # Iterate over Months
 def trimStartEndDates(
     month: int,
-    now: datetime.datetime
-) -> Tuple[str, str]:
+    now: datetime
+) -> tuple[str, str]:
     if month > now.month: return (None, None)
     day = (
         now.day if month == now.month else
-        helpers.lastDayOfMonth(_date(now.year, month, 1)).day
+        lastDayOfMonth(date(now.year, month, 1)).day
     )
-    sdate = _date(now.year, month, 1)
-    edate = _date(now.year, now.month, day)
+    sdate = date(now.year, month, 1)
+    edate = date(now.year, now.month, day)
     return (sdate, edate)
 
 #################################################################################################################################################
 
 def getMetaTrim(
-    df: pandas.DataFrame,
-    now: datetime.datetime,
+    df: DataFrame,
+    now: datetime,
     parser: Callable[
-        [pandas.DataFrame, Tuple[datetime.date, datetime.date]],
+        [DataFrame, tuple[date, date]],
         float
     ]
 ) -> dict[str, float]:
@@ -87,7 +81,7 @@ def getMetaTrim(
     trims: tlst = { 1: (1, 2, 3), 2: (4, 5, 6), 3: (7, 8, 9), 4: (10, 11, 12) }
     trim = trims[1 + ((now.month - 1) // 3)]
     # Helper Lambdas
-    helper = lambda m: (m, helpers.lastDayOfMonth(_date(now.year, m, 1)))
+    helper = lambda m: (m, lastDayOfMonth(date(now.year, m, 1)))
     # Return Data
     return {
         'acumulado': parser(df, trimStartEndDates(trim[0], now)),
@@ -100,10 +94,10 @@ def getMetaTrim(
 
 # Iterate over Months
 def metaTrimParser(
-    df: pandas.DataFrame,
-    dates: Tuple[datetime.date, datetime.date]
+    df: DataFrame,
+    dates: tuple[date, date]
 ) -> float:
-    dts = (pandas.to_datetime(dates[0]), pandas.to_datetime(dates[1]))
+    dts = (to_datetime(dates[0]), to_datetime(dates[1]))
     query = (dts[0] <= df['DATA_MSG']) & (df['DATA_MSG'] <= dts[1])
     return df[query]['VALOR'].sum()
 
@@ -111,10 +105,10 @@ def metaTrimParser(
 
 # Iterate over Months
 def utilTrimParser(
-    df: pandas.DataFrame,
-    dates: Tuple[datetime.date, datetime.date]
+    df: DataFrame,
+    dates: tuple[date, date]
 ) -> float:
-    dts = (pandas.to_datetime(dates[0]), pandas.to_datetime(dates[1]))
+    dts = (to_datetime(dates[0]), to_datetime(dates[1]))
     query = (dts[0] <= df['_date']) & (df['_date'] <= dts[1])
     fltr = ['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h']
     return df[query]['VALOR'].filter(fltr).drop(['M1'], axis=1).mean().mean()
@@ -125,7 +119,7 @@ def utilTrimParser(
 
 def utilizacao():
     # Execute Query
-    df = pandas.read_sql(
+    df = read_sql(
         open(util_sql).read(),
         connect.iba()
     )
@@ -142,9 +136,9 @@ class metas:
     def custo():
         try: # Connect
             sql = 'SELECT * FROM wf_sap WHERE (YEAR(data_msg) = 2022)'
-            df = pandas.read_sql(sql, connect.bot())
+            df = read_sql(sql, connect.bot())
             # Datetime
-            now = datetime.datetime.now()
+            now = datetime.now()
             # Get Meta Parser
             day = getMetaDay(df, now)
             meta = getMetaTrim(df, now, metaTrimParser)
@@ -160,9 +154,9 @@ class metas:
     def cincos():
         try: # Connect
             sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2022) AND (nome_meta = "5S")'
-            df = pandas.read_sql(sql, connect.bot())
+            df = read_sql(sql, connect.bot())
             # Datetime
-            now = datetime.datetime.now()
+            now = datetime.now()
             # Get Meta Parser
             day = getMetaDay(df, now)
             meta = getMetaTrim(df, now, metaTrimParser)
@@ -178,9 +172,9 @@ class metas:
     def sucata():
         try: # Connect
             sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2022) AND (nome_meta = "sucateamento")'
-            df = pandas.read_sql(sql, connect.bot())
+            df = read_sql(sql, connect.bot())
             # Datetime
-            now = datetime.datetime.now()
+            now = datetime.now()
             # Get Meta Parser
             day = getMetaDay(df, now)
             meta = getMetaTrim(df, now, metaTrimParser)
@@ -196,12 +190,12 @@ class metas:
     def utilizacao():
         try: # Connect 
             sql = open(util_sql).read()
-            df = pandas.read_sql(sql, connect.iba())
+            df = read_sql(sql, connect.iba())
             # Datetime
-            now = datetime.datetime.now()
+            now = datetime.now()
 
             # Update Shift Helper
-            eTurno = lambda row: helpers.escalaTurno(data=row)
+            eTurno = lambda row: escalaTurno(data=row)
             turnoIndex = lambda i: (lambda row : eTurno(row)[i][0])
 
             # Update Shift

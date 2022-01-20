@@ -2,41 +2,41 @@
 #################################################################################################################################################
 
 # Imports
-import os
-import pyodbc
+from os import getenv, path
+from pyodbc import connect
 
 # Modules
-from . import helpers
+from .helpers import execute
 
 #################################################################################################################################################
 
 # Get File-Paths
-fileDir = os.path.dirname(os.path.abspath(__file__))
-blbp_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.blbp.sql'))
-product_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.product.sql'))
-rfal2_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.rfal2.sql'))
-rfa_sql = os.path.abspath(os.path.join(fileDir, '../sql/mill.rfa.sql'))
+fileDir = path.dirname(path.abspath(__file__))
+blbp_sql = path.abspath(path.join(fileDir, '../sql/mill.blbp.sql'))
+product_sql = path.abspath(path.join(fileDir, '../sql/mill.product.sql'))
+rfal2_sql = path.abspath(path.join(fileDir, '../sql/mill.rfal2.sql'))
+rfa_sql = path.abspath(path.join(fileDir, '../sql/mill.rfa.sql'))
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
-class connect:
+class db:
 
     def iba():
-        return pyodbc.connect(
+        return connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('IBA_MSSQL_DSN'),
-            uid=os.getenv('IBA_MSSQL_USER'),
-            pwd=os.getenv('IBA_MSSQL_PASSWORD')
+            server=getenv('IBA_MSSQL_DSN'),
+            uid=getenv('IBA_MSSQL_USER'),
+            pwd=getenv('IBA_MSSQL_PASSWORD')
         )
 
     def l2():
-        return pyodbc.connect(
+        return connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('L2_MSSQL_DSN'),
-            uid=os.getenv('L2_MSSQL_USER'),
-            pwd=os.getenv('L2_MSSQL_PASSWORD')
+            server=getenv('L2_MSSQL_DSN'),
+            uid=getenv('L2_MSSQL_USER'),
+            pwd=getenv('L2_MSSQL_PASSWORD')
         )
 
 ##########################################################################################################################
@@ -45,9 +45,9 @@ class connect:
 
 def produto():
     # Connect to Server
-    conn = connect.iba()
+    conn = db.iba()
     # Execute Query
-    data = helpers.execute(conn, open(product_sql).read())
+    data = execute(conn, open(product_sql).read())
     # Fix Product Name
     pname = data[0].get('CTR_PRODUCT_NAME')
     pname = pname.strip() if isinstance(pname, str) else None
@@ -59,9 +59,9 @@ def produto():
 
 def blbp():
     # Connect to Server
-    conn = connect.iba()
+    conn = db.iba()
     # Execute Query
-    data = helpers.execute(conn, open(blbp_sql).read())
+    data = execute(conn, open(blbp_sql).read())
     # Return Data
     return data[0]
 
@@ -69,9 +69,9 @@ def blbp():
 
 def rfa():
     # Connect to Server
-    conn = connect.iba()
+    conn = db.iba()
     # Execute Query
-    data = helpers.execute(conn, open(rfa_sql).read())
+    data = execute(conn, open(rfa_sql).read())
     # Return Data
     return data[0]
 
@@ -81,10 +81,10 @@ def rfal2():
     # Get Product Name
     product = produto().get('CTR_PRODUCT_NAME')
     # Connect to Server
-    conn = connect.l2()
+    conn = db.l2()
     # Execute Query
     query = open(rfal2_sql).read().format(product)
-    data = helpers.execute(conn, query)
+    data = execute(conn, query)
     # Return Data
     return data[0]
 
