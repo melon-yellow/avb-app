@@ -24,9 +24,10 @@ def relatorio_lista(
             'data_final': data_final,
             'id_processo': id_processo
         }
-    )
+    ).json()
     # Return Result
-    return res.json()['data']
+    print(res)
+    return res['data']
 
 #################################################################################################################################################
 
@@ -40,9 +41,10 @@ def relatorio_gerencial_report(
             'data': data,
             'id_report': id_report
         }
-    )
+    ).json()
     # Return Result
-    return res.json()['data']
+    print(res)
+    return res['data']
 
 #################################################################################################################################################
 
@@ -58,9 +60,10 @@ def relatorio_boletim(
             'data_final': data_final,
             'id_report': id_report
         }
-    )
+    ).json()
     # Return Result
-    return res.json()['data']
+    print(res)
+    return res['data']
 
 #################################################################################################################################################
 
@@ -74,9 +77,10 @@ def producao_lista(
             'data_final': data_final,
             'controle': controle
         }
-    )
+    ).json()
     # Return Result
-    return res.json()['data']
+    print(res)
+    return res['data']
 
 #################################################################################################################################################
 
@@ -90,8 +94,9 @@ def relatorio_gerencial_registro(
             'data': data,
             'registro': registro
         }
-    )
+    ).json()
     # Return Result
-    return res.json()['data']
+    print(res)
+    return res['data']
 
 #################################################################################################################################################
