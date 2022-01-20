@@ -10,7 +10,7 @@ defmodule HomericoSxWeb.ReportsController do
   )
 
   defp report_to_atom!(report) when report in @reports do
-    _ = @report_atoms # Force Atoms into Context
+    ctx = @report_atoms # Force Atoms into Context
     String.to_existing_atom report
   end
   defp report_to_atom!(_), do: throw "report not found"
@@ -28,7 +28,7 @@ defmodule HomericoSxWeb.ReportsController do
   end
 
   defp api_format!({:ok, data}), do: %{done: true, data: data}
-  defp api_format!({:error, reason}), do: IO.inspect %{done: false, error: "#{reason}"}
+  defp api_format!({:error, reason}), do: %{done: false, error: "#{reason}"}
 
   def handle(conn, %{"report" => report} = params)
     when is_binary(report), do: json conn,
