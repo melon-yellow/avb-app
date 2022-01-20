@@ -62,7 +62,7 @@ services:
     build: ./nginx
     env_file: .env
     volumes:
-      - ./nginx/config:/etc/nginx/conf.d/
+      - ./nginx/config:/etc/nginx/templates/
     ports:
       - "${APP_PORT}:${APP_PORT}"
     depends_on:

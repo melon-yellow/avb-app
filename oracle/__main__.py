@@ -20,7 +20,7 @@ app.port(int(getenv('ORACLE_SERVICE_PORT')))
 
 ##########################################################################################################################
 
-@app.route('/oracle/furnace/gusaapp/')
+@app.route('/oracle/laminador/forno/')
 def furnaceGusaapp(req: Request, res: Response):
     data = furnace.gusaapp()
     data.update({

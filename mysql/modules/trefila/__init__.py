@@ -3,13 +3,14 @@
 
 # Imports
 from os import getenv, path
-from datetime import datetime, date
-from pandas import DataFrame, read_sql, to_datetime
+from datetime import datetime
+from pandas import read_sql
 from mysql.connector import connect
-from typing import Callable
 
 # Modules
-from .helpers import escalaTurno, lastDayOfMonth
+from ..iba import read as fromIba
+from .metas import getMetaDay, getMetaTrim, metaTrimParser, utilTrimParser
+from ..helpers import escalaTurno
 
 #################################################################################################################################################
 
@@ -17,8 +18,6 @@ from .helpers import escalaTurno, lastDayOfMonth
 fileDir = path.dirname(path.abspath(__file__))
 util_sql = path.abspath(path.join(fileDir, '../sql/trefila.utilizacao.sql'))
 
-##########################################################################################################################
-#                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
 class db:
@@ -41,80 +40,7 @@ class db:
             database=getenv('BOT_MYSQL_DATABASE')
         )
 
-##########################################################################################################################
 
-def getMetaDay(
-    df: DataFrame,
-    now: datetime
-) -> float:
-    dt = to_datetime(date(now.year, now.month, now.day))
-    return df[df['DATA_MSG'] >= dt]['VALOR'].sum()
-
-#################################################################################################################################################
-
-# Iterate over Months
-def trimStartEndDates(
-    month: int,
-    now: datetime
-) -> tuple[str, str]:
-    if month > now.month: return (None, None)
-    day = (
-        now.day if month == now.month else
-        lastDayOfMonth(date(now.year, month, 1)).day
-    )
-    sdate = date(now.year, month, 1)
-    edate = date(now.year, now.month, day)
-    return (sdate, edate)
-
-#################################################################################################################################################
-
-def getMetaTrim(
-    df: DataFrame,
-    now: datetime,
-    parser: Callable[
-        [DataFrame, tuple[date, date]],
-        float
-    ]
-) -> dict[str, float]:
-    # Trimestre
-    tlst = dict[int, tuple[int, int, int]]
-    trims: tlst = { 1: (1, 2, 3), 2: (4, 5, 6), 3: (7, 8, 9), 4: (10, 11, 12) }
-    trim = trims[1 + ((now.month - 1) // 3)]
-    # Helper Lambdas
-    helper = lambda m: (m, lastDayOfMonth(date(now.year, m, 1)))
-    # Return Data
-    return {
-        'acumulado': parser(df, trimStartEndDates(trim[0], now)),
-        'mes1': parser(df, trimStartEndDates(*helper(trim[0]))),
-        'mes2': parser(df, trimStartEndDates(*helper(trim[1]))),
-        'mes3': parser(df, trimStartEndDates(*helper(trim[2])))
-    }
-
-#################################################################################################################################################
-
-# Iterate over Months
-def metaTrimParser(
-    df: DataFrame,
-    dates: tuple[date, date]
-) -> float:
-    dts = (to_datetime(dates[0]), to_datetime(dates[1]))
-    query = (dts[0] <= df['DATA_MSG']) & (df['DATA_MSG'] <= dts[1])
-    return df[query]['VALOR'].sum()
-
-#################################################################################################################################################
-
-# Iterate over Months
-def utilTrimParser(
-    df: DataFrame,
-    dates: tuple[date, date]
-) -> float:
-    dts = (to_datetime(dates[0]), to_datetime(dates[1]))
-    query = (dts[0] <= df['_date']) & (df['_date'] <= dts[1])
-    fltr = ['_date','M1','M2','M3','M4','M5','_0h','_8h','_16h']
-    return df[query]['VALOR'].filter(fltr).drop(['M1'], axis=1).mean().mean()
-
-##########################################################################################################################
-#                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
 def utilizacao():
@@ -146,8 +72,8 @@ class metas:
             # Return Data
             return { 'custo': meta }
         # On Error
-        except Exception as e:
-            return { 'custo': { 'error': f'{e}' } }
+        except Exception as error:
+            return { 'custo': { 'error': f'{error}' } }
 
     #################################################################################################################################################
 
@@ -164,8 +90,8 @@ class metas:
             # Return Data
             return { '5S': meta }
         # On Error
-        except Exception as e:
-            return { '5S': { 'error': f'{e}' } }
+        except Exception as error:
+            return { '5S': { 'error': f'{error}' } }
 
     #################################################################################################################################################
 
@@ -182,8 +108,8 @@ class metas:
             # Return Data
             return { 'sucateamento': meta }
         # On Error
-        except Exception as e:
-            return { 'sucateamento': { 'error': f'{e}' } }
+        except Exception as error:
+            return { 'sucateamento': { 'error': f'{error}' } }
 
     #################################################################################################################################################
 
@@ -193,26 +119,32 @@ class metas:
             df = read_sql(sql, connect.iba())
             # Datetime
             now = datetime.now()
-
             # Update Shift Helper
             eTurno = lambda row: escalaTurno(data=row)
             turnoIndex = lambda i: (lambda row : eTurno(row)[i][0])
-
             # Update Shift
             df['_0h'] = df['_date'].apply(turnoIndex(0))
             df['_8h'] = df['_date'].apply(turnoIndex(1))
             df['_16h'] = df['_date'].apply(turnoIndex(2))
             df['_date'] = df['_date'].astype('str')
-
             # Assembly Data
             meta = getMetaTrim(df, now, utilTrimParser)
-            meta.update({ 'meta': 60, 'dia': 0 })
+            # util trf dia
+            util = fromIba('0:45')
+            total = (
+                util['m01']['UTIL'] +
+                util['m02']['UTIL'] +
+                util['m03']['UTIL'] +
+                util['m04']['UTIL'] +
+                util['m05']['UTIL']
+            )
+            dia = (total / 4) * 100
+            # update util
+            meta.update({ 'meta': 60, 'dia': dia })
             # Return Data
             return { 'utilizacao': meta }
         # On Error
-        except Exception as e:
-            return { 'utilizacao': { 'error': f'{e}' } }
+        except Exception as error:
+            return { 'utilizacao': { 'error': f'{error}' } }
 
-##########################################################################################################################
-#                                                        MAIN CODE                                                       #
 ##########################################################################################################################
