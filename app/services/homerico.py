@@ -26,8 +26,8 @@ def relatorio_lista(
         }
     ).json()
     # Return Result
-    print(res)
-    return res['data']
+    try: return res['data']
+    except: return res['error']
 
 #################################################################################################################################################
 
@@ -43,8 +43,8 @@ def relatorio_gerencial_report(
         }
     ).json()
     # Return Result
-    print(res)
-    return res['data']
+    try: return res['data']
+    except: return res['error']
 
 #################################################################################################################################################
 
@@ -62,8 +62,8 @@ def relatorio_boletim(
         }
     ).json()
     # Return Result
-    print(res)
-    return res['data']
+    try: return res['data']
+    except: return res['error']
 
 #################################################################################################################################################
 
@@ -79,8 +79,8 @@ def producao_lista(
         }
     ).json()
     # Return Result
-    print(res)
-    return res['data']
+    try: return res['data']
+    except: return res['error']
 
 #################################################################################################################################################
 
@@ -96,7 +96,7 @@ def relatorio_gerencial_registro(
         }
     ).json()
     # Return Result
-    print(res)
-    return res['data']
+    try: return res['data']
+    except: return res['error']
 
 #################################################################################################################################################
