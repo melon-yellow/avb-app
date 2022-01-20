@@ -1,3 +1,2 @@
-flask
 mysql-connector-python
--e git+https://github.com/anthony-freitas/pylixir#egg=pylixir
+-e git+https://github.com/melon-yellow/py-misc#egg=py-misc

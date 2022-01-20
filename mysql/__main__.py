@@ -5,6 +5,7 @@
 import os
 import json
 import flask
+from py_misc import express
 
 # Routes
 from .modules import trefila
@@ -12,7 +13,7 @@ from .modules import trefila
 ##########################################################################################################################
 
 # Declare HTTP API
-app = flask.Flask(__name__)
+app = express.Express()
 
 # Set API Port
 app.port(

@@ -1,7 +1,4 @@
-pyyaml
-nltk
-pyodbc
-cx_Oracle
 pandas
 requests
--e git+https://github.com/melon-yellow/pylixir#egg=pylixir
+collections
+-e git+https://github.com/melon-yellow/py-misc#egg=py-misc

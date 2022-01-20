@@ -15,8 +15,8 @@ services:
     env_file: .env
     volumes:
       - ./app/:/usr/app/
-    ports:
-      - "${AVB_APP_PORT}:${AVB_APP_PORT}"
+    expose:
+      - ${CLIENT_SERVICE_PORT}
     depends_on:
       - homerico
       - opc
