@@ -16,7 +16,7 @@ from ..helpers import escalaTurno
 
 # Get File-Paths
 fileDir = path.dirname(path.abspath(__file__))
-util_sql = path.abspath(path.join(fileDir, '../sql/trefila.utilizacao.sql'))
+util_sql = path.abspath(path.join(fileDir, '../../sql/trefila.utilizacao.sql'))
 
 ##########################################################################################################################
 
