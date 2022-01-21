@@ -130,14 +130,12 @@ class metas:
             # Assembly Data
             meta = getMetaTrim(df, now, utilTrimParser)
             # util trf dia
-            util = fromIba('0:45')
-            total = (
-                util['m01']['UTIL'] +
-                util['m02']['UTIL'] +
-                util['m03']['UTIL'] +
-                util['m04']['UTIL'] +
-                util['m05']['UTIL']
-            )
+            (ok, u1) = fromIba('0:25')
+            (ok, u2) = fromIba('0:26')
+            (ok, u3) = fromIba('0:27')
+            (ok, u4) = fromIba('0:28')
+            (ok, u5) = fromIba('0:29')
+            total = (u1 + u2 + u3 + u4 + u5)
             dia = (total / 4) * 100
             # update util
             meta.update({ 'meta': 60, 'dia': dia })

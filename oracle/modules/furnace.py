@@ -6,6 +6,7 @@ from os import getenv, path
 from cx_Oracle import connect
 
 # Modules
+from .iba import read as fromIba
 from .helpers import execute
 
 #################################################################################################################################################
@@ -34,6 +35,12 @@ def gusaapp():
     conn = db.furnace()
     # Execute Query
     data = execute(conn, open(gusaapp_sql).read())
+    # Update Data
+    (ok, util) = fromIba('0:5')
+    (ok, time_util) = fromIba('2:25')
+    (ok, time_plc) = fromIba('2:26')
+    time_stopped = (time_plc - time_util) / 60
+    data[0].update({'UTIL': util, 'TEMPO_PARADO': time_stopped})
     # Return Data
     return data[0]
 

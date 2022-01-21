@@ -4,7 +4,7 @@
 # Imports
 from os import getenv
 from requests import post
-from py_misc import elixir
+from py_misc.elixir import Safe
 
 #################################################################################################################################################
 
@@ -13,7 +13,7 @@ remote = getenv('OPC_SERVICE_ADDRESS')
 
 #################################################################################################################################################
 
-@elixir.Safe
+@Safe
 def read(
     tag: str = None,
     tagname: str = None
