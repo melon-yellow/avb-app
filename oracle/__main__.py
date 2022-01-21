@@ -22,12 +22,19 @@ app.port(int(getenv('ORACLE_SERVICE_PORT')))
 
 @app.route('/laminador/forno/')
 def furnaceGusaapp(req: Request, res: Response):
-    data = gusaapp()
-    return res(
-        dumps(data),
-        mimetype='application/json',
-        status=200
-    )
+    try:
+        data = gusaapp()
+        return res(
+            dumps(data),
+            mimetype='application/json',
+            status=200
+        )
+    except Exception as error:
+        return res(
+            dumps({ 'error': f'{error}' }),
+            mimetype='application/json',
+            status=200
+        )
 
 ##########################################################################################################################
 
