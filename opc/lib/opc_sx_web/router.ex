@@ -8,7 +8,7 @@ defmodule OpcSxWeb.Router do
   scope "/", OpcSxWeb do
     pipe_through :api
 
-    post "/opc/iba/read", IbaController, :read
-    post "/opc/pims/read", PimsController, :read
+    post "/iba/read", IbaController, :read
+    post "/pims/read", PimsController, :read
   end
 end

@@ -47,7 +47,7 @@ def utilizacao():
     # Execute Query
     df = read_sql(
         open(util_sql).read(),
-        connect.iba()
+        db.iba()
     )
     # Return Data
     return str(df.to_csv())
@@ -62,7 +62,7 @@ class metas:
     def custo():
         try: # Connect
             sql = 'SELECT * FROM wf_sap WHERE (YEAR(data_msg) = 2022)'
-            df = read_sql(sql, connect.bot())
+            df = read_sql(sql, db.bot())
             # Datetime
             now = datetime.now()
             # Get Meta Parser
@@ -80,7 +80,7 @@ class metas:
     def cincos():
         try: # Connect
             sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2022) AND (nome_meta = "5S")'
-            df = read_sql(sql, connect.bot())
+            df = read_sql(sql, db.bot())
             # Datetime
             now = datetime.now()
             # Get Meta Parser
@@ -98,7 +98,7 @@ class metas:
     def sucata():
         try: # Connect
             sql = 'SELECT * FROM metas WHERE (YEAR(data_msg) = 2022) AND (nome_meta = "sucateamento")'
-            df = read_sql(sql, connect.bot())
+            df = read_sql(sql, db.bot())
             # Datetime
             now = datetime.now()
             # Get Meta Parser
@@ -116,7 +116,7 @@ class metas:
     def utilizacao():
         try: # Connect 
             sql = open(util_sql).read()
-            df = read_sql(sql, connect.iba())
+            df = read_sql(sql, db.iba())
             # Datetime
             now = datetime.now()
             # Update Shift Helper

@@ -43,7 +43,7 @@ def laminadorMetas(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/trefila/metas/')
+@app.route('/trefila/metas/homerico')
 def trefilaMetas(req: Request, res: Response):
     report = homerico.RelatorioGerencialTrimestre(
         idReport=16,

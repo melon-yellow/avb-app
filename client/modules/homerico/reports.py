@@ -23,7 +23,7 @@ class reports:
         id_processo: str
     ):
         res = post(
-            url=f'{remote}/relatorio_lista',
+            url=f'{remote}/reports/relatorio_lista',
             json={
                 'data_inicial': data_inicial,
                 'data_final': data_final,
@@ -40,7 +40,7 @@ class reports:
         id_report: str
     ):
         res = post(
-            url=f'{remote}/relatorio_gerencial_report',
+            url=f'{remote}/reports/relatorio_gerencial_report',
             json={
                 'data': data,
                 'id_report': id_report
@@ -57,7 +57,7 @@ class reports:
         id_report: str
     ):
         res = post(
-            url=f'{remote}/relatorio_boletim',
+            url=f'{remote}/reports/relatorio_boletim',
             json={
                 'data_inicial': data_inicial,
                 'data_final': data_final,
@@ -74,7 +74,7 @@ class reports:
         controle: str
     ):
         res = post(
-            url=f'{remote}/producao_lista',
+            url=f'{remote}/reports/producao_lista',
             json={
                 'data_final': data_final,
                 'controle': controle
@@ -90,7 +90,7 @@ class reports:
         registro: str
     ):
         res = post(
-            url=f'{remote}/relatorio_gerencial_registro',
+            url=f'{remote}/reports/relatorio_gerencial_registro',
             json={
                 'data': data,
                 'registro': registro
