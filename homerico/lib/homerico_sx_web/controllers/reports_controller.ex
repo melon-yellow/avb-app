@@ -30,8 +30,8 @@ defmodule HomericoSxWeb.ReportsController do
     end
   end
 
-  defp api_format!({:ok, data}), do: %{done: true, data: data}
-  defp api_format!({:error, reason}), do: %{done: false, error: "#{reason}"}
+  defp api_format!({:ok, data}), do: %{ok: true, data: data}
+  defp api_format!({:error, reason}), do: %{ok: false, error: "#{reason}"}
 
   def handle(conn, %{"report" => report} = params)
     when is_binary(report), do: json conn,

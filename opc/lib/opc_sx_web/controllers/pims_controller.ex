@@ -12,8 +12,8 @@ defmodule OpcSxWeb.PimsController do
   end
   defp fetch(_), do: {:error, "invalid parameters"}
 
-  defp api_format!({:ok, data}), do: %{done: true, data: data}
-  defp api_format!({:error, reason}), do: %{done: false, error: "#{Kernel.inspect reason}"}
+  defp api_format!({:ok, data}), do: %{ok: true, data: data}
+  defp api_format!({:error, reason}), do: %{ok: false, error: "#{Kernel.inspect reason}"}
 
   def read(conn, params), do:
     json conn, api_format!(fetch params)
