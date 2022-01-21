@@ -2,10 +2,10 @@
 ##########################################################################################################################
 
 # Imports
-import os
-import json
-import flask
-import py_misc
+from os import getenv
+from json import dumps
+from flask import Request, Response
+from py_misc.express import Express
 
 # Routes
 from .modules import furnace
@@ -13,25 +13,22 @@ from .modules import furnace
 ##########################################################################################################################
 
 # Declare HTTP API
-app = py_misc.express.Express()
+app = Express()
 
 # Set API Port
-app.port(
-    int(os.getenv('ORACLE_SERVICE_PORT'))
-)
-
-#################################################################################################################################################
-
-Request = flask.Request
-Response = flask.Response
+app.port(int(getenv('ORACLE_SERVICE_PORT')))
 
 ##########################################################################################################################
 
-@app.route('/oracle/furnace/gusaapp/')
+@app.route('/laminador/forno/')
 def furnaceGusaapp(req: Request, res: Response):
     data = furnace.gusaapp()
+    data.update({
+        'UTIL': iba.read('0:5'),
+        'TEMPO_PARADO': iba.read('2:25') / 60
+    })
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )

@@ -2,24 +2,32 @@
 #################################################################################################################################################
 
 # Imports
-import os
-import requests
+from os import getenv
+from requests import post
+from py_misc import elixir
 
 #################################################################################################################################################
 
 # Get Address
-remote = os.getenv('ORACLE_SERVICE_ADDRESS')
+remote = getenv('OPC_SERVICE_ADDRESS')
 
 #################################################################################################################################################
 
-# Furnace
-class furnace:
-
-    def gusaapp():
-        res = requests.get(
-            url=f'{remote}/furnace/gusaapp/',
-        )
-        res.raise_for_status()
-        return res.json()
+@elixir.Safe
+def read(
+    tag: str = None,
+    tagname: str = None
+) -> (bool | float | str):
+    req = {}
+    if tag: req.update({'tag': tag})
+    if tagname: req.update({'tagname': tagname})
+    # Request
+    res = post(
+        url=f'{remote}/iba/read',
+        json=req
+    ).json()
+    if not res['ok']:
+        raise Exception(res['error'])
+    return res['data']
 
 #################################################################################################################################################

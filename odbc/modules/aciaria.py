@@ -2,39 +2,39 @@
 #################################################################################################################################################
 
 # Imports
-import os
-import pyodbc
+from os import getenv, path
+from pyodbc import connect
 
 # Modules
-from . import helpers
+from .helpers import execute
 
 #################################################################################################################################################
 
 # Get File-Paths
-fileDir = os.path.dirname(os.path.abspath(__file__))
-spec_sql = os.path.abspath(os.path.join(fileDir, '../sql/aciaria.spec.sql'))
+fileDir = path.dirname(path.abspath(__file__))
+spec_sql = path.abspath(path.join(fileDir, '../sql/aciaria.spec.sql'))
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
 ##########################################################################################################################
 
-class connect:
+class db:
 
     def ld():
-        return pyodbc.connect(
+        return connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('SPEC_LD_MSSQL_DSN'),
-            uid=os.getenv('SPEC_LD_MSSQL_USER'),
-            pwd=os.getenv('SPEC_LD_MSSQL_PASSWORD'),
+            server=getenv('SPEC_LD_MSSQL_DSN'),
+            uid=getenv('SPEC_LD_MSSQL_USER'),
+            pwd=getenv('SPEC_LD_MSSQL_PASSWORD'),
             database='ANALYSES'
         )
 
     def fp():
-        return pyodbc.connect(
+        return connect(
             driver='ODBC Driver 17 for SQL Server',
-            server=os.getenv('SPEC_FP_MSSQL_DSN'),
-            uid=os.getenv('SPEC_FP_MSSQL_USER'),
-            pwd=os.getenv('SPEC_FP_MSSQL_PASSWORD'),
+            server=getenv('SPEC_FP_MSSQL_DSN'),
+            uid=getenv('SPEC_FP_MSSQL_USER'),
+            pwd=getenv('SPEC_FP_MSSQL_PASSWORD'),
             database='ANALYSES'
         )
 
@@ -67,9 +67,9 @@ class ld:
 
     def espectrometro():
         # Connect to Server
-        conn = connect.ld()
+        conn = db.ld()
         # Execute Query
-        data = helpers.execute(conn, query.ld())
+        data = execute(conn, query.ld())
         # Return Data
         return data
 
@@ -79,9 +79,9 @@ class fp:
 
     def espectrometro():
         # Connect to Server
-        conn = connect.fp()
+        conn = db.fp()
         # Execute Query
-        data = helpers.execute(conn, query.fp())
+        data = execute(conn, query.fp())
         # Return Data
         return data
 

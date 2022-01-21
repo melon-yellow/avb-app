@@ -2,10 +2,11 @@
 ##########################################################################################################################
 
 # Imports
-import os
-import json
-import flask
-import py_misc
+from os import getenv
+from json import dumps
+from flask import Request, Response
+from py_misc.express import Express
+from py_misc.schedule import each
 
 # Modules
 from .modules import laminador
@@ -16,99 +17,88 @@ from .modules import iba
 ##########################################################################################################################
 
 # Declare HTTP API
-app = py_misc.express.Express()
+app = Express()
 
 # Set API Port
-app.port(
-    int(os.getenv('ODBC_SERVICE_PORT'))
-)
-
-#################################################################################################################################################
-
-Request = flask.Request
-Response = flask.Response
+app.port(int(getenv('ODBC_SERVICE_PORT')))
 
 ##########################################################################################################################
 
-@app.route('/odbc/sap/preditivas/')
+@app.route('/sap/preditivas/')
 def sapPreditivas(req: Request, res: Response):
-    try:
-        kwargs = req.json
-        data = sap.preditivas(kwargs['equip'])
-        return res(
-            json.dumps(data),
-            mimetype='application/json',
-            status=200
-        )
-    except Exception as e:
-        return res(
-            json.dumps({ 'error': str(e) }),
-            mimetype='application/json',
-            status=200
-        )
+    kwargs = req.json
+    if not isinstance(kwargs, dict): raise Exception('bad request')
+    if 'equip' not in kwargs: raise Exception('invalid argument "equip"')
+    # Execute Query
+    data = sap.preditivas(kwargs['equip'])
+    return res(
+        dumps(data),
+        mimetype='application/json',
+        status=200
+    )
 
 ##########################################################################################################################
 
-@app.route('/odbc/aciaria/ld/espectrometro/')
+@app.route('/aciaria/ld/espectrometro/')
 def aciariaLDEspectrometro(req: Request, res: Response):
     data = aciaria.ld.espectrometro()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/odbc/aciaria/fp/espectrometro/')
+@app.route('/aciaria/fp/espectrometro/')
 def aciariaFPEspectrometro(req: Request, res: Response):
     data = aciaria.fp.espectrometro()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/produto/')
+@app.route('/laminador/produto/')
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.produto()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/blbp/')
+@app.route('/laminador/blbp/')
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.blbp()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/rfa/')
+@app.route('/laminador/rfa/')
 def laminadorRFA(req: Request, res: Response):
     data = laminador.rfa()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/rfal2/')
+@app.route('/laminador/rfal2/')
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.rfal2()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
@@ -116,7 +106,7 @@ def laminadorRFAL2(req: Request, res: Response):
 ##########################################################################################################################
 
 # Scheduled Actions
-@py_misc.schedule.each.one.hour.do.at('00:00')
+@each.one.hour.do.at('00:00')
 def each_one_hour():
     iba.clear()
 

@@ -2,80 +2,103 @@
 ##########################################################################################################################
 
 # Imports
-import os
-import json
-import flask
-import py_misc
+from os import getenv
+from json import dumps
+from flask import Request, Response
+from py_misc.express import Express
 
-# Routes
-from .modules import trefila
+# Modules
+from .modules import trefila, homerico
 
 ##########################################################################################################################
 
 # Declare HTTP API
-app = py_misc.express.Express()
+app = Express()
 
 # Set API Port
-app.port(
-    int(os.getenv('MYSQL_SERVICE_PORT'))
-)
-
-#################################################################################################################################################
-
-Request = flask.Request
-Response = flask.Response
+app.port(int(getenv('MYSQL_SERVICE_PORT')))
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/utilizacao/')
+@app.route('/trefila/utilizacao/')
 def trefilaUtilizacao(req: Request, res: Response):
-    data = trefila.utilizacao()
+    # Query Data
+    csv = trefila.utilizacao()
+    # Retrun Data
     return res(
-        data,
+        csv,
         mimetype='text/csv',
+        headers={
+            'Content-disposition': (
+                'attachment; filename=utilizacao.csv'
+            )
+        },
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/metas/utilizacao/')
-def trefilaMetasUtilizacao(req: Request, res: Response):
-    data = trefila.metas.utilizacao()
-    return res(
-        json.dumps(data),
-        mimetype='application/json',
-        status=200
-    )
-
-##########################################################################################################################
-
-@app.route('/mysql/trefila/metas/custo/')
+@app.route('/trefila/metas/custo/')
 def trefilaMetasCusto(req: Request, res: Response):
     data = trefila.metas.custo()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/metas/sucata/')
+@app.route('/trefila/metas/sucata/')
 def trefilaMetasSucata(req: Request, res: Response):
     data = trefila.metas.sucata()
     return res(
-        json.dumps(data),
+        dumps(data),
         mimetype='application/json',
         status=200
     )
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/metas/cincos/')
+@app.route('/trefila/metas/5s/')
 def trefilaMetasCincoS(req: Request, res: Response):
     data = trefila.metas.cincos()
     return res(
-        json.dumps(data),
+        dumps(data),
+        mimetype='application/json',
+        status=200
+    )
+
+##########################################################################################################################
+
+@app.route('/trefila/metas/utilizacao/')
+def trefilaMetasUtilizacao(req: Request, res: Response):
+    data = trefila.metas.utilizacao()
+    return res(
+        dumps(data),
+        mimetype='application/json',
+        status=200
+    )
+
+#################################################################################################################################################
+
+@app.route('/trefila/metas/')
+def trefilaMetas(req: Request, res: Response):
+    report = dict()
+    # Read Metas
+    try: report.update(trefila.metas.custo())
+    except: pass
+    try: report.update(trefila.metas.sucata())
+    except: pass
+    try: report.update(trefila.metas.cincos())
+    except: pass
+    try: report.update(trefila.metas.utilizacao())
+    except: pass
+    try: report.update(homerico.trefila.metas())
+    except: pass
+    # Return Data
+    return res(
+        dumps(report),
         mimetype='application/json',
         status=200
     )

@@ -1,2 +1,2 @@
 cx_Oracle
--e git+https://github.com/anthony-freitas/py-misc#egg=py-misc
+-e git+https://github.com/melon-yellow/py-misc#egg=py-misc

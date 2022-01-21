@@ -7,14 +7,28 @@ services:
 
 ##########################################################################################################################
 
+  client:
+    image: melon-yellow/python-3.10-${CLIENT_SERVICE_NAME}
+    container_name: ${CLIENT_SERVICE_NAME}
+    build: ./client
+    command: bash -c "./setup.sh"
+    env_file: .env
+    volumes:
+      - ./client/:/usr/app/
+    expose:
+      - ${CLIENT_SERVICE_PORT}
+    depends_on:
+      - homerico
+      - opc
+    restart: always
+
+##########################################################################################################################
+
   homerico:
-    image: mellon-yellow/elixir-1.13-avb-app-sx-homerico
-    container_name: avb-app-sx-homerico
+    image: melon-yellow/elixir-1.13-${HOMERICO_SERVICE_NAME}
+    container_name: ${HOMERICO_SERVICE_NAME}
     build: ./homerico
-    command: bash -c "
-      mix deps.get &&
-      mix do compile --force &&
-      MIX_ENV=prod mix phx.server"
+    command: bash -c "./setup.sh"
     env_file:
       - .env
       - ./homerico/.env
@@ -27,13 +41,10 @@ services:
 ##########################################################################################################################
 
   mysql:
-    image: mellon-yellow/python-3.10-avb-app-sx-mysql
-    container_name: avb-app-sx-mysql
+    image: melon-yellow/python-3.10-${MYSQL_SERVICE_NAME}
+    container_name: ${MYSQL_SERVICE_NAME}
     build: ./mysql
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
+    command: bash -c "./setup.sh"
     env_file:
       - .env
       - ./mysql/.env
@@ -45,14 +56,32 @@ services:
 
 ##########################################################################################################################
 
+  nginx:
+    image: melon-yellow/nginx-alpine-${NGINX_SERVICE_NAME}
+    container_name: ${NGINX_SERVICE_NAME}
+    build: ./nginx
+    env_file: .env
+    volumes:
+      - ./nginx/config/:/etc/nginx/conf.d/
+      - ./nginx/env/:/etc/nginx/templates/env/
+    ports:
+      - "${NGINX_SERVICE_PORT}:${APP_PORT}"
+    depends_on:
+      - client
+      - homerico
+      - mysql
+      - odbc
+      - opc
+      - oracle
+    restart: always
+
+##########################################################################################################################
+
   odbc:
-    image: mellon-yellow/python-3.10-avb-app-sx-odbc
-    container_name: avb-app-sx-odbc
+    image: melon-yellow/python-3.10-${ODBC_SERVICE_NAME}
+    container_name: ${ODBC_SERVICE_NAME}
     build: ./odbc
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
+    command: bash -c "./setup.sh"
     env_file:
       - .env
       - ./odbc/.env
@@ -65,33 +94,26 @@ services:
 #########################################################################################################################
 
   opc:
-    image: melon-yellow/elixir-1.13-avb-app-sx-opc
-    container_name: avb-app-sx-opc
+    image: melon-yellow/elixir-1.13-${OPC_SERVICE_NAME}
+    container_name: ${OPC_SERVICE_NAME}
     build: ./opc
-    command: bash -c "
-      priv/keygen/keygen.sh &&
-      mix deps.get &&
-      mix do compile --force &&
-      MIX_ENV=prod mix phx.server"
+    command: bash -c "./setup.sh"
     env_file:
       - .env
       - ./opc/.env
     volumes:
       - ./opc/:/usr/app/
-    ports:
-      - '${OPC_SERVICE_PORT}:${OPC_SERVICE_PORT}'
+    expose:
+      - ${OPC_SERVICE_PORT}
     restart: always
 
 ##########################################################################################################################
 
   oracle:
-    image: mellon-yellow/python-3.10-avb-app-sx-oracle
-    container_name: avb-app-sx-oracle
+    image: melon-yellow/python-3.10-${ORACLE_SERVICE_NAME}
+    container_name: ${ORACLE_SERVICE_NAME}
     build: ./oracle
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
+    command: bash -c "./setup.sh"
     env_file:
       - .env
       - ./oracle/.env
@@ -99,29 +121,6 @@ services:
       - ./oracle/:/usr/app/
     expose:
       - ${ORACLE_SERVICE_PORT}
-    restart: always
-
-##########################################################################################################################
-
-  app:
-    image: mellon-yellow/python-3.10-avb-app
-    container_name: avb-app
-    build: ./app
-    command: bash -c "
-      pip install -r requirements.txt &&
-      cd .. &&
-      python -m app"
-    env_file: .env
-    volumes:
-      - ./app/:/usr/app/
-    ports:
-      - "${AVB_APP_PORT}:${AVB_APP_PORT}"
-    depends_on:
-      - homerico
-      - mysql
-      - odbc
-      - opc
-      - oracle
     restart: always
 
 ##########################################################################################################################

@@ -1,0 +1,3 @@
+
+server_name ${APP_NAME};
+listen ${NGINX_SERVICE_PORT};
