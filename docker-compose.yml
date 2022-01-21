@@ -65,7 +65,7 @@ services:
       - ./nginx/config/:/etc/nginx/conf.d/
       - ./nginx/env/:/etc/nginx/templates/env/
     ports:
-      - "${NGINX_SERVICE_PORT}:${APP_PORT}"
+      - "${APP_PORT}:${NGINX_SERVICE_PORT}"
     depends_on:
       - client
       - homerico
