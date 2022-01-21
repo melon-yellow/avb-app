@@ -1,4 +1,4 @@
 
 location /avb/sap/preditivas/ {
-    proxy_pass http://${ODBC_SERVICE_ADDRESS}/sap/preditivas/;
+    proxy_pass http://odbc/sap/preditivas/;
 }

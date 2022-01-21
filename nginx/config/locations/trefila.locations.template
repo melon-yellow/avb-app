@@ -1,13 +1,16 @@
 
 location /avb/trefila/metas/ {
-    proxy_pass http://${MYSQL_SERVICE_ADDRESS}/trefila/metas/;
+    proxy_pass http://mysql/trefila/metas/;
+}
+location /avb/trefila/metas/homerico/ {
+    proxy_pass http://client/trefila/metas/homerico/;
 }
 location /avb/trefila/produtividade/ {
-    proxy_pass http://${CLIENT_SERVICE_ADDRESS}/trefila/produtividade/;
+    proxy_pass http://mysql/trefila/produtividade/;
 }
 location /avb/trefila/producao/ {
-    proxy_pass http://${CLIENT_SERVICE_ADDRESS}/trefila/producao/;
+    proxy_pass http://mysql/trefila/producao/;
 }
 location /avb/trefila/utilizacao/ {
-    proxy_pass http://${MYSQL_SERVICE_ADDRESS}/trefila/utilizacao/;
+    proxy_pass http://mysql/trefila/utilizacao/;
 }

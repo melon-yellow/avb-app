@@ -23,7 +23,7 @@ app.port(int(getenv('ODBC_SERVICE_PORT')))
 
 ##########################################################################################################################
 
-@app.route('/odbc/sap/preditivas/')
+@app.route('/sap/preditivas/')
 def sapPreditivas(req: Request, res: Response):
     kwargs = req.json
     if not isinstance(kwargs, dict): raise Exception('bad request')
@@ -38,7 +38,7 @@ def sapPreditivas(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/odbc/aciaria/ld/espectrometro/')
+@app.route('/aciaria/ld/espectrometro/')
 def aciariaLDEspectrometro(req: Request, res: Response):
     data = aciaria.ld.espectrometro()
     return res(
@@ -49,7 +49,7 @@ def aciariaLDEspectrometro(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/odbc/aciaria/fp/espectrometro/')
+@app.route('/aciaria/fp/espectrometro/')
 def aciariaFPEspectrometro(req: Request, res: Response):
     data = aciaria.fp.espectrometro()
     return res(
@@ -60,7 +60,7 @@ def aciariaFPEspectrometro(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/produto/')
+@app.route('/laminador/produto/')
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.produto()
     return res(
@@ -71,7 +71,7 @@ def laminadorRFAL2(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/blbp/')
+@app.route('/laminador/blbp/')
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.blbp()
     return res(
@@ -82,7 +82,7 @@ def laminadorRFAL2(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/rfa/')
+@app.route('/laminador/rfa/')
 def laminadorRFA(req: Request, res: Response):
     data = laminador.rfa()
     return res(
@@ -93,7 +93,7 @@ def laminadorRFA(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/odbc/laminador/rfal2/')
+@app.route('/laminador/rfal2/')
 def laminadorRFAL2(req: Request, res: Response):
     data = laminador.rfal2()
     return res(

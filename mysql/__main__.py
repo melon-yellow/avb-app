@@ -20,7 +20,7 @@ app.port(int(getenv('MYSQL_SERVICE_PORT')))
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/utilizacao/')
+@app.route('/trefila/utilizacao/')
 def trefilaUtilizacao(req: Request, res: Response):
     # Query Data
     csv = trefila.utilizacao()
@@ -38,7 +38,7 @@ def trefilaUtilizacao(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/metas/custo/')
+@app.route('/trefila/metas/custo/')
 def trefilaMetasCusto(req: Request, res: Response):
     data = trefila.metas.custo()
     return res(
@@ -49,7 +49,7 @@ def trefilaMetasCusto(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/metas/sucata/')
+@app.route('/trefila/metas/sucata/')
 def trefilaMetasSucata(req: Request, res: Response):
     data = trefila.metas.sucata()
     return res(
@@ -60,7 +60,7 @@ def trefilaMetasSucata(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/metas/cincos/')
+@app.route('/trefila/metas/cincos/')
 def trefilaMetasCincoS(req: Request, res: Response):
     data = trefila.metas.cincos()
     return res(
@@ -71,7 +71,7 @@ def trefilaMetasCincoS(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/mysql/trefila/metas/utilizacao/')
+@app.route('/trefila/metas/utilizacao/')
 def trefilaMetasUtilizacao(req: Request, res: Response):
     data = trefila.metas.utilizacao()
     return res(
@@ -82,7 +82,7 @@ def trefilaMetasUtilizacao(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/mysql/trefila/metas/')
+@app.route('/trefila/metas/')
 def trefilaMetas(req: Request, res: Response):
     report = dict()
     # Read Metas

@@ -1,3 +1,4 @@
 pandas
+requests
 mysql-connector-python
 -e git+https://github.com/melon-yellow/py-misc#egg=py-misc

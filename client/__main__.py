@@ -23,7 +23,7 @@ app.port(int(getenv('CLIENT_SERVICE_PORT')))
 
 #################################################################################################################################################
 
-@app.route('/client/laminador/metas/')
+@app.route('/laminador/metas/')
 def laminadorMetas(req: Request, res: Response):
     data = homerico.RelatorioGerencialTrimestre(
         idReport=10,
@@ -43,7 +43,7 @@ def laminadorMetas(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/client/trefila/metas/')
+@app.route('/trefila/metas/')
 def trefilaMetas(req: Request, res: Response):
     report = homerico.RelatorioGerencialTrimestre(
         idReport=16,
@@ -62,7 +62,7 @@ def trefilaMetas(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/client/trefila/producao/')
+@app.route('/trefila/producao/')
 def trefilaProducao(req: Request, res: Response):
     data = homerico.ProducaoLista(lista=2361)
     return res(
@@ -73,7 +73,7 @@ def trefilaProducao(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/client/laminador/producao/')
+@app.route('/laminador/producao/')
 def laminadorProducao(req: Request, res: Response):
     data = homerico.ProducaoLista(lista=1269)
     return res(
@@ -84,7 +84,7 @@ def laminadorProducao(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/client/aciaria/rendimento/')
+@app.route('/aciaria/rendimento/')
 def aciariaRendimento(req: Request, res: Response):
     data = rendimento.aciaria()
     return res(
@@ -95,7 +95,7 @@ def aciariaRendimento(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/client/trefila/produtividade/')
+@app.route('/trefila/produtividade/')
 def trefilaProdutividade(req: Request, res: Response):
     data = produtividade.trefila()
     return res(
@@ -106,7 +106,7 @@ def trefilaProdutividade(req: Request, res: Response):
 
 #################################################################################################################################################
 
-@app.route('/client/laminador/escala/')
+@app.route('/laminador/escala/')
 def laminadorEscalaTurno(req: Request, res: Response):
     data = turno.escala()
     return res(
