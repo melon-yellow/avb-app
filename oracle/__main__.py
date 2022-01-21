@@ -5,7 +5,7 @@
 from os import getenv
 from json import dumps
 from flask import Request, Response
-from py_misc import express
+from py_misc.express import Express
 
 # Routes
 from .modules import furnace
@@ -13,7 +13,7 @@ from .modules import furnace
 ##########################################################################################################################
 
 # Declare HTTP API
-app = express.Express()
+app = Express()
 
 # Set API Port
 app.port(int(getenv('ORACLE_SERVICE_PORT')))

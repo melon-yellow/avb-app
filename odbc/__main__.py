@@ -5,7 +5,8 @@
 from os import getenv
 from json import dumps
 from flask import Request, Response
-from py_misc import schedule, express
+from py_misc.express import Express
+from py_misc.schedule import each
 
 # Modules
 from .modules import laminador
@@ -16,7 +17,7 @@ from .modules import iba
 ##########################################################################################################################
 
 # Declare HTTP API
-app = express.Express()
+app = Express()
 
 # Set API Port
 app.port(int(getenv('ODBC_SERVICE_PORT')))
@@ -105,7 +106,7 @@ def laminadorRFAL2(req: Request, res: Response):
 ##########################################################################################################################
 
 # Scheduled Actions
-@schedule.each.one.hour.do.at('00:00')
+@each.one.hour.do.at('00:00')
 def each_one_hour():
     iba.clear()
 

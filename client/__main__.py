@@ -5,7 +5,7 @@
 from os import getenv
 from json import dumps
 from flask import Request, Response
-from py_misc import express
+from py_misc.express import Express
 
 # Modules
 from .modules import turno
@@ -16,7 +16,7 @@ from .modules import produtividade
 ##########################################################################################################################
 
 # Declare HTTP API
-app = express.Express()
+app = Express()
 
 # Set API Port
 app.port(int(getenv('CLIENT_SERVICE_PORT')))
