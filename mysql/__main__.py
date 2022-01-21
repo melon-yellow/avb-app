@@ -60,7 +60,7 @@ def trefilaMetasSucata(req: Request, res: Response):
 
 ##########################################################################################################################
 
-@app.route('/trefila/metas/cincos/')
+@app.route('/trefila/metas/5s/')
 def trefilaMetasCincoS(req: Request, res: Response):
     data = trefila.metas.cincos()
     return res(

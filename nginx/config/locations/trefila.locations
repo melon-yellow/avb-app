@@ -1,0 +1,28 @@
+
+location /avb/trefila/metas/ {
+    proxy_pass http://mysql/trefila/metas/;
+}
+location /avb/trefila/metas/homerico/ {
+    proxy_pass http://client/trefila/metas/homerico/;
+}
+location /avb/trefila/metas/custo/ {
+    proxy_pass http://mysql/trefila/metas/custo/;
+}
+location /avb/trefila/metas/sucata/ {
+    proxy_pass http://mysql/trefila/metas/sucata/;
+}
+location /avb/trefila/metas/5s/ {
+    proxy_pass http://mysql/trefila/metas/5s/;
+}
+location /avb/trefila/metas/utilizacao/ {
+    proxy_pass http://mysql/trefila/metas/utilizacao/;
+}
+location /avb/trefila/producao/ {
+    proxy_pass http://client/trefila/producao/;
+}
+location /avb/trefila/produtividade/ {
+    proxy_pass http://client/trefila/produtividade/;
+}
+location /avb/trefila/utilizacao/ {
+    proxy_pass http://mysql/trefila/utilizacao/;
+}

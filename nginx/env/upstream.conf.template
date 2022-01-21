@@ -3,27 +3,22 @@ upstream client {
   ip_hash;
   server ${CLIENT_SERVICE_NAME}:${CLIENT_SERVICE_PORT};
 }
-
 upstream homerico {  
   ip_hash;
   server ${HOMERICO_SERVICE_NAME}:${HOMERICO_SERVICE_PORT};
 }
-
 upstream mysql {  
   ip_hash;
   server ${MYSQL_SERVICE_NAME}:${MYSQL_SERVICE_PORT};
 }
-
 upstream odbc {  
   ip_hash;
   server ${ODBC_SERVICE_NAME}:${ODBC_SERVICE_PORT};
 }
-
 upstream opc {  
   ip_hash;
   server ${OPC_SERVICE_NAME}:${OPC_SERVICE_PORT};
 }
-
 upstream oracle {  
   ip_hash;
   server ${ORACLE_SERVICE_NAME}:${ORACLE_SERVICE_PORT};
