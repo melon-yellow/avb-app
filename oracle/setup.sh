@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WSGI=app.wsgi:app
+WSGI=app:app
 BIND=0.0.0.0:$ORACLE_SERVICE_PORT
 
 pip install -r requirements.txt
