@@ -14,9 +14,6 @@ ENV LD_LIBRARY_PATH="/usr/lib/oracle/18.5/client64/lib:${LD_LIBRARY_PATH}"
 
 #################################################################################################################################################
 
-# pip Install Requirements
 WORKDIR /usr/app
-ADD requirements.txt requirements.txt
-RUN pip install -r requirements.txt
 
 #################################################################################################################################################
