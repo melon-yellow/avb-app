@@ -48,8 +48,8 @@ defmodule OpcSx.IbaClient.Utils do
   def start_link do
     try do
       {:ok, pid} = OpcSx.IbaClient.State.start_link
-      {:ok, ioc} = OpcSx.IbaClient.IoConfig.read
-      OpcSx.IbaClient.State.set ioc
+      # {:ok, ioc} = OpcSx.IbaClient.IoConfig.read
+      # OpcSx.IbaClient.State.set ioc
       {:ok, pid}
     catch _, reason -> {:error, reason}
     end
