@@ -17,15 +17,16 @@ app = Flask('oracle_client')
 
 @app.route('/laminador/forno/')
 async def laminadorForno():
-    try:
-        (ok, data) = await forno()
-        if not ok: raise data
-        return Response(
-            dumps(data),
-            mimetype='application/json',
-            status=200
-        )
-    except Exception as error:
-        print(error)
+    (ok, data) = await forno()
+    res = (
+        {'ok': ok, 'data': data}
+        if ok else
+        {'ok': ok, 'error': f'{data}'}
+    )
+    return Response(
+        dumps(res),
+        mimetype='application/json',
+        status=200
+    )
 
 ##########################################################################################################################
