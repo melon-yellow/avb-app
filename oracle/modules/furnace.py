@@ -37,8 +37,11 @@ def gusaapp():
     data = execute(conn, open(gusaapp_sql).read())
     # Update Data
     (ok, util) = fromIba('0:5')
+    if not ok: raise util
     (ok, time_util) = fromIba('2:25')
+    if not ok: raise time_util
     (ok, time_plc) = fromIba('2:26')
+    if not ok: raise time_plc
     time_stopped = (time_plc - time_util) / 60
     data[0].update({'UTIL': util, 'TEMPO_PARADO': time_stopped})
     # Return Data
