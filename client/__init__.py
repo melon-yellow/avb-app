@@ -45,7 +45,7 @@ async def laminadorMetas():
 
 #################################################################################################################################################
 
-@app.route('/trefila/metas/homerico')
+@app.route('/trefila/metas/homerico/')
 async def trefilaMetasHomerico():
     res = {}
     try:
