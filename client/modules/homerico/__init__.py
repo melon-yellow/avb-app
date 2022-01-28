@@ -44,12 +44,15 @@ async def relatorio_gerencial_report(
             id_report=str(idReport)
         )
         if not ok: raise csv
+        # Parse Response
+        report = matrix(csv)
+        report.pop(0)
         # Set Replace
         replace = set_report_replace(registros)
         items: dict[str, 'MetaMes'] = {}
         items.update({key:None for key in registros.values()})
         # Map Items
-        for item in matrix(csv):
+        for item in report:
             items.update(replace(item))
         # Return Data
         return (True, items)
