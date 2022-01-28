@@ -18,7 +18,7 @@ from ..helpers import escalaTurno
 # Get File-Paths
 fileDir = path.dirname(path.abspath(__file__))
 s5_sql = path.abspath(path.join(fileDir, '../../sql/trefila.meta.5s.sql'))
-custo_sql = path.abspath(path.join(fileDir, '../../sql/trefila.custo.sql'))
+custo_sql = path.abspath(path.join(fileDir, '../../sql/trefila.meta.custo.sql'))
 sucata_sql = path.abspath(path.join(fileDir, '../../sql/trefila.meta.sucata.sql'))
 util_sql = path.abspath(path.join(fileDir, '../../sql/trefila.meta.utilizacao.sql'))
 
