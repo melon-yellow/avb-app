@@ -2,6 +2,7 @@
 #################################################################################################################################################
 
 # Imports
+from re import match
 from typing import TypedDict
 from asyncio import gather
 from datetime import date
@@ -117,6 +118,7 @@ async def relatorio_gerencial_trimestre(
         items.update((mes1, mes2, mes3)[offset])
         # Get Month Metas
         for item in items:
+            if not isinstance(items[item], dict): continue
             items[item].pop('acumulado')
             items[item].update({
                 'mes1': mes1[item].get('acumulado'),
@@ -158,6 +160,7 @@ class Producao(TypedDict):
 def set_prod_replacer(postfix: str):
     def replacer(item: list[str]) -> 'Producao':
         if len(item) != 3: return
+        if match(r'^-?\d+(?:\,\d+)$', item[2]) is None: return
         return {
             'data': f'{item[0][:2].zfill(2)}{postfix}',
             'peso': num(item[2])
@@ -182,7 +185,6 @@ async def producao_lista(
             last.strftime("%d/%m/%Y")[2:]
         )
         items = matrix(csv)
-        items.pop(0)
         dat: list['Producao'] = []
         # Map Days of Month
         for item in items:
