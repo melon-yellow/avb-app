@@ -76,9 +76,9 @@ def utilTrimParser(
     df: DataFrame,
     dates: tuple[date, date]
 ) -> float:
+    fltr = ['DATA','M1','M2','M3','M4','M5']
     dts = (to_datetime(dates[0]), to_datetime(dates[1]))
     query = (dts[0] <= df['DATA']) & (df['DATA'] <= dts[1])
-    fltr = ['DATA','M1','M2','M3','M4','M5']
     return df[query]['VALOR'].filter(fltr).drop(['M1'], axis=1).mean().mean()
 
 #################################################################################################################################################

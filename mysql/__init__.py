@@ -117,12 +117,12 @@ async def trefilaMetas():
         if not ok2: raise custo
         if not ok3: raise sucata
         if not ok4: raise outras
-        if not ok5: raise utilizacao
+        # if not ok5: raise utilizacao
         # Assembly Data
         data = {
             '5S': s5,
             'custo': custo,
-            'utilizacao': utilizacao,
+            # 'utilizacao': utilizacao,
             'sucateamento': sucata
         }
         data.update(outras)
