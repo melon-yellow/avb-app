@@ -154,14 +154,8 @@ class metas:
             df = read_sql(sql, db.iba())
             # Datetime
             now = datetime.now()
-            # Update Shift Helper
-            eTurno = lambda row: escalaTurno(data=row)
-            turnoIndex = lambda i: (lambda row : eTurno(row)[i][0])
             # Update Shift
-            df['_0h'] = df['_date'].apply(turnoIndex(0))
-            df['_8h'] = df['_date'].apply(turnoIndex(1))
-            df['_16h'] = df['_date'].apply(turnoIndex(2))
-            df['_date'] = df['_date'].astype('str')
+            df['DATA'] = df['DATA'].astype('str')
             # Assembly Data
             meta = getMetaTrim(df, now, utilTrimParser)
             # Get Util Trf Dia
