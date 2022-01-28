@@ -19,9 +19,8 @@ app = Flask('oracle_client')
 async def laminadorForno():
     (ok, data) = await forno()
     res = (
-        {'ok': ok, 'data': data}
-        if ok else
-        {'ok': ok, 'error': f'{data}'}
+        {'ok': True, 'data': data} if ok else
+        {'ok': False, 'error': f'{data}'}
     )
     return Response(
         dumps(res),

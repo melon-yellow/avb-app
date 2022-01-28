@@ -66,24 +66,30 @@ class query:
 class ld:
 
     def espectrometro():
-        # Connect to Server
-        conn = db.ld()
-        # Execute Query
-        data = execute(conn, query.ld())
-        # Return Data
-        return data
+        try:
+            # Connect to Server
+            conn = db.ld()
+            # Execute Query
+            data = execute(conn, query.ld())
+            # Return Data
+            return (True, data)
+        except Exception as error:
+            return (False, error)
 
 #################################################################################################################################################
 
 class fp:
 
     def espectrometro():
-        # Connect to Server
-        conn = db.fp()
-        # Execute Query
-        data = execute(conn, query.fp())
-        # Return Data
-        return data
+        try:
+            # Connect to Server
+            conn = db.fp()
+            # Execute Query
+            data = execute(conn, query.fp())
+            # Return Data
+            return (True, data)
+        except Exception as error:
+            return (False, error)
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

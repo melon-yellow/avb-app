@@ -25,8 +25,9 @@ async def read(
             url=f'{remote}/iba/read',
             json=req
         ).json()
-        if not res['ok']:
-            raise Exception(res['error'])
+        # Check Return
+        if not res['ok']: raise Exception(res['error'])
+        # Return Data
         return (True, res['data'])
     except Exception as error:
         return (False, error)

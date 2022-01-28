@@ -17,11 +17,17 @@ class trefila:
 
     #################################################################################################################################################
 
-    def metas():
-        res = get(
-            url=f'{remote}/trefila/metas/homerico',
-        ).json()
-        # Return Result
-        return res
+    async def metas():
+        try:
+            res = get(
+                f'{remote}/trefila/metas/homerico/',
+            ).json()
+            # Check Response
+            if not res['ok']:
+                raise Exception(res['error'])
+            # Return Data
+            return (True, res['data'])
+        except Exception as error:
+            return (False, error)
 
 #################################################################################################################################################

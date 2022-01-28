@@ -22,16 +22,25 @@ class reports:
         data_final: str,
         id_processo: str
     ):
-        res = post(
-            url=f'{remote}/reports/relatorio_lista',
-            json={
-                'data_inicial': data_inicial,
-                'data_final': data_final,
-                'id_processo': id_processo
-            }
-        ).json()
-        # Return Result
-        return res['data']
+        try:
+            res = post(
+                url=f'{remote}/reports/relatorio_lista',
+                json={
+                    'data_inicial': data_inicial,
+                    'data_final': data_final,
+                    'id_processo': id_processo
+                }
+            ).json()
+            # Check Response
+            if not res['ok']:
+                raise Exception(res['error'])
+            csv = res['data']
+            if not isinstance(csv, str):
+                raise Exception('invalid response')
+            # Return Data
+            return (True, csv)
+        except Exception as error:
+            return (False, error)
 
     #################################################################################################################################################
 
@@ -39,15 +48,24 @@ class reports:
         data: str,
         id_report: str
     ):
-        res = post(
-            url=f'{remote}/reports/relatorio_gerencial_report',
-            json={
-                'data': data,
-                'id_report': id_report
-            }
-        ).json()
-        # Return Result
-        return res['data']
+        try:
+            res = post(
+                url=f'{remote}/reports/relatorio_gerencial_report',
+                json={
+                    'data': data,
+                    'id_report': id_report
+                }
+            ).json()
+            # Check Response
+            if not res['ok']:
+                raise Exception(res['error'])
+            csv = res['data']
+            if not isinstance(csv, str):
+                raise Exception('invalid response')
+            # Return Data
+            return (True, csv)
+        except Exception as error:
+            return (False, error)
 
     #################################################################################################################################################
 
@@ -56,16 +74,25 @@ class reports:
         data_final: str,
         id_report: str
     ):
-        res = post(
-            url=f'{remote}/reports/relatorio_boletim',
-            json={
-                'data_inicial': data_inicial,
-                'data_final': data_final,
-                'id_report': id_report
-            }
-        ).json()
-        # Return Result
-        return res['data']
+        try:
+            res = post(
+                url=f'{remote}/reports/relatorio_boletim',
+                json={
+                    'data_inicial': data_inicial,
+                    'data_final': data_final,
+                    'id_report': id_report
+                }
+            ).json()
+            # Check Response
+            if not res['ok']:
+                raise Exception(res['error'])
+            csv = res['data']
+            if not isinstance(csv, str):
+                raise Exception('invalid response')
+            # Return Data
+            return (True, csv)
+        except Exception as error:
+            return (False, error)
 
     #################################################################################################################################################
 
@@ -73,15 +100,24 @@ class reports:
         data_final: str,
         controle: str
     ):
-        res = post(
-            url=f'{remote}/reports/producao_lista',
-            json={
-                'data_final': data_final,
-                'controle': controle
-            }
-        ).json()
-        # Return Result
-        return res['data']
+        try:
+            res = post(
+                url=f'{remote}/reports/producao_lista',
+                json={
+                    'data_final': data_final,
+                    'controle': controle
+                }
+            ).json()
+            # Check Response
+            if not res['ok']:
+                raise Exception(res['error'])
+            csv = res['data']
+            if not isinstance(csv, str):
+                raise Exception('invalid response')
+            # Return Data
+            return (True, csv)
+        except Exception as error:
+            return (False, error)
 
     #################################################################################################################################################
 
@@ -89,14 +125,23 @@ class reports:
         data: str,
         registro: str
     ):
-        res = post(
-            url=f'{remote}/reports/relatorio_gerencial_registro',
-            json={
-                'data': data,
-                'registro': registro
-            }
-        ).json()
-        # Return Result
-        return res['data']
+        try:
+            res = post(
+                url=f'{remote}/reports/relatorio_gerencial_registro',
+                json={
+                    'data': data,
+                    'registro': registro
+                }
+            ).json()
+            # Check Response
+            if not res['ok']:
+                raise Exception(res['error'])
+            csv = res['data']
+            if not isinstance(csv, str):
+                raise Exception('invalid response')
+            # Return Data
+            return (True, csv)
+        except Exception as error:
+            return (False, error)
 
 #################################################################################################################################################

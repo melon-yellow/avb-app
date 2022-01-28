@@ -7,13 +7,10 @@ from datetime import datetime, timedelta
 #################################################################################################################################################
 
 # string to number
-def num(string: str, ptbr: bool = False):
-    if string == '': return None
-    string = string.replace(' ','')
-    if ptbr:
-        string = string.replace('.','')
-        string = string.replace(',','.')
-    return float(string)
+def num(text: str, sep: str = ',', rem: str = '.'):
+    mem = str(text).replace(' ','')
+    mem = mem.replace(rem, '').replace(sep, '.')
+    return float(mem)
 
 #################################################################################################################################################
 

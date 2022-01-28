@@ -18,15 +18,21 @@ def escalaTurno(
     data: datetime = None,
     referencia: dict[str,tuple[str,str,str,str]] = None
 ):
-    res = post(
-        url=f'{remote}/laminador/escalaTurno',
-        json={
-            'data': data,
-            'referencia': referencia
-        }
-    )
-    # Return Result
-    return res.json()
+    try:
+        res = post(
+            url=f'{remote}/laminador/escalaTurno/',
+            json={
+                'data': data,
+                'referencia': referencia
+            }
+        ).json()
+        # Check Response
+        if not res['ok']:
+            raise Exception(res['error'])
+        # Return Data
+        return (True, res['data'])
+    except Exception as error:
+        return (False, error)
 
 #################################################################################################################################################
 

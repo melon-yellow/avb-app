@@ -44,49 +44,61 @@ class db:
 ##########################################################################################################################
 
 def produto():
-    # Connect to Server
-    conn = db.iba()
-    # Execute Query
-    data = execute(conn, open(product_sql).read())
-    # Fix Product Name
-    pname = data[0].get('CTR_PRODUCT_NAME')
-    pname = pname.strip() if isinstance(pname, str) else None
-    data[0]['CTR_PRODUCT_NAME'] = pname
-    # Return Data
-    return data[0]
+    try:
+        # Connect to Server
+        conn = db.iba()
+        # Execute Query
+        data = execute(conn, open(product_sql).read())
+        # Fix Product Name
+        pname = data[0].get('CTR_PRODUCT_NAME')
+        pname = pname.strip() if isinstance(pname, str) else None
+        data[0]['CTR_PRODUCT_NAME'] = pname
+        # Return Data
+        return (True, data[0])
+    except Exception as error:
+        return (False, error)
 
 #################################################################################################################################################
 
 def blbp():
-    # Connect to Server
-    conn = db.iba()
-    # Execute Query
-    data = execute(conn, open(blbp_sql).read())
-    # Return Data
-    return data[0]
+    try:
+        # Connect to Server
+        conn = db.iba()
+        # Execute Query
+        data = execute(conn, open(blbp_sql).read())
+        # Return Data
+        return (True, data[0])
+    except Exception as error:
+        return (False, error)
 
 #################################################################################################################################################
 
 def rfa():
-    # Connect to Server
-    conn = db.iba()
-    # Execute Query
-    data = execute(conn, open(rfa_sql).read())
-    # Return Data
-    return data[0]
+    try:
+        # Connect to Server
+        conn = db.iba()
+        # Execute Query
+        data = execute(conn, open(rfa_sql).read())
+        # Return Data
+        return (True, data[0])
+    except Exception as error:
+        return (False, error)
 
 #################################################################################################################################################
 
 def rfal2():
-    # Get Product Name
-    product = produto().get('CTR_PRODUCT_NAME')
-    # Connect to Server
-    conn = db.l2()
-    # Execute Query
-    query = open(rfal2_sql).read().format(product)
-    data = execute(conn, query)
-    # Return Data
-    return data[0]
+    try:
+        # Get Product Name
+        product = produto().get('CTR_PRODUCT_NAME')
+        # Connect to Server
+        conn = db.l2()
+        # Execute Query
+        query = open(rfal2_sql).read().format(product)
+        data = execute(conn, query)
+        # Return Data
+        return (True, data[0])
+    except Exception as error:
+        return (False, error)
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

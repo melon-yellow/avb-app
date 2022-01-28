@@ -1,2 +1,3 @@
 pyodbc
--e git+https://github.com/melon-yellow/py-misc#egg=py-misc
+flask[async]
+gunicorn

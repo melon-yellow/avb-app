@@ -33,12 +33,15 @@ class db:
 ##########################################################################################################################
 
 def clear():
-    # Connect to Server
-    conn = db.iba()
-    # Execute Query
-    data = execute(conn, open(iba_clear_sql).read())
-    # Return Data
-    return data
+    try:
+        # Connect to Server
+        conn = db.iba()
+        # Execute Query
+        data = execute(conn, open(iba_clear_sql).read())
+        # Return Data
+        return (True, data)
+    except Exception as error:
+        return (False, error)
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #

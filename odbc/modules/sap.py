@@ -4,6 +4,7 @@
 # Imports
 from os import getenv, path
 from pyodbc import connect
+from asyncio import gather
 
 # Modules
 from .helpers import execute
@@ -32,29 +33,48 @@ class db:
 
 
 ##########################################################################################################################
-#                                                        MAIN CODE                                                       #
+
+async def read_from_sap(conn, path: str, where: str):
+    try:
+        query = open(path).read().format(where)
+        data = execute(conn, query)
+        # Return Data
+        return (True, data)
+    except Exception as error:
+        return (False, error)
+
 ##########################################################################################################################
 
-def preditivas(equip: list[str]):
-    # Check Input
-    if not isinstance(equip, list):
-        raise Exception('invalid argument "equip"')
-    if not all(isinstance(i, str) for i in equip):
-        raise Exception('invalid argument "equip"')
-    # Connect to Server
-    conn = db.sap()
-    # Get Where Clause
-    where = ' OR '.join(
-        list(map(lambda e: f'("Equipamento" = {e})', equip))
-    )
-    # Execute Query
-    query = open(equip_sql).read().format(where)
-    data = execute(conn, query)
-    # Get First Date
-    queryf = open(first_sql).read().format(where)
-    first = execute(conn, queryf)
-    # Return Data
-    return { 'data': data, 'first': first }
+async def preditivas(equip: list[str]):
+    try:
+        # Check Input
+        if not isinstance(equip, list):
+            raise Exception('invalid argument "equip"')
+        if not all(isinstance(i, str) for i in equip):
+            raise Exception('invalid argument "equip"')
+        # Connect to Server
+        conn = db.sap()
+        # Get Where Clause
+        where = ' OR '.join(
+            list(map(lambda e: f'("Equipamento" = {e})', equip))
+        )
+        # Execute Query
+        (
+            (ok1, equips),
+            (ok2, first)
+        ) = await gather(
+            read_from_sap(conn, equip_sql, where),
+            read_from_sap(conn, first_sql, where)
+        )
+        # Check Results
+        if not ok1: raise equips
+        if not ok2: raise first
+        # Return Data
+        data = {'data': equips, 'first': first}
+        # Return Data
+        return (True, data)
+    except Exception as error:
+        return (False, error)
 
 ##########################################################################################################################
 #                                                        MAIN CODE                                                       #
