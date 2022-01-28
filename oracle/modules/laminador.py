@@ -44,28 +44,50 @@ async def gusaapp():
 
 #################################################################################################################################################
 
-async def forno():
+async def get_util():
     try:
-        # Read Data
         (
-            (ok1, data),
-            (ok2, util),
-            (ok3, time_util),
-            (ok4, time_plc)
+            (ok1, util),
+            (ok2, time_util),
+            (ok3, time_plc)
         ) = await gather(
-            gusaapp(),
             fromIba('0:5'),
             fromIba('2:25'),
             fromIba('2:26')
         )
-        # check errors
-        if not ok1: raise data
-        if not ok2: raise util
-        if not ok3: raise time_util
-        if not ok4: raise time_plc
+        # Check Response
+        if not ok1: raise util
+        if not ok2: raise time_util
+        if not ok3: raise time_plc
         # Update Data
-        time_stopped = (time_plc - time_util) / 60
-        data.update({'UTIL': util, 'TEMPO_PARADO': time_stopped})
+        stop = (time_plc - time_util) / 60
+        data = {
+            'UTIL': util,
+            'TEMPO_PARADO': stop
+        }
+        # Return Data
+        return (True, data)
+    except Exception as error:
+        return (False, error)
+
+#################################################################################################################################################
+
+async def forno():
+    try:
+        data = {}
+        (
+            (ok1, furnace),
+            (ok2, util)
+        ) = await gather(
+            gusaapp(),
+            get_util()
+        )
+        # Check Response
+        if not ok1: raise furnace
+        if not ok2: raise util
+        # Update Data
+        data.update(furnace)
+        data.update(util)
         # Return Data
         return (True, data)
     except Exception as error:
