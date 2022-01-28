@@ -2,7 +2,7 @@
 #################################################################################################################################################
 
 # Imports
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 #################################################################################################################################################
 
@@ -30,7 +30,7 @@ def matrix(
 #################################################################################################################################################
 
 # Get Last Day Of Month
-def lastDayOfMonth(date: datetime):
+def lastDayOfMonth(date: date):
     if date.month == 12: return date.replace(day=31)
     return (
         date.replace(month=(date.month + 1), day=1) -

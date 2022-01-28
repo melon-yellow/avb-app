@@ -70,7 +70,7 @@ class MetaTrim(TypedDict):
 def last_date(data: date, month: int):
     return lastDayOfMonth(
         date(data.year, month, 1)
-    ).date()
+    )
 
 #################################################################################################################################################
 
@@ -170,7 +170,7 @@ async def producao_lista(
     data: date = date.today()
 ):
     try:
-        last = lastDayOfMonth(data).date()
+        last = lastDayOfMonth(data)
         (ok, csv) = reports.producao_lista(
             data_final=last.strftime('%d/%m/%Y'),
             controle=str(lista)
