@@ -1,6 +1,6 @@
 import Unsafe.Handler
 
-defmodule OpcSx.IbaClient.Utils do
+defmodule OpcSx.Iba.Utils do
   use Unsafe.Generator, handler: :bang!
 
   @unsafe [
@@ -35,7 +35,7 @@ defmodule OpcSx.IbaClient.Utils do
   end
 
   defp tag_from_name!(tagname), do:
-    OpcSx.IbaClient.State.get().tag_list[tagname]
+    OpcSx.Iba.State.get().tag_list[tagname]
 
   def node_from_tagname(tagname) when is_binary(tagname) do
     try do
@@ -47,7 +47,7 @@ defmodule OpcSx.IbaClient.Utils do
 
   def start_link do
     try do
-      {:ok, pid} = OpcSx.IbaClient.State.start_link
+      {:ok, pid} = OpcSx.Iba.State.start_link
       # {:ok, ioc} = OpcSx.IbaClient.IoConfig.read
       # OpcSx.IbaClient.State.set ioc
       {:ok, pid}
@@ -57,7 +57,7 @@ defmodule OpcSx.IbaClient.Utils do
 
 end
 
-defmodule OpcSx.IbaClient.State do
+defmodule OpcSx.Iba.State do
 
   @pid :opc_sx_iba_io_config_pid
 

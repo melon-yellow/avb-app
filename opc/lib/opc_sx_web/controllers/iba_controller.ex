@@ -5,23 +5,23 @@ defmodule OpcSxWeb.IbaController do
   when is_number(ns) and (is_number(s) or is_binary(s)) do
     try do
       data = OpcSx.Utils.node_from!(ns: ns, s: s)
-        |> OpcSx.IbaClient.read_node_value!
+        |> OpcSx.Iba.read_node_value!
       {:ok, data}
     catch _, reason -> {:error, reason}
     end
   end
   defp fetch(%{"tag" => tag}) when is_binary(tag) do
     try do
-      data = OpcSx.IbaClient.Utils.node_from_tag!(tag)
-        |> OpcSx.IbaClient.read_node_value!
+      data = OpcSx.Iba.Utils.node_from_tag!(tag)
+        |> OpcSx.Iba.read_node_value!
       {:ok, data}
     catch _, reason -> {:error, reason}
     end
   end
   defp fetch(%{"tagname" => tagname}) when is_binary(tagname) do
     try do
-      data = OpcSx.IbaClient.Utils.node_from_tagname!(tagname)
-        |> OpcSx.IbaClient.read_node_value!
+      data = OpcSx.Iba.Utils.node_from_tagname!(tagname)
+        |> OpcSx.Iba.read_node_value!
       {:ok, data}
     catch _, reason -> {:error, reason}
     end

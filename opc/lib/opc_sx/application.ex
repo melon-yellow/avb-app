@@ -8,9 +8,11 @@ defmodule OpcSx.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start OPC Clients
-      OpcSx.IbaClient,
-      #OpcSx.PimsClient,
+      # Start Clients
+      {OpcSx.Iba.Client, name: IbaClient},
+      OpcSx.Iba,
+      # {OpcSx.Pims.Client, name: PimsClient},
+      # OpcSx.Pims,
       # Start the Telemetry supervisor
       OpcSxWeb.Telemetry,
       # Start the PubSub system

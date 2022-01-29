@@ -1,4 +1,4 @@
-defmodule OpcSx.IbaClient.IoConfig do
+defmodule OpcSx.Iba.IoConfig do
   # use Rustler, otp_app: :opc_sx, crate: :io_config
 
   def read_xml(_), do: :erlang.nif_error(:nif_not_loaded)

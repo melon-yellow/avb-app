@@ -5,7 +5,7 @@ defmodule OpcSxWeb.PimsController do
   when is_number(ns) and (is_number(s) or is_binary(s)) do
     try do
       data = OpcSx.Utils.node_from!(ns: ns, s: s)
-        |> OpcSx.PimsClient.read_node_value!
+        |> OpcSx.Pims.read_node_value!
       {:ok, data}
     catch _, reason -> {:error, reason}
     end
