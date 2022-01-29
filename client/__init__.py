@@ -20,23 +20,20 @@ app = Flask('app_client')
 
 @app.route('/laminador/metas/')
 async def laminadorMetas():
-    res = {}
-    try:
-        (ok, data) = await relatorio_gerencial_trimestre(
-            idReport=10,
-            registros={
-                1444: 'BLBP',
-                1350: 'SUCATEAMENTO',
-                1333: 'ACIDENTE CPT',
-                1336: 'PROD LAMINADO',
-                1338: 'REND. METALICO'
-            }
-        )
-        if not ok: raise data
-        res = {'ok': True, 'data': data}
-    except Exception as error:
-        res = {'ok': False, 'error': f'{error}'}
-    # Return View
+    (ok, data) = await relatorio_gerencial_trimestre(
+        idReport=10,
+        registros={
+            1444: 'BLBP',
+            1350: 'SUCATEAMENTO',
+            1333: 'ACIDENTE CPT',
+            1336: 'PROD LAMINADO',
+            1338: 'REND. METALICO'
+        }
+    )
+    res = (
+        {'ok': True, 'data': data} if ok else
+        {'ok': False, 'error': f'{data}'}
+    )
     return Response(
         dumps(res),
         mimetype='application/json',
@@ -47,22 +44,19 @@ async def laminadorMetas():
 
 @app.route('/trefila/metas/homerico/')
 async def trefilaMetasHomerico():
-    res = {}
-    try:
-        (ok, data) = await relatorio_gerencial_trimestre(
-            idReport=16,
-            registros={
-                2962: 'PRODUÇÃO',
-                2966: 'PRODUÇÃO HORÁRIA',
-                2963: 'RENDIMENTO METÁLICO',
-                2988: 'PRODUÇÃO POR MÁQUINA'
-            }
-        )
-        if not ok: raise data
-        res = {'ok': True, 'data': data}
-    except Exception as error:
-        res = {'ok': False, 'error': f'{error}'}
-    # Return View
+    (ok, data) = await relatorio_gerencial_trimestre(
+        idReport=16,
+        registros={
+            2962: 'PRODUÇÃO',
+            2966: 'PRODUÇÃO HORÁRIA',
+            2963: 'RENDIMENTO METÁLICO',
+            2988: 'PRODUÇÃO POR MÁQUINA'
+        }
+    )
+    res = (
+        {'ok': True, 'data': data} if ok else
+        {'ok': False, 'error': f'{data}'}
+    )
     return Response(
         dumps(res),
         mimetype='application/json',

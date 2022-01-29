@@ -23,7 +23,6 @@ async def sapPreditivas():
     res = {}
     try:
         kwargs = request.json
-        # Check Input
         if not isinstance(kwargs, dict): raise Exception('bad request')
         if 'equip' not in kwargs: raise Exception('invalid argument "equip"')
         # Fetch Data

@@ -11,7 +11,7 @@ from mysql.connector import connect
 # Modules
 from ..iba import read as fromIba
 from .metas import getMetaDay, getMetaTrim, metaTrimParser, utilTrimParser
-from ..helpers import escalaTurno
+from ..homerico import trefila
 
 #################################################################################################################################################
 
@@ -166,5 +166,41 @@ class metas:
             return (True, meta)
         except Exception as error:
             return (False, error)
+
+##########################################################################################################################
+
+async def all_metas():
+    try:
+        (
+            (ok1, s5),
+            (ok2, custo),
+            (ok3, sucata),
+            (ok4, outras),
+            # (ok5, utilizacao)
+        ) = await gather(
+            metas.s5(),
+            metas.custo(),
+            metas.sucata(),
+            trefila.metas(),
+            # metas.utilizacao()
+        )
+        # Check Response
+        if not ok1: raise s5
+        if not ok2: raise custo
+        if not ok3: raise sucata
+        if not ok4: raise outras
+        # if not ok5: raise utilizacao
+        # Assembly Data
+        data = {
+            '5S': s5,
+            'custo': custo,
+            # 'utilizacao': utilizacao,
+            'sucateamento': sucata
+        }
+        data.update(outras)
+        # Return Data
+        return (True, data)
+    except Exception as error:
+        return (False, error)
 
 ##########################################################################################################################

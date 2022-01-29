@@ -96,9 +96,13 @@ async def relatorio_gerencial_trimestre(
 ):
     try:
         (offset, dates) = trim_dates(data)
-        get_report = (lambda d: relatorio_gerencial_report(
-            idReport=idReport, registros=registros, data=d
-        ))
+        get_report = (lambda d:
+            relatorio_gerencial_report(
+                idReport=idReport,
+                registros=registros,
+                data=d
+            )
+        )
         # Get Reports
         (
             (ok1, mes1),
