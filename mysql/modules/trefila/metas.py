@@ -52,7 +52,7 @@ def getMetaTrim(
     helper = lambda m: (m, lastDayOfMonth(date(now.year, m, 1)))
     # Return Data
     return {
-        'acumulado': parser(df, trimStartEndDates(trim[0], now)),
+        'acumulado': parser(df, trimStartEndDates(now.month, now)),
         'mes1': parser(df, trimStartEndDates(*helper(trim[0]))),
         'mes2': parser(df, trimStartEndDates(*helper(trim[1]))),
         'mes3': parser(df, trimStartEndDates(*helper(trim[2])))
