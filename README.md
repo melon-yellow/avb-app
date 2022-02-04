@@ -1,6 +1,5 @@
-
 # avb-app
-# HTTP Rest API for AVB
+HTTP Rest API for AVB
 
-# run with docker compose:
-# $ sudo docker-compose up -d
+# run:
+sudo docker-compose up -d
