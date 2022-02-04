@@ -1,6 +1,6 @@
 
-# py-avb
-# Python AVB - HTTP Rest API
+# avb-app
+# HTTP Rest API for AVB
 
-# Run as Module:
-# $ py -m app
+# run with docker compose:
+# $ sudo docker-compose up -d
