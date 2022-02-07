@@ -41,6 +41,21 @@ end
 
 ##########################################################################################################################
 
+defmodule OpcSx.Iba.State do
+  use SimpleState
+
+  def start_link(_init_arg) do
+    try do
+      {:ok, config} = OpcSx.Iba.IoConfig.read
+      SimpleState.start_link(__MODULE__, value: config)
+    catch _, reason -> {:error, reason}
+    end
+  end
+
+end
+
+##########################################################################################################################
+
 defmodule OpcSx.Iba.Supervisor do
   use Supervisor
 

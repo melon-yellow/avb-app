@@ -8,8 +8,6 @@ defmodule HomericoSx.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start Homerico Connection
-      HomericoSx.Connect,
       # Start the Telemetry supervisor
       HomericoSxWeb.Telemetry,
       # Start the PubSub system
@@ -18,6 +16,7 @@ defmodule HomericoSx.Application do
       HomericoSxWeb.Endpoint
       # Start a worker by calling: HomericoSx.Worker.start_link(arg)
       # {HomericoSx.Worker, arg}
+      {HomericoSx.State, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

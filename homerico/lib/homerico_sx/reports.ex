@@ -1,3 +1,6 @@
+
+##########################################################################################################################
+
 defmodule HomericoSx.Reports do
 
   def relatorio_lista(
@@ -36,3 +39,5 @@ defmodule HomericoSx.Reports do
   ), do: Homerico.Reports.relatorio_interrupcoes! config, id_processo, data
 
 end
+
+##########################################################################################################################

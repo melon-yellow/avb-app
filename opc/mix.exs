@@ -38,6 +38,7 @@ defmodule OpcSx.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+      {:simple_state, git: "https://github.com/melon-yellow/ex-simple-state.git"},
       {:opex62541, git: "https://github.com/valiot/opex62541"},
       {:rustler, "~> 0.23.0"},
       {:unsafe, "~> 1.0"}

@@ -22,9 +22,11 @@ defmodule HomericoSxWeb.ReportsController do
     is_binary(report) and is_map(params)
   do
     try do
-      data = apply HomericoSx.Reports,
+      data = apply(
+        HomericoSx.Reports,
         report_to_atom!(report),
-        [HomericoSx.Connect.config, params]
+        [HomericoSx.config, params]
+      )
       {:ok, data}
     catch _, reason -> {:error, reason}
     end
