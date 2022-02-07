@@ -8,11 +8,6 @@ defmodule OpcSx.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start Clients
-      {OpcSx.Iba.Client, name: IbaClient},
-      OpcSx.Iba,
-      # {OpcSx.Pims.Client, name: PimsClient},
-      # OpcSx.Pims,
       # Start the Telemetry supervisor
       OpcSxWeb.Telemetry,
       # Start the PubSub system
@@ -21,6 +16,8 @@ defmodule OpcSx.Application do
       OpcSxWeb.Endpoint
       # Start a worker by calling: OpcSx.Worker.start_link(arg)
       # {OpcSx.Worker, arg}
+      {OpcSx.Iba.Supervisor, []},
+      {OpcSx.Pims.Supervisor, []},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

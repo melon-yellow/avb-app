@@ -1,28 +1,31 @@
 import Unsafe.Handler
 
-defmodule OpcSx.Iba.Client do
-  use OpcUA.Client, restart: :transient, shutdown: 10_000
-end
+##########################################################################################################################
 
 defmodule OpcSx.Iba do
   use Unsafe.Generator, handler: :bang!
-  use GenServer
 
   @unsafe [read_node_value: 1]
 
-  def start_link(_args) do
+  def read_node_value(nid), do:
+    OpcUA.Client.read_node_value IbaClient, nid
+
+end
+
+##########################################################################################################################
+
+defmodule OpcSx.Iba.Client do
+  use OpcUA.Client, restart: :transient, shutdown: 10_000
+
+  def start_link(init_arg) when is_list(init_arg) do
     try do
-      {:ok, pid} = GenServer.start_link(__MODULE__, default)
-      :ok = OpcUA.Client.set_config_with_certs IbaClient, cert_config!()
-      :ok = OpcUA.Client.connect_by_url IbaClient, url: System.get_env("AVB_IBA_OPC_URL")
-      {:ok, _} = OpcSx.Iba.Utils.start_link
+      {:ok, pid} = OpcUA.Client.start_link(__MODULE__, init_arg)
+      :ok = OpcUA.Client.set_config_with_certs pid, cert_config!()
+      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_URL")
       {:ok, pid}
     catch _, reason -> {:error, reason}
     end
   end
-
-  def read_node_value(nid), do:
-    OpcUA.Client.read_node_value IbaClient, nid
 
   defp read_cert!(path), do: :opc_sx
     |> Application.app_dir("priv/certs/#{path}")
@@ -35,3 +38,26 @@ defmodule OpcSx.Iba do
   ]
 
 end
+
+##########################################################################################################################
+
+defmodule OpcSx.Iba.Supervisor do
+  use Supervisor
+
+  def start_link(init_arg) when is_list(init_arg) do
+    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+  end
+
+  @impl true
+  def init(_init_arg) do
+    children = [
+      {OpcSx.Iba.Client, name: IbaClient},
+      {OpcSx.Iba.State, name: IbaState}
+    ]
+
+    Supervisor.init(children, strategy: :one_for_one)
+  end
+
+end
+
+##########################################################################################################################

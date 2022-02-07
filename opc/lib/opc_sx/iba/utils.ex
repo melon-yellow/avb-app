@@ -1,5 +1,7 @@
 import Unsafe.Handler
 
+##########################################################################################################################
+
 defmodule OpcSx.Iba.Utils do
   use Unsafe.Generator, handler: :bang!
 
@@ -45,21 +47,25 @@ defmodule OpcSx.Iba.Utils do
     end
   end
 
-  def start_link do
+end
+
+##########################################################################################################################
+
+defmodule OpcSx.Iba.State do
+  use Task
+
+  @pid :opc_sx_iba_io_config_pid
+
+  def start_link(_init_arg) do
     try do
-      {:ok, pid} = OpcSx.Iba.State.start_link
-      # {:ok, ioc} = OpcSx.IbaClient.IoConfig.read
-      # OpcSx.IbaClient.State.set ioc
+      {:ok, pid} = Task.start_link(fn -> loop nil end)
+      Process.register pid, @pid
+      {:ok, ioc} = OpcSx.Iba.IoConfig.read
+      OpcSx.Iba.State.set ioc
       {:ok, pid}
     catch _, reason -> {:error, reason}
     end
   end
-
-end
-
-defmodule OpcSx.Iba.State do
-
-  @pid :opc_sx_iba_io_config_pid
 
   defp loop(state) do
     receive do
@@ -67,15 +73,6 @@ defmodule OpcSx.Iba.State do
       {:get, caller} ->
         send caller, {@pid, state}
         loop state
-    end
-  end
-
-  def start_link do
-    try do
-      {:ok, pid} = Task.start_link(fn -> loop nil end)
-      Process.register pid, @pid
-      {:ok, pid}
-    catch _, reason -> {:error, reason}
     end
   end
 
@@ -89,3 +86,5 @@ defmodule OpcSx.Iba.State do
   end
 
 end
+
+##########################################################################################################################
