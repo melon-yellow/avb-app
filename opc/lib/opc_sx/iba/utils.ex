@@ -2,12 +2,12 @@ import Unsafe.Handler
 
 ##########################################################################################################################
 
-defmodule OpcSx.Iba.Utils do
+defmodule OpcSx.Iba.NodeId do
   use Unsafe.Generator, handler: :bang!
 
   @unsafe [
-    node_from_tag: 1,
-    node_from_tagname: 1,
+    from_tag: 1,
+    from_tagname: 1,
   ]
 
   @node_prefix %{ns: 3, s: "V:0.3"}
@@ -19,29 +19,32 @@ defmodule OpcSx.Iba.Utils do
   defp check_tag!(text), do:
     text |> String.match?(@tag_regex) |> throw_tag!
 
-  defp split_tag!(tag), do: if String.contains?(tag, ":"),
+  defp split!(tag), do: if String.contains?(tag, ":"),
     do:   [0 | String.split(tag, ":")],
     else: [1 | String.split(tag, ".")]
 
-  defp set_node!([d, m, s]), do: OpcSx.Utils.node_from!(
-    ns: @node_prefix.ns, s: @node_prefix.s <> ".#{m}.#{d}.#{s}"
+  defp node!([dig, mod, i]), do: OpcSx.NodeId.new!(
+    ns: @node_prefix.ns,
+    s: @node_prefix.s <> ".#{mod}.#{dig}.#{i}"
   )
 
-  def node_from_tag(tag) when is_binary(tag) do
+  def from_tag(tag) when is_binary(tag) do
     try do
       check_tag! tag
-      nid = tag |> split_tag! |> set_node!
+      nid = tag |> split! |> node!
       {:ok, nid}
     catch _, reason -> {:error, reason}
     end
   end
 
-  defp tag_from_name!(tagname), do:
-    OpcSx.Iba.State.get().tag_list[tagname]
+  defp named_tag!(tagname) do
+    config = OpcSx.Iba.State.get
+    config.names[tagname]
+  end
 
-  def node_from_tagname(tagname) when is_binary(tagname) do
+  def from_tagname(tagname) when is_binary(tagname) do
     try do
-      nid = tagname |> tag_from_name! |> node_from_tag!
+      nid = tagname |> named_tag! |> from_tag!
       {:ok, nid}
     catch _, reason -> {:error, reason}
     end

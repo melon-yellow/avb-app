@@ -2,21 +2,19 @@ import Unsafe.Handler
 
 ##########################################################################################################################
 
-defmodule OpcSx.Utils do
+defmodule OpcSx.NodeId do
   use Unsafe.Generator, handler: :bang!
 
-  @unsafe [
-    node_from: 1
-  ]
+  @unsafe [node_from: 1]
 
-  def node_from(opts) when is_list(opts) do
+  def new(opts) when is_list(opts) do
     try do
-      node_id = OpcUA.NodeId.new(
+      nid = OpcUA.NodeId.new(
         ns_index: Keyword.fetch!(opts, :ns),
-        identifier_type: "string",
-        identifier: Keyword.fetch!(opts, :s)
+        identifier: Keyword.fetch!(opts, :s),
+        identifier_type: "string"
       )
-      {:ok, node_id}
+      {:ok, nid}
     catch _, reason -> {:error, reason}
     end
   end
