@@ -62,17 +62,17 @@ async def get_util():
             (ok5t, time5),
             (okt, time_plc)
         ) = await gather(
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba(''),
-            fromIba('')
+            fromIba(''), # util 1
+            fromIba(''), # util 2
+            fromIba(''), # util 3
+            fromIba(''), # util 4
+            fromIba(''), # util 5
+            fromIba(''), # time util 1
+            fromIba(''), # time util 2
+            fromIba(''), # time util 3
+            fromIba(''), # time util 4
+            fromIba(''), # time util 5
+            fromIba('')  # time plc
         )
         # Check Response
         if not ok1: raise util1
@@ -113,11 +113,11 @@ async def get_util():
             'u03': util3,
             'u04': util4,
             'u05': util5,
-            't01': time1,
-            't02': time2,
-            't03': time3,
-            't04': time4,
-            't05': time5,
+            't01': stop1,
+            't02': stop2,
+            't03': stop3,
+            't04': stop4,
+            't05': stop5,
             's': time_plc
         }
         # Return Data
