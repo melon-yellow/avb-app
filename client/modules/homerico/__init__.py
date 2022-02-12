@@ -21,9 +21,10 @@ class MetaMes(TypedDict):
 #################################################################################################################################################
 
 def set_report_replace(registros: dict[int, str]):
-    def replacer(item: tuple[str, int]) -> dict[str, 'MetaMes']:
+    def replacer(item: list[str]) -> dict[str, 'MetaMes']:
+        if len(item) < 4: return {}
         if not item[0].isdigit(): return {}
-        if int(item[0]) not in registros: return {}
+        if int(item[0]) not in list(registros.keys()): return {}
         return {
             registros[int(item[0])]: {
                 'meta': num(item[1]),
@@ -49,7 +50,7 @@ async def relatorio_gerencial_report(
         # Set Replace
         replace = set_report_replace(registros)
         items: dict[str, 'MetaMes'] = {}
-        items.update({key:None for key in registros.values()})
+        items.update({key:None for key in list(registros.values())})
         # Map Items
         for item in matrix(csv):
             items.update(replace(item))
@@ -91,7 +92,7 @@ def trim_dates(data: date):
 
 async def relatorio_gerencial_trimestre(
     idReport: int,
-    registros: dict[int, str] = dict(),
+    registros: dict[int, str] = {},
     data: date = date.today()
 ):
     try:
@@ -119,7 +120,7 @@ async def relatorio_gerencial_trimestre(
         if not ok3: raise mes3
         # Update Data
         items: dict[str, 'MetaTrim'] = {}
-        items.update((mes1, mes2, mes3)[offset])
+        items.update([mes1, mes2, mes3][offset])
         # Get Month Metas
         for item in items:
             if not isinstance(items[item], dict): continue
