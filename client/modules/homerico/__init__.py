@@ -38,7 +38,7 @@ def set_report_replace(registros: dict[int, str]):
 
 async def relatorio_gerencial_report(
     idReport: int,
-    registros: dict[int, str] = {},
+    registros: dict[int, str],
     data: date = date.today()
 ):
     try:
@@ -92,7 +92,7 @@ def trim_dates(data: date):
 
 async def relatorio_gerencial_trimestre(
     idReport: int,
-    registros: dict[int, str] = {},
+    registros: dict[int, str],
     data: date = date.today()
 ):
     try:
