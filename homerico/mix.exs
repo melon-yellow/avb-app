@@ -38,7 +38,6 @@ defmodule HomericoSx.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:simple_state, git: "https://github.com/melon-yellow/ex-simple-state.git"},
       {:homerico, git: "https://github.com/melon-yellow/ex-homerico.git"}
     ]
   end

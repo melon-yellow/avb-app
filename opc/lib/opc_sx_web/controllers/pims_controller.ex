@@ -1,22 +1,26 @@
 defmodule OpcSxWeb.PimsController do
   use OpcSxWeb, :controller
 
-  defp fetch(%{"id" => %{"ns" => ns, "s" => s}}) when
-    is_number(ns) and (is_number(s) or is_binary(s))
-  do
+  defp fetch(module, fun, args) do
     try do
-      data = OpcSx.NodeId.new!(ns: ns, s: s)
+      data = apply(module, fun, args)
         |> OpcSx.Pims.read_node_value!
       {:ok, data}
     catch _, reason -> {:error, reason}
     end
   end
-  defp fetch(_), do: {:error, "invalid parameters"}
 
-  defp api_format!({:ok, data}), do: %{ok: true, data: data}
-  defp api_format!({:error, reason}), do: %{ok: false, error: "#{reason}"}
+  defp handle(%{"id" => %{"ns" => ns, "s" => s}}) when
+    is_number(ns) and (is_number(s) or is_binary(s)),
+  do:
+    fetch OpcSx.NodeId, :new!, [ns: ns, s: s]
+
+  defp handle(_), do: {:error, "invalid parameters"}
+
+  defp format({:ok, data}), do: %{ok: true, data: data}
+  defp format({:error, reason}), do: %{ok: false, error: "#{reason}"}
 
   def read(conn, params), do:
-    json conn, api_format!(fetch params)
+    json conn, format(handle params)
 
 end

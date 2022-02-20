@@ -1,8 +1,12 @@
+import Unsafe.Handler
 
 ##########################################################################################################################
 
 defmodule OpcSx.Iba.IoConfig do
+  use Unsafe.Generator, handler: :bang!
   # use Rustler, otp_app: :opc_sx, crate: :io_config
+
+  @unsafe [read: 0]
 
   def read_xml(_), do: :erlang.nif_error(:nif_not_loaded)
   def parse_config(_), do: :erlang.nif_error(:nif_not_loaded)

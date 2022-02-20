@@ -11,32 +11,29 @@ defmodule HomericoSxWeb.ReportsController do
   defp throw_report!(valid) when valid, do: true
   defp throw_report!(_), do: throw "invalid report"
 
-  defp report_to_atom!(report) when report in @reports do
-    report_atom = String.to_existing_atom report
-    throw_report!(report_atom in @atoms)
-    report_atom
+  defp report_function!(report) when report in @reports do
+    atom = String.to_existing_atom report
+    throw_report!(atom in @atoms)
+    atom
   end
-  defp report_to_atom!(_), do: throw "invalid report"
+  defp report_function!(_), do: throw "invalid report"
 
-  defp fetch(report, params) when
+  defp handle(report, params) when
     is_binary(report) and is_map(params)
   do
     try do
-      data = apply(
-        HomericoSx.Reports,
-        report_to_atom!(report),
-        [HomericoSx.config, params]
-      )
+      fun = report_function! report
+      data = apply HomericoSx.Reports, fun, [params]
       {:ok, data}
     catch _, reason -> {:error, reason}
     end
   end
 
-  defp api_format!({:ok, data}), do: %{ok: true, data: data}
-  defp api_format!({:error, reason}), do: %{ok: false, error: "#{reason}"}
+  defp format({:ok, data}), do: %{ok: true, data: data}
+  defp format({:error, reason}), do: %{ok: false, error: "#{reason}"}
 
-  def handle(conn, %{"report" => report} = params)
-    when is_binary(report), do: json conn,
-      (report |> fetch(params) |> api_format!)
+  def read(conn, %{"report" => report} = params)
+    when is_binary(report),
+  do: json conn, format handle(report, params)
 
 end

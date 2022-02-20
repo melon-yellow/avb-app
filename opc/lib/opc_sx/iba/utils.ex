@@ -24,8 +24,8 @@ defmodule OpcSx.Iba.NodeId do
     else: [1 | String.split(tag, ".")]
 
   defp node!([dig, mod, i]), do: OpcSx.NodeId.new!(
-    ns: @node_prefix.ns,
-    s: @node_prefix.s <> ".#{mod}.#{dig}.#{i}"
+    s: @node_prefix.s <> ".#{mod}.#{dig}.#{i}",
+    ns: @node_prefix.ns
   )
 
   def from_tag(tag) when is_binary(tag) do
@@ -38,7 +38,7 @@ defmodule OpcSx.Iba.NodeId do
   end
 
   defp named_tag!(tagname) do
-    config = OpcSx.Iba.State.get
+    config = Agent.get IbaState, & &1
     config.names[tagname]
   end
 

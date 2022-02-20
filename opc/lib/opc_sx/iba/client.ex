@@ -10,22 +10,6 @@ defmodule OpcSx.Iba do
   def read_node_value(nid), do:
     OpcUA.Client.read_node_value IbaClient, nid
 
-  defp cert!(path), do: :opc_sx
-    |> Application.app_dir("priv/certs/#{path}")
-    |> File.read!
-
-  def config do
-    try do
-      config = [
-        security_mode: 3,
-        certificate: cert!("elixir-client_cert.der"),
-        private_key: cert!("elixir-client_key.der")
-      ]
-      {:ok, config}
-    catch _, reason -> {:error, reason}
-    end
-  end
-
 end
 
 ##########################################################################################################################
@@ -33,31 +17,37 @@ end
 defmodule OpcSx.Iba.Client do
   use OpcUA.Client, restart: :transient, shutdown: 10_000
 
-  def start_link(init_arg) when is_list(init_arg) do
-    try do
-      {:ok, config} = OpcSx.Iba.config
-      {:ok, pid} = OpcUA.Client.start_link(__MODULE__, init_arg)
-      :ok = OpcUA.Client.set_config_with_certs pid, config
-      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_IBA_OPC_URL")
-      {:ok, pid}
-    catch _, reason -> {:error, reason}
-    end
-  end
+  defp read_cert!(path), do: :opc_sx
+    |> Application.app_dir("priv/certs/#{path}")
+    |> File.read!
+
+  def configuration(_user_init_state), do: [
+    conn: [
+      by_url: [url: System.get_env "AVB_IBA_OPC_URL"]
+    ],
+    config: [
+      set_config_with_certs: [
+        security_mode: 3,
+        certificate: (read_cert! "elixir-client_cert.der"),
+        private_key: (read_cert! "elixir-client_key.der")
+      ],
+      set_config: %{
+        "requestedSessionTimeout" => 1200000,
+        "secureChannelLifeTime" => 600000,
+        "timeout" => 50000
+      }
+    ]
+  ]
 
 end
 
 ##########################################################################################################################
 
 defmodule OpcSx.Iba.State do
-  use SimpleState
+  use Agent
 
-  def start_link(_init_arg) do
-    try do
-      {:ok, config} = OpcSx.Iba.IoConfig.read
-      SimpleState.start_link(__MODULE__, value: config)
-    catch _, reason -> {:error, reason}
-    end
-  end
+  def start_link(init_arg) when is_list(init_arg), do:
+    Agent.start_link OpcSx.Iba.IoConfig, :read!, [], init_arg
 
 end
 

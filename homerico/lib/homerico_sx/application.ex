@@ -16,7 +16,7 @@ defmodule HomericoSx.Application do
       HomericoSxWeb.Endpoint
       # Start a worker by calling: HomericoSx.Worker.start_link(arg)
       # {HomericoSx.Worker, arg}
-      {HomericoSx.State, []}
+      {HomericoSx.Client, name: HomericoClient}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

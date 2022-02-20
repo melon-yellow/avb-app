@@ -17,15 +17,18 @@ end
 defmodule OpcSx.Pims.Client do
   use OpcUA.Client, restart: :transient, shutdown: 10_000
 
-  def start_link(init_arg) when is_list(init_arg) do
-    try do
-      {:ok, pid} = OpcUA.Client.start_link(__MODULE__, init_arg)
-      :ok = OpcUA.Client.set_config pid
-      :ok = OpcUA.Client.connect_by_url pid, url: System.get_env("AVB_PIMS_OPC_ADDRESS")
-      {:ok, pid}
-    catch _, reason -> {:error, reason}
-    end
-  end
+  def configuration(_user_init_state), do: [
+    conn: [
+      by_url: [url: System.get_env "AVB_PIMS_OPC_URL"]
+    ],
+    config: [
+      set_config: %{
+        "requestedSessionTimeout" => 1200000,
+        "secureChannelLifeTime" => 600000,
+        "timeout" => 50000
+      }
+    ]
+  ]
 
 end
 

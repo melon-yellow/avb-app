@@ -8,6 +8,6 @@ defmodule HomericoSxWeb.Router do
   scope "/", HomericoSxWeb do
     pipe_through :api
 
-    post "/reports/:report", ReportsController, :handle
+    post "/reports/:report", ReportsController, :read
   end
 end
