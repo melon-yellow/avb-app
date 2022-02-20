@@ -5,10 +5,7 @@ import Unsafe.Handler
 defmodule OpcSx.Iba.NodeId do
   use Unsafe.Generator, handler: :bang!
 
-  @unsafe [
-    from_tag: 1,
-    from_tagname: 1,
-  ]
+  @unsafe [from_tag: 1, from_tagname: 1]
 
   @node_prefix %{ns: 3, s: "V:0.3"}
   @tag_regex ~r/([0-9]+)((.|:){1})([0-9]+)/

@@ -27,6 +27,6 @@ defmodule OpcSxWeb.IbaController do
   defp format({:error, reason}), do: %{ok: false, error: "#{reason}"}
 
   def read(conn, params), do:
-    json conn, format(handle params)
+    json conn, format handle(params)
 
 end
