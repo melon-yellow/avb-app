@@ -1,9 +1,8 @@
-import Unsafe.Handler
 
 ##########################################################################################################################
 
 defmodule OpcSx.Iba.NodeId do
-  use Unsafe.Generator, handler: :bang!
+  use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
 
   @unsafe [from_tag: 1, from_tagname: 1]
 
