@@ -1,9 +1,8 @@
-import Unsafe.Handler
 
 ##########################################################################################################################
 
 defmodule OpcSx.Iba.IoConfig do
-  use Unsafe.Generator, handler: :bang!
+  use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
   # use Rustler, otp_app: :opc_sx, crate: :io_config
 
   @unsafe [read: 0]
