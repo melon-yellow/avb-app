@@ -1,9 +1,8 @@
-import Unsafe.Handler
 
 ##########################################################################################################################
 
 defmodule OpcSx.Pims do
-  use Unsafe.Generator, handler: :bang!
+  use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
 
   @unsafe [read_node_value: 1]
 
