@@ -4,7 +4,7 @@
 defmodule OpcSx.NodeId do
   use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
 
-  @unsafe [node_from: 1]
+  @unsafe [new: 1]
 
   def new(opts) when is_list(opts) do
     try do
