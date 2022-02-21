@@ -1,9 +1,8 @@
-import Unsafe.Handler
 
 ##########################################################################################################################
 
 defmodule OpcSx.NodeId do
-  use Unsafe.Generator, handler: :bang!
+  use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
 
   @unsafe [node_from: 1]
 
