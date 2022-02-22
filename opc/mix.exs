@@ -40,7 +40,8 @@ defmodule OpcSx.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:opex62541, git: "https://github.com/valiot/opex62541"},
       {:rustler, "~> 0.23.0"},
-      {:unsafe, "~> 1.0"}
+      {:unsafe, "~> 1.0"},
+      {:httpoison, "~> 1.7"}
     ]
   end
 

@@ -4,7 +4,7 @@
 defmodule OpcSx.Iba.IoConfig do
   use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
   use Rustler, otp_app: :opc_sx, crate: :io_config
-  alias OpcSx.Iba.IoConfig.Network
+  alias OpcSx.Iba.IoConfig.HTTP
 
   @unsafe [read: 0]
 
@@ -12,7 +12,7 @@ defmodule OpcSx.Iba.IoConfig do
 
   def read do
     try do
-      io = Network.get |> parse()
+      io = HTTP.get |> parse()
       {:ok, io}
     catch _, reason -> {:error, reason}
     end
@@ -22,20 +22,19 @@ end
 
 ##########################################################################################################################
 
-defmodule OpcSx.Iba.IoConfig.Network do
-
-  @request Finch.build(:get,
+defmodule OpcSx.Iba.IoConfig.HTTP do
+  @address (
     "https://raw.githubusercontent.com" <>
     "/melon-yellow/avb-iba/main/pda/pda.config.io"
   )
 
-  defp handle_http!({:ok, %{status_code: 200, body: body}}), do: handle_data!(body)
-  defp handle_http!({:ok, %{status_code: 404}}), do: throw "(404) could not reach the link"
+  defp handle_http!({:ok, %{status_code: 200, body: body}}), do: body
+  defp handle_http!({:ok, %{status_code: status}}), do: throw "http status: #{status}"
   defp handle_http!({:error, %{reason: reason}}), do: throw reason
 
-  def get, do: @request
-    |> Finch.request(HTTPClient)
-    |> handle_http!()
+  def get, do: @address
+    |> HTTPoison.get
+    |> handle_http!
 
 end
 
