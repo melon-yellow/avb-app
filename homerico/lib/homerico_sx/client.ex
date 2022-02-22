@@ -1,15 +1,6 @@
 
 ##########################################################################################################################
 
-defmodule HomericoSx do
-
-  def conn, do:
-    Agent.get HomericoClient, & &1
-
-end
-
-##########################################################################################################################
-
 defmodule HomericoSx.Client do
   use Homerico.Client, restart: :transient, shutdown: 10_000
 
@@ -20,6 +11,9 @@ defmodule HomericoSx.Client do
       password: (System.get_env "HOMERICO_PASSWORD")
     }
   }
+
+  def conn, do:
+    Agent.get HomericoClient, & &1
 
 end
 

@@ -3,16 +3,16 @@
 
 defmodule OpcSx.Iba.IoConfig do
   use Agent
-  alias OpcSx.Iba.IoConfig.Get
+  alias OpcSx.Iba.IoConfig.Nif
 
   def start_link(init_arg) when is_list(init_arg), do:
-    Agent.start_link Get, :config!, [], init_arg
+    Agent.start_link Nif, :read!, [], init_arg
 
 end
 
 ##########################################################################################################################
 
-defmodule OpcSx.Iba.IoConfig.Get do
+defmodule OpcSx.Iba.IoConfig.Nif do
   use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
   use Rustler, otp_app: :opc_sx, crate: :io_config
 
@@ -29,12 +29,12 @@ defmodule OpcSx.Iba.IoConfig.Get do
   defp handle_http!({:ok, %{status_code: status}}), do: throw "http status: #{status}"
   defp handle_http!({:error, %{reason: reason}}), do: throw reason
 
-  def get, do: @address
+  defp get, do: @address
     |> HTTPoison.get
     |> handle_http!
 
-  def config do
-    try do {:ok, parse get}
+  def read do
+    try do {:ok, parse get()}
     catch _, reason -> {:error, reason}
     end
   end

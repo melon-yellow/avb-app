@@ -1,4 +1,4 @@
-# NIF for Elixir.OpcSx.Iba.IoConfig.Get
+# NIF for Elixir.OpcSx.Iba.IoConfig.Nif
 
 ## To build the NIF module:
 
@@ -7,7 +7,7 @@
 ## To load the NIF:
 
 ```elixir
-defmodule OpcSx.Iba.IoConfig.Get do
+defmodule OpcSx.Iba.IoConfig.Nif do
     use Rustler, otp_app: :opc_sx, crate: "io_config"
 
     # When your NIF is loaded, it will override this function.
