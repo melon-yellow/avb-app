@@ -2,8 +2,8 @@
 use rustler::NifResult;
 
 #[rustler::nif]
-fn parse(xml: String) -> NifResult<String> {
-    Ok(xml)
+fn parse(_xml: String) -> NifResult<u8> {
+    Ok(0)
 }
 
 rustler::init!(
