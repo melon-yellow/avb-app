@@ -13,7 +13,7 @@ defmodule HomericoSx.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: HomericoSx.PubSub},
       # Start the Endpoint (http/https)
-      HomericoSxWeb.Endpoint
+      HomericoSxWeb.Endpoint,
       # Start a worker by calling: HomericoSx.Worker.start_link(arg)
       # {HomericoSx.Worker, arg}
       {HomericoSx.Client, name: HomericoClient}
