@@ -13,7 +13,7 @@ defmodule OpcSx.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: OpcSx.PubSub},
       # Start the Endpoint (http/https)
-      OpcSxWeb.Endpoint
+      OpcSxWeb.Endpoint,
       # Start a worker by calling: OpcSx.Worker.start_link(arg)
       # {OpcSx.Worker, arg}
       {OpcSx.Iba.Supervisor, []},
