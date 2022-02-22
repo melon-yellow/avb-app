@@ -7,6 +7,6 @@ fn parse(_xml: String) -> NifResult<u8> {
 }
 
 rustler::init!(
-    "Elixir.OpcSx.Iba.IoConfig",
+    "Elixir.OpcSx.Iba.IoConfig.Get",
     [parse]
 );

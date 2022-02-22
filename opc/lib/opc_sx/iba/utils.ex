@@ -34,7 +34,7 @@ defmodule OpcSx.Iba.NodeId do
   end
 
   defp named_tag!(tagname) do
-    config = Agent.get IbaState, & &1
+    config = Agent.get IbaIoConfig, & &1
     config.names[tagname]
   end
 

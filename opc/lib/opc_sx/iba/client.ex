@@ -42,16 +42,6 @@ end
 
 ##########################################################################################################################
 
-defmodule OpcSx.Iba.State do
-  use Agent
-
-  def start_link(init_arg) when is_list(init_arg), do:
-    Agent.start_link OpcSx.Iba.IoConfig, :read!, [], init_arg
-
-end
-
-##########################################################################################################################
-
 defmodule OpcSx.Iba.Supervisor do
   use Supervisor
 
@@ -63,7 +53,7 @@ defmodule OpcSx.Iba.Supervisor do
   def init(_init_arg) do
     children = [
       {OpcSx.Iba.Client, name: IbaClient},
-      {OpcSx.Iba.State, name: IbaState}
+      {OpcSx.Iba.IoConfig, name: IbaIoConfig}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
