@@ -72,7 +72,7 @@ def aciariaFPEspectrometro():
 ##########################################################################################################################
 
 @app.route('/laminador/produto/')
-def laminadorRFAL2():
+def laminadorProduto():
     (ok, data) = produto()
     res = (
         {'ok': True, 'data': data} if ok else
@@ -87,7 +87,7 @@ def laminadorRFAL2():
 ##########################################################################################################################
 
 @app.route('/laminador/blbp/')
-def laminadorRFAL2():
+def laminadorBLBP():
     (ok, data) = blbp()
     res = (
         {'ok': True, 'data': data} if ok else
