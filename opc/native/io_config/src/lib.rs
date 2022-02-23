@@ -1,5 +1,5 @@
 
-use rustler::NifResult;
+use rustler::{NifResult};
 
 #[rustler::nif]
 fn parse(_xml: String) -> NifResult<u8> {
