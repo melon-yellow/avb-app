@@ -131,68 +131,80 @@ fn get_tags<'a>(
     env: Env<'a>,
     prefix: (u32, &str),
     list: &Vec<Signal>,
-    names: Term<'a>
+    buffer: (Term<'a>, Term<'a>)
 ) -> NifResult<(Term<'a>, Term<'a>)> {
-    // Index Kind
-    let mut unames = names;
-    let mut kind = Term::map_new(env);
+    // Set Buffer
+    let mut _kind = buffer.0;
+    let mut _names = buffer.1;
     // Iterate over Tags
     for (i, signal) in list.iter().enumerate() {
         if !signal.Name.trim().is_empty() {
-            kind = Term::map_put(kind,
+            _kind = Term::map_put(_kind,
                 i.encode(env),
                 signal.to_term(env)?
             )?;
-            unames = Term::map_put(unames,
+            _names = Term::map_put(_names,
                 signal.Name.encode(env),
                 format!("{}{}{}", prefix.0, prefix.1, i).encode(env)
             )?;
         };
     };
     // Return Ok
-    Ok((kind, unames))
+    Ok((_kind, _names))
 }
 
 //##########################################################################################################################
 
 #[rustler::nif]
 fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
-    // Set Variables
-    let mut tags = Term::map_new(env);
-    let mut names = Term::map_new(env);
     // Parse XML
     let doc: Document = de::from_str(xml.trim()).unwrap();
+    // Set Buffer
+    let mut tags = Term::map_new(env);
+    let mut names = Term::map_new(env);
     // Iterate over Modules
     for module in doc.Modules.list.iter() {
-        // Index Module
-        let mut modl = Term::map_new(env);
+        // Set Buffer
+        let mut analogs = Term::map_new(env);
+        let mut digitals = Term::map_new(env);
         // Iterate over Links
         for link in module.Links.list.iter() {
             if let Some(analog) = &link.Analog {
-                let (kind, unames) = get_tags(env,
-                    (module.ModuleNr, ":"), &analog.list, names)?;
-                modl = Term::map_put(modl, 0.encode(env), kind)?;
-                names = unames;
+                let (_analogs, _names) = get_tags(
+                    env,
+                    (module.ModuleNr, ":"),
+                    &analog.list,
+                    (analogs, names)
+                )?;
+                analogs = _analogs;
+                names = _names;
             };
             if let Some(digital) = &link.Digital {
-                let (kind, unames) = get_tags(env,
-                    (module.ModuleNr, "."), &digital.list, names)?;
-                modl = Term::map_put(modl, 1.encode(env), kind)?;
-                names = unames;
+                let (_digitals, _names) = get_tags(
+                    env,
+                    (module.ModuleNr, "."),
+                    &digital.list,
+                    (digitals, names)
+                )?;
+                digitals = _digitals;
+                names = _names;
             };
         };
-        // Add module Info
-        modl = Term::map_put(modl,
+        // Set Module Info
+        let mut _mod = Term::map_new(env);
+        _mod = Term::map_put(_mod, 0.encode(env), analogs)?;
+        _mod = Term::map_put(_mod, 1.encode(env), digitals)?;
+        _mod = Term::map_put(_mod,
             atoms::config().to_term(env),
             module.to_term(env)?
         )?;
         // Index Module
         tags = Term::map_put(tags,
             (module.ModuleNr).encode(env),
-            modl
+            _mod
         )?;
     };
-    // Assembly Map
+    // Assembly Data
     let mut io = Term::map_new(env);
     io = Term::map_put(io, atoms::tags().to_term(env), tags)?;
     io = Term::map_put(io, atoms::names().to_term(env), names)?;
