@@ -153,6 +153,8 @@ fn get_tags<'a>(
     Ok((kind, unames))
 }
 
+//##########################################################################################################################
+
 #[rustler::nif]
 fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Set Variables
@@ -174,13 +176,13 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
         // Iterate over Links
         for link in module.Links.list.iter() {
             if let Some(analog) = &link.Analog {
-                let (unames, kind) = get_tags(env,
+                let (kind, unames) = get_tags(env,
                     module.ModuleNr, ":", &analog.list, names)?;
                 tmod = Term::map_put(tmod, 0.encode(env), kind)?;
                 names = unames;
             };
             if let Some(digital) = &link.Digital {
-                let (unames, kind) = get_tags(env,
+                let (kind, unames) = get_tags(env,
                     module.ModuleNr, ".", &digital.list, names)?;
                 tmod = Term::map_put(tmod, 1.encode(env), kind)?;
                 names = unames;
