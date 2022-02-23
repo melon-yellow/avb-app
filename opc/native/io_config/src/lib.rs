@@ -7,7 +7,7 @@ use quick_xml::de;
 //##########################################################################################################################
 
 mod atoms {
-    rustler::atoms! { tags, modules, names }
+    rustler::atoms! { tags, names, config }
 }
 
 //##########################################################################################################################
@@ -126,7 +126,7 @@ impl Module {
 
 //##########################################################################################################################
 
-// 
+// Get Tags From Signal-List
 fn get_tags<'a>(
     env: Env<'a>,
     prefix: (u32, &str),
@@ -158,44 +158,44 @@ fn get_tags<'a>(
 #[rustler::nif]
 fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Set Variables
-    let mut io = Term::map_new(env);
     let mut tags = Term::map_new(env);
     let mut names = Term::map_new(env);
-    let mut modules = Term::map_new(env);
     // Parse XML
     let doc: Document = de::from_str(xml.trim()).unwrap();
     // Iterate over Modules
     for module in doc.Modules.list.iter() {
-        // Add module Info
-        modules = Term::map_put(modules,
-            (module.ModuleNr).encode(env),
-            module.to_term(env)?
-        )?;
         // Index Module
-        let mut tmod = Term::map_new(env);
+        let mut modl = Term::map_new(env);
         // Iterate over Links
         for link in module.Links.list.iter() {
             if let Some(analog) = &link.Analog {
                 let (kind, unames) = get_tags(env,
                     (module.ModuleNr, ":"), &analog.list, names)?;
-                tmod = Term::map_put(tmod, 0.encode(env), kind)?;
+                modl = Term::map_put(modl, 0.encode(env), kind)?;
                 names = unames;
             };
             if let Some(digital) = &link.Digital {
                 let (kind, unames) = get_tags(env,
                     (module.ModuleNr, "."), &digital.list, names)?;
-                tmod = Term::map_put(tmod, 1.encode(env), kind)?;
+                modl = Term::map_put(modl, 1.encode(env), kind)?;
                 names = unames;
             };
         };
+        // Add module Info
+        modl = Term::map_put(modl,
+            atoms::config().to_term(env),
+            module.to_term(env)?
+        )?;
         // Index Module
         tags = Term::map_put(tags,
-            (module.ModuleNr).encode(env), tmod)?;
+            (module.ModuleNr).encode(env),
+            modl
+        )?;
     };
     // Assembly Map
+    let mut io = Term::map_new(env);
     io = Term::map_put(io, atoms::tags().to_term(env), tags)?;
     io = Term::map_put(io, atoms::names().to_term(env), names)?;
-    io = Term::map_put(io, atoms::modules().to_term(env), modules)?;
     // Return Ok
     Ok(io)
 }
