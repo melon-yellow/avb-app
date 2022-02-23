@@ -123,7 +123,7 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     let mut names = Term::map_new(env);
     let mut modules = Term::map_new(env);
     // Parse XML
-    let doc: Document = de::from_str(xml).unwrap();
+    let doc: Document = de::from_str(xml.trim()).unwrap();
     // Iterate over Modules
     for module in doc.xml.IOConfiguration.Modules.list.iter() {
         modules = Term::map_put(
