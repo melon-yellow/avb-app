@@ -13,10 +13,7 @@ end
 ##########################################################################################################################
 
 defmodule OpcSx.Iba.IoConfig.Nif do
-  use Unsafe.Generator, handler: {Unsafe.Handler, :bang!}
   use Rustler, otp_app: :opc_sx, crate: :io_config
-
-  @unsafe [read: 0]
 
   @address (
     "https://raw.githubusercontent.com" <>
@@ -33,11 +30,8 @@ defmodule OpcSx.Iba.IoConfig.Nif do
     |> HTTPoison.get
     |> handle_http!
 
-  def read do
-    try do {:ok, parse get()}
-    catch _, reason -> {:error, reason}
-    end
-  end
+  def read!, do:
+    get() |> parse
 
 end
 
