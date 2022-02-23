@@ -31,7 +31,7 @@ defmodule OpcSx.Iba.IoConfig.Nif do
     |> handle_http!
 
   def read!, do:
-    get() |> parse
+    get() |> parse |> IO.inspect
 
 end
 
