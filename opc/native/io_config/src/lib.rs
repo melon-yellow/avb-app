@@ -83,8 +83,7 @@ fn map_put_atom<'a, T: Encoder>(
     value: &T
 ) -> NifResult<Term<'a>> {
     Ok(
-        Term::map_put(
-            map,
+        Term::map_put(map,
             Atom::from_str(env, atom)?.encode(env),
             value.encode(env)
         )?
@@ -97,16 +96,16 @@ impl Signal {
     pub fn to_term<'a>(&self, env: Env<'a>) -> NifResult<Term<'a>> {
         let mut map = Term::map_new(env);
         map = map_put_atom(env, map, "name", &self.Name)?;
-        map = map_put_atom(env, map, "data_type", &self.DataType)?;
-        map = map_put_atom(env, map, "active", &self.Active)?;
         map = map_put_atom(env, map, "unit", &self.Unit)?;
+        map = map_put_atom(env, map, "active", &self.Active)?;
+        map = map_put_atom(env, map, "data_type", &self.DataType)?;
         map = map_put_atom(env, map, "comment_1", &self.Comment1)?;
         map = map_put_atom(env, map, "comment_2", &self.Comment2)?;
-        map = map_put_atom(env, map, "expression", &self.Expression)?;
-        map = map_put_atom(env, map, "file_signal_id", &self.FileSignalId)?;
         map = map_put_atom(env, map, "s7_symbol", &self.S7Symbol)?;
         map = map_put_atom(env, map, "s7_operand", &self.S7Operand)?;
+        map = map_put_atom(env, map, "expression", &self.Expression)?;
         map = map_put_atom(env, map, "s7_data_type", &self.S7DataType)?;
+        map = map_put_atom(env, map, "file_signal_id", &self.FileSignalId)?;
         Ok(map)
     }
 }
@@ -115,22 +114,22 @@ impl Module {
     pub fn to_term<'a>(&self, env: Env<'a>) -> NifResult<Term<'a>> {
         let mut map = Term::map_new(env);
         map = map_put_atom(env, map, "name", &self.Name)?;
+        map = map_put_atom(env, map, "cpu_name", &self.CPUName)?;
         map = map_put_atom(env, map, "module_nr", &self.ModuleNr)?;
         map = map_put_atom(env, map, "file_module_nr", &self.FileModuleNr)?;
+        map = map_put_atom(env, map, "pccp_destination", &self.PCCP_Destination)?;
         map = map_put_atom(env, map, "nr_analog_signals", &self.NrAnalogSignals)?;
         map = map_put_atom(env, map, "nr_digital_signals", &self.NrDigitalSignals)?;
-        map = map_put_atom(env, map, "pccp_destination", &self.PCCP_Destination)?;
-        map = map_put_atom(env, map, "cpu_name", &self.CPUName)?;
         Ok(map)
     }
 }
 
 //##########################################################################################################################
 
+// 
 fn get_tags<'a>(
     env: Env<'a>,
-    mod_nr: u32,
-    sep: &str,
+    prefix: (u32, &str),
     list: &Vec<Signal>,
     names: Term<'a>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
@@ -146,10 +145,11 @@ fn get_tags<'a>(
             )?;
             unames = Term::map_put(unames,
                 signal.Name.encode(env),
-                format!("{}{}{}", mod_nr, sep, i).encode(env)
+                format!("{}{}{}", prefix.0, prefix.1, i).encode(env)
             )?;
-        }
+        };
     };
+    // Return Ok
     Ok((kind, unames))
 }
 
@@ -177,24 +177,26 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
         for link in module.Links.list.iter() {
             if let Some(analog) = &link.Analog {
                 let (kind, unames) = get_tags(env,
-                    module.ModuleNr, ":", &analog.list, names)?;
+                    (module.ModuleNr, ":"), &analog.list, names)?;
                 tmod = Term::map_put(tmod, 0.encode(env), kind)?;
                 names = unames;
             };
             if let Some(digital) = &link.Digital {
                 let (kind, unames) = get_tags(env,
-                    module.ModuleNr, ".", &digital.list, names)?;
+                    (module.ModuleNr, "."), &digital.list, names)?;
                 tmod = Term::map_put(tmod, 1.encode(env), kind)?;
                 names = unames;
             };
         };
         // Index Module
-        tags = Term::map_put(tags, (module.ModuleNr).encode(env), tmod)?;
-    }
+        tags = Term::map_put(tags,
+            (module.ModuleNr).encode(env), tmod)?;
+    };
     // Assembly Map
     io = Term::map_put(io, atoms::tags().to_term(env), tags)?;
     io = Term::map_put(io, atoms::names().to_term(env), names)?;
     io = Term::map_put(io, atoms::modules().to_term(env), modules)?;
+    // Return Ok
     Ok(io)
 }
 
