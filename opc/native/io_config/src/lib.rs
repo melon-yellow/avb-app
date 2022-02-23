@@ -71,8 +71,13 @@ struct IoConfig {
 }
 
 #[derive(Debug, Deserialize, PartialEq)]
-struct Document {
+struct XML {
     IOConfiguration: IoConfig
+}
+
+#[derive(Debug, Deserialize, PartialEq)]
+struct Document {
+    xml: XML
 }
 
 //##########################################################################################################################
@@ -120,7 +125,7 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Parse XML
     let doc: Document = de::from_str(xml).unwrap();
     // Iterate over Modules
-    for module in doc.IOConfiguration.Modules.list.iter() {
+    for module in doc.xml.IOConfiguration.Modules.list.iter() {
         modules = Term::map_put(
             modules,
             (module.ModuleNr).encode(env),
