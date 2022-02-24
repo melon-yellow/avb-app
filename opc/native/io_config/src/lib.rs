@@ -55,7 +55,7 @@ struct Module {
     Enabled: bool,
     ModuleNr: u32,
     Links: LinkList,
-    FileModuleNr: Option<u16>,
+    FileModuleNr: Option<u32>,
     NrAnalogSignals: Option<u32>,
     NrDigitalSignals: Option<u32>,
     PCCP_Destination: Option<String>,
