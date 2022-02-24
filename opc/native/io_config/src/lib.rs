@@ -129,9 +129,9 @@ impl Module {
 // Get Tags From Signal-List
 fn get_tags<'a>(
     env: Env<'a>,
-    prefix: (u32, &str),
+    prefix: &(u32, &str),
     list: &Vec<Signal>,
-    buffer: (Term<'a>, Term<'a>)
+    buffer: &(Term<'a>, Term<'a>)
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     // Set Buffer
     let mut _kind = buffer.0;
@@ -158,7 +158,7 @@ fn get_tags<'a>(
 #[rustler::nif]
 fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Parse XML
-    let doc: Document = de::from_str(xml.trim()).unwrap();
+    let doc: Document = de::from_str(xml).unwrap();
     // Set Buffer
     let mut tags = Term::map_new(env);
     let mut names = Term::map_new(env);
@@ -172,9 +172,9 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
             if let Some(analog) = &link.Analog {
                 let (_analogs, _names) = get_tags(
                     env,
-                    (module.ModuleNr, ":"),
-                    &analog.list,
-                    (analogs, names)
+                    &(module.ModuleNr, ":"),
+                    &(analog.list),
+                    &(analogs, names)
                 )?;
                 analogs = _analogs;
                 names = _names;
@@ -182,9 +182,9 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
             if let Some(digital) = &link.Digital {
                 let (_digitals, _names) = get_tags(
                     env,
-                    (module.ModuleNr, "."),
-                    &digital.list,
-                    (digitals, names)
+                    &(module.ModuleNr, "."),
+                    &(digital.list),
+                    &(digitals, names)
                 )?;
                 digitals = _digitals;
                 names = _names;
