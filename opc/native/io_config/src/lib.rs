@@ -1,5 +1,12 @@
 
-use rustler::{Env, Term, Encoder, NifResult, Atom};
+use rustler::{
+    Env,
+    Term,
+    Encoder,
+    NifResult,
+    Atom,
+    MapIterator
+};
 
 use serde::Deserialize;
 use quick_xml::de;
@@ -77,14 +84,15 @@ struct Document {
 //##########################################################################################################################
 
 fn map_put_atom<'a, T: Encoder>(
-    env: Env<'a>,
     map: Term<'a>,
     atom: &str,
     value: &T
 ) -> NifResult<Term<'a>> {
+    let env = map.get_env();
+    let _atom = Atom::from_str(env, atom)?;
     Ok(
         Term::map_put(map,
-            Atom::from_str(env, atom)?.encode(env),
+            _atom.encode(env),
             value.encode(env)
         )?
     )
@@ -107,17 +115,17 @@ fn map_merge<'a>(
 impl Signal {
     pub fn to_term<'a>(&self, env: Env<'a>) -> NifResult<Term<'a>> {
         let mut map = Term::map_new(env);
-        map = map_put_atom(env, map, "name", &self.Name)?;
-        map = map_put_atom(env, map, "unit", &self.Unit)?;
-        map = map_put_atom(env, map, "active", &self.Active)?;
-        map = map_put_atom(env, map, "data_type", &self.DataType)?;
-        map = map_put_atom(env, map, "comment_1", &self.Comment1)?;
-        map = map_put_atom(env, map, "comment_2", &self.Comment2)?;
-        map = map_put_atom(env, map, "s7_symbol", &self.S7Symbol)?;
-        map = map_put_atom(env, map, "s7_operand", &self.S7Operand)?;
-        map = map_put_atom(env, map, "expression", &self.Expression)?;
-        map = map_put_atom(env, map, "s7_data_type", &self.S7DataType)?;
-        map = map_put_atom(env, map, "file_signal_id", &self.FileSignalId)?;
+        map = map_put_atom(map, "name", &self.Name)?;
+        map = map_put_atom(map, "unit", &self.Unit)?;
+        map = map_put_atom(map, "active", &self.Active)?;
+        map = map_put_atom(map, "data_type", &self.DataType)?;
+        map = map_put_atom(map, "comment_1", &self.Comment1)?;
+        map = map_put_atom(map, "comment_2", &self.Comment2)?;
+        map = map_put_atom(map, "s7_symbol", &self.S7Symbol)?;
+        map = map_put_atom(map, "s7_operand", &self.S7Operand)?;
+        map = map_put_atom(map, "expression", &self.Expression)?;
+        map = map_put_atom(map, "s7_data_type", &self.S7DataType)?;
+        map = map_put_atom(map, "file_signal_id", &self.FileSignalId)?;
         Ok(map)
     }
 }
@@ -125,13 +133,13 @@ impl Signal {
 impl Module {
     pub fn to_term<'a>(&self, env: Env<'a>) -> NifResult<Term<'a>> {
         let mut map = Term::map_new(env);
-        map = map_put_atom(env, map, "name", &self.Name)?;
-        map = map_put_atom(env, map, "cpu_name", &self.CPUName)?;
-        map = map_put_atom(env, map, "module_nr", &self.ModuleNr)?;
-        map = map_put_atom(env, map, "file_module_nr", &self.FileModuleNr)?;
-        map = map_put_atom(env, map, "pccp_destination", &self.PCCP_Destination)?;
-        map = map_put_atom(env, map, "nr_analog_signals", &self.NrAnalogSignals)?;
-        map = map_put_atom(env, map, "nr_digital_signals", &self.NrDigitalSignals)?;
+        map = map_put_atom(map, "name", &self.Name)?;
+        map = map_put_atom(map, "cpu_name", &self.CPUName)?;
+        map = map_put_atom(map, "module_nr", &self.ModuleNr)?;
+        map = map_put_atom(map, "file_module_nr", &self.FileModuleNr)?;
+        map = map_put_atom(map, "pccp_destination", &self.PCCP_Destination)?;
+        map = map_put_atom(map, "nr_analog_signals", &self.NrAnalogSignals)?;
+        map = map_put_atom(map, "nr_digital_signals", &self.NrDigitalSignals)?;
         Ok(map)
     }
 }
