@@ -104,8 +104,10 @@ fn map_merge<'a>(
     dest: Term<'a>,
     origin: Term<'a>
 ) -> NifResult<Term<'a>> {
-    for (key, value) in MapIterator::new(origin) {
-        dest = Term::map_put(dest, key, value)?;
+    if let Some(iter) = MapIterator::new(origin) {
+        for (key, value) in iter {
+            dest = Term::map_put(dest, key, value)?;
+        };
     };
     Ok(dest)
 }
