@@ -157,6 +157,8 @@ fn get_tags<'a>(
     // Set Buffer
     let mut tags = Term::map_new(env);
     let mut names = Term::map_new(env);
+    // Set Tag Prefix
+    let pfx = format!("{}{}", prefix.0, prefix.1);
     // Iterate over Tags
     for (i, signal) in list.iter().enumerate() {
         if !signal.Name.trim().is_empty() {
@@ -164,10 +166,9 @@ fn get_tags<'a>(
                 i.encode(env),
                 signal.to_term(env)?
             )?;
-            let tag = format!("{}{}{}", prefix.0, prefix.1, i);
             names = Term::map_put(names,
                 signal.Name.encode(env),
-                tag.encode(env)
+                format!("{}{}", pfx, i).encode(env)
             )?;
         };
     };
