@@ -16,7 +16,7 @@ mod atoms {
 #[derive(Debug, Deserialize, PartialEq)]
 struct Signal {
     Name: String,
-    DataType: u32,
+    DataType: usize,
     Active: bool,
     Unit: Option<String>,
     Comment1: Option<String>,
@@ -51,13 +51,13 @@ struct LinkList {
 #[derive(Debug, Deserialize, PartialEq)]
 struct Module {
     Name: String,
-    ModuleType: u32,
+    ModuleType: usize,
     Enabled: bool,
-    ModuleNr: u32,
+    ModuleNr: usize,
     Links: LinkList,
-    FileModuleNr: Option<u32>,
-    NrAnalogSignals: Option<u32>,
-    NrDigitalSignals: Option<u32>,
+    FileModuleNr: Option<usize>,
+    NrAnalogSignals: Option<usize>,
+    NrDigitalSignals: Option<usize>,
     PCCP_Destination: Option<String>,
     CPUName: Option<String>
 }
@@ -88,6 +88,18 @@ fn map_put_atom<'a, T: Encoder>(
             value.encode(env)
         )?
     )
+}
+
+//##########################################################################################################################
+
+fn map_merge<'a>(
+    dest: Term<'a>,
+    origin: Term<'a>
+) -> NifResult<Term<'a>> {
+    for (key, value) in MapIterator::new(origin) {
+        dest = Term::map_put(dest, key, value)?;
+    };
+    Ok(dest)
 }
 
 //##########################################################################################################################
@@ -129,28 +141,27 @@ impl Module {
 // Get Tags From Signal-List
 fn get_tags<'a>(
     env: Env<'a>,
-    prefix: &(u32, &str),
-    list: &Vec<Signal>,
-    buffer: &(Term<'a>, Term<'a>)
+    prefix: (usize, &str),
+    list: &Vec<Signal>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     // Set Buffer
-    let mut _kind = buffer.0;
-    let mut _names = buffer.1;
+    let mut tags = Term::map_new(env);
+    let mut names = Term::map_new(env);
     // Iterate over Tags
     for (i, signal) in list.iter().enumerate() {
         if !signal.Name.trim().is_empty() {
-            _kind = Term::map_put(_kind,
+            tags = Term::map_put(tags,
                 i.encode(env),
                 signal.to_term(env)?
             )?;
-            _names = Term::map_put(_names,
+            names = Term::map_put(names,
                 signal.Name.encode(env),
                 format!("{}{}{}", prefix.0, prefix.1, i).encode(env)
             )?;
         };
     };
     // Return Ok
-    Ok((_kind, _names))
+    Ok((tags, names))
 }
 
 //##########################################################################################################################
@@ -170,24 +181,20 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
         // Iterate over Links
         for link in module.Links.list.iter() {
             if let Some(analog) = &link.Analog {
-                let (_analogs, _names) = get_tags(
-                    env,
-                    &(module.ModuleNr, ":"),
-                    &(analog.list),
-                    &(analogs, names)
+                let (_tags, _names) = get_tags(env,
+                    (module.ModuleNr, ":"),
+                    &(analog.list)
                 )?;
-                analogs = _analogs;
-                names = _names;
+                analogs = map_merge(analogs, _tags);
+                names = map_merge(names, _names);
             };
             if let Some(digital) = &link.Digital {
-                let (_digitals, _names) = get_tags(
-                    env,
-                    &(module.ModuleNr, "."),
-                    &(digital.list),
-                    &(digitals, names)
+                let (_tags, _names) = get_tags(env,
+                    (module.ModuleNr, "."),
+                    &(digital.list)
                 )?;
-                digitals = _digitals;
-                names = _names;
+                digitals = map_merge(digitals, _tags);
+                names = map_merge(names, _names);
             };
         };
         // Set Module Info
