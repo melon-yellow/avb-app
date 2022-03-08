@@ -151,7 +151,7 @@ impl Module {
 // Get Tags From Signal-List
 fn get_tags<'a>(
     env: Env<'a>,
-    prefix: (usize, &str),
+    prefix: (&usize, &str),
     list: &Vec<Signal>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     // Set Buffer
@@ -194,7 +194,7 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
         for link in module.Links.list.iter() {
             if let Some(analog) = &link.Analog {
                 let (_tags, _names) = get_tags(env,
-                    (module.ModuleNr, ":"),
+                    (&(module.ModuleNr), ":"),
                     &(analog.list)
                 )?;
                 analogs = map_merge(analogs, _tags);
@@ -202,7 +202,7 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
             };
             if let Some(digital) = &link.Digital {
                 let (_tags, _names) = get_tags(env,
-                    (module.ModuleNr, "."),
+                    (&(module.ModuleNr), "."),
                     &(digital.list)
                 )?;
                 digitals = map_merge(digitals, _tags);
