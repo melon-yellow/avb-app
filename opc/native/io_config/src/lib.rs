@@ -194,16 +194,16 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
         for link in module.Links.list.iter() {
             if let Some(analog) = &link.Analog {
                 let (_tags, _names) = get_tags(env,
-                    (&(module.ModuleNr), ":"),
-                    &(analog.list)
+                    (&module.ModuleNr, ":"),
+                    &analog.list
                 )?;
                 analogs = map_merge(analogs, _tags);
                 names = map_merge(names, _names);
             };
             if let Some(digital) = &link.Digital {
                 let (_tags, _names) = get_tags(env,
-                    (&(module.ModuleNr), "."),
-                    &(digital.list)
+                    (&module.ModuleNr, "."),
+                    &digital.list
                 )?;
                 digitals = map_merge(digitals, _tags);
                 names = map_merge(names, _names);
