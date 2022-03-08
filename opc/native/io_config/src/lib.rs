@@ -164,9 +164,10 @@ fn get_tags<'a>(
                 i.encode(env),
                 signal.to_term(env)?
             )?;
+            let tag = format!("{}{}{}", prefix.0, prefix.1, i);
             names = Term::map_put(names,
                 signal.Name.encode(env),
-                format!("{}{}{}", prefix.0, prefix.1, i).encode(env)
+                tag.encode(env)
             )?;
         };
     };
@@ -217,7 +218,7 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
         )?;
         // Index Module
         tags = Term::map_put(tags,
-            (module.ModuleNr).encode(env),
+            module.ModuleNr.encode(env),
             _mod
         )?;
     };
