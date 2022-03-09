@@ -89,10 +89,10 @@ fn map_put_atom<'a, T: Encoder>(
     value: &T
 ) -> NifResult<Term<'a>> {
     let env = map.get_env();
-    let _atom = Atom::from_str(env, atom)?;
+    let atom = Atom::from_str(env, atom)?;
     Ok(
         Term::map_put(map,
-            _atom.encode(env),
+            atom.encode(env),
             value.encode(env)
         )?
     )
@@ -101,15 +101,15 @@ fn map_put_atom<'a, T: Encoder>(
 //##########################################################################################################################
 
 fn map_merge<'a>(
-    dest: mut Term<'a>,
+    map: mut Term<'a>,
     origin: Term<'a>
 ) -> NifResult<Term<'a>> {
     if let Some(iter) = MapIterator::new(origin) {
         for (key, value) in iter {
-            dest = Term::map_put(dest, key, value)?;
+            map = Term::map_put(map, key, value)?;
         };
     };
-    Ok(dest)
+    Ok(map)
 }
 
 //##########################################################################################################################
