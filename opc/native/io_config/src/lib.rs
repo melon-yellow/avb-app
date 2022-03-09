@@ -101,7 +101,7 @@ fn map_put_atom<'a, T: Encoder>(
 //##########################################################################################################################
 
 fn map_merge<'a>(
-    dest: Term<'a>,
+    dest: mut Term<'a>,
     origin: Term<'a>
 ) -> NifResult<Term<'a>> {
     if let Some(iter) = MapIterator::new(origin) {
