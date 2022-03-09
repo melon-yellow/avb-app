@@ -84,7 +84,7 @@ struct Document {
 //##########################################################################################################################
 
 fn map_put_atom<'a, T: Encoder>(
-    map: Term<'a>,
+    map: mut Term<'a>,
     atom: &str,
     value: &T
 ) -> NifResult<Term<'a>> {
