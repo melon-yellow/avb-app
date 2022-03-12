@@ -229,7 +229,7 @@ fn get_tags<'a>(
     list: &Vec<Signal>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     let reduced = list.par_iter().enumerate()
-        .map(|(i, signal)| map_tags(env, pfx, i, signal)?)
+        .map(|(i, signal)| map_tags(env, pfx, &i, &signal)?)
         .reduce(|| buffer2(env)?, |u, d| merge2(u, d)?);
     // Return Data
     Ok(reduced)
@@ -291,8 +291,52 @@ fn get_links<'a>(
     list: &Vec<Link>
 ) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
     let reduced = list.par_iter()
-        .map(|link| map_links(env, modnr, link)?)
+        .map(|link| map_links(env, modnr, &link)?)
         .reduce(|| buffer3(env)?, |u, d| merge3(u, d)?);
+    // Return Data
+    Ok(reduced)
+}
+
+
+//##########################################################################################################################
+
+// Map Modules in IO
+fn map_modules<'a>(
+    env: Env<'a>,
+    module: &Module
+) -> NifResult<(Term<'a>, Term<'a>)> {
+    // Get Links in Module
+    let (names, analogs, digitals) = get_links(env,
+        module.ModuleNr, module.Links.list
+    )?;
+    // Assembly Module
+    let mut _mod = Term::map_new(env);
+    _mod = Term::map_put(_mod, 0.encode(env), analogs)?;
+    _mod = Term::map_put(_mod, 1.encode(env), digitals)?;
+    _mod = Term::map_put(_mod,
+        atoms::config().to_term(env),
+        module.to_term(env)?
+    )?;
+    // Set Modules Map
+    let mut modules = Term::map_new(env);
+    modules = Term::map_put(modules,
+        module.ModuleNr.encode(env),
+        _mod
+    )?;
+    // Return Data
+    Ok((names, modules))
+}
+
+//##########################################################################################################################
+
+// Get Modules in IO
+fn get_modules<'a>(
+    env: Env<'a>,
+    list: &Vec<Module>
+) -> NifResult<(Term<'a>, Term<'a>)> {
+    let reduced = list.par_iter()
+        .map(|module| map_modules(env, &module)?)
+        .reduce(|| buffer2(env)?, |u, d| merge2(u, d)?);
     // Return Data
     Ok(reduced)
 }
@@ -303,32 +347,9 @@ fn get_links<'a>(
 fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Parse XML
     let doc: Document = de::from_str(xml).unwrap();
-    // Set Buffer
-    let mut modules = Term::map_new(env);
-    let mut names = Term::map_new(env);
-    // Iterate over Modules
-    for module in doc.Modules.list.iter() {
-        // Get Links in Module
-        let (_names, analogs, digitals) = get_links(env,
-            &module.ModuleNr, &module.Links.list
-        )?;
-        // Assembly Module
-        let mut _mod = Term::map_new(env);
-        _mod = Term::map_put(_mod, 0.encode(env), analogs)?;
-        _mod = Term::map_put(_mod, 1.encode(env), digitals)?;
-        _mod = Term::map_put(_mod,
-            atoms::config().to_term(env),
-            module.to_term(env)?
-        )?;
-        // Assign Names
-        names = map_merge(names, _names)?;
-        // Assign Module
-        modules = Term::map_put(modules,
-            module.ModuleNr.encode(env),
-            _mod
-        )?;
-    };
-    // Assembly Data
+    // Get Modules
+    let (names, modules) = get_modules(env, &doc.Modules.list)?;
+    // Assembly IO Config
     let mut io = Term::map_new(env);
     io = Term::map_put(io, atoms::modules().to_term(env), modules)?;
     io = Term::map_put(io, atoms::names().to_term(env), names)?;
