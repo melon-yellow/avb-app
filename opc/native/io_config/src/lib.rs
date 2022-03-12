@@ -225,7 +225,7 @@ fn map_tags<'a>(
 // Get Tags in Link
 fn get_tags<'a>(
     env: Env<'a>,
-    prefix: (&usize, &str),
+    pfx: &str,
     list: &Vec<Signal>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     let reduced = list.par_iter().enumerate()
