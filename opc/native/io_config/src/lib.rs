@@ -237,6 +237,29 @@ fn get_tags<'a>(
     Ok(reduced)
 }
 
+
+//##########################################################################################################################
+
+// Process Optional Links
+fn option_link<'a>(
+    env: Env<'a>,
+    modnr: &usize,
+    sep: &str,
+    option: &SignalList
+) -> NifResult<(Term<'a>, Term<'a>)> {
+    let mut (names, tags) = buffer2(env)?;
+    // Check Option
+    if let Some(signals) = option {
+        let (_names, _tags) = get_tags(env,
+            (modnr, sep), signals.list
+        )?;
+        names = _names;
+        tags = _tags;
+    };
+    // Return Data
+    Ok((names, tags))
+}
+
 //##########################################################################################################################
 
 // Map Links in Module
@@ -245,22 +268,17 @@ fn map_links<'a>(
     modnr: &usize,
     link: &Link
 ) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
-    let mut (names, analogs, digitals) = buffer3(env)?;
-    // Apply Link
-    if let Some(analog) = link.Analog {
-        let (_names, _tags) = get_tags(env,
-            (modnr, ":"), &analog.list
-       )?;
-        analogs = map_merge(analogs, _tags)?;
-        names = map_merge(names, _names)?;
-    };
-    if let Some(digital) = link.Digital {
-        let (_names, _tags) = get_tags(env,
-            (modnr, "."), &digital.list
-        )?;
-        digitals = map_merge(digitals, _tags)?;
-        names = map_merge(names, _names)?;
-    };
+    let mut [
+        (analogs, names),
+        (digitals, _names)
+    ] = [
+        (modnr, ":", link.Analog),
+        (modnr, ".", link.Digital)
+    ].par_iter()
+        .map(|x| option_link(env, x.0, x.1, x.2)?)
+        .collect();
+    // Merge Name List
+    names = map_merge(names, _names)?;
     // Return Data
     Ok((names, analogs, digitals))
 }
