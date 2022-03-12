@@ -223,7 +223,7 @@ fn map_links<'a>(
     link: &Link
 ) -> NifResult<((Term<'a>, Term<'a>), Term<'a>)> {
     let mut (analogs, digitals) = tag_buffer(env)?;
-    let mut names = Term::map_new(env)?;
+    let mut names = Term::map_new(env);
     // Apply Link
     if let Some(analog) = link.Analog {
         let (_tags, _names) = get_tags(env,
