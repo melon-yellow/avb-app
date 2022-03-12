@@ -8,6 +8,7 @@ use rustler::{
     MapIterator
 };
 
+use rayon::prelude::*;
 use serde::Deserialize;
 use quick_xml::de;
 
