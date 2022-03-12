@@ -245,13 +245,13 @@ fn option_link<'a>(
     env: Env<'a>,
     modnr: &usize,
     sep: &str,
-    option: &SignalList
+    option: &Option<SignalList>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     let mut (names, tags) = buffer2(env)?;
     // Check Option
     if let Some(signals) = option {
         let (_names, _tags) = get_tags(env,
-            (modnr, sep), signals.list
+            (modnr, sep), &signals.list
         )?;
         names = _names;
         tags = _tags;
