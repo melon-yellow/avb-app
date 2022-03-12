@@ -248,14 +248,14 @@ fn map_links<'a>(
     let mut (names, analogs, digitals) = buffer3(env)?;
     // Apply Link
     if let Some(analog) = link.Analog {
-        let (_tags, _names) = get_tags(env,
+        let (_names, _tags) = get_tags(env,
             (modnr, ":"), &analog.list
        )?;
         analogs = map_merge(analogs, _tags)?;
         names = map_merge(names, _names)?;
     };
     if let Some(digital) = link.Digital {
-        let (_tags, _names) = get_tags(env,
+        let (_names, _tags) = get_tags(env,
             (modnr, "."), &digital.list
         )?;
         digitals = map_merge(digitals, _tags)?;
@@ -292,7 +292,7 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Iterate over Modules
     for module in doc.Modules.list.iter() {
         // Get Links in Module
-        let ((analogs, digitals), _names) = get_links(env,
+        let (_names, analogs, digitals) = get_links(env,
             &module.ModuleNr, &module.Links.list
         )?;
         // Assembly Module
