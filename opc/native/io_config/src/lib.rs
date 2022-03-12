@@ -9,6 +9,7 @@ use rustler::{
 };
 
 use rayon::prelude::*;
+use rayon::iter::ParallelBridge;
 use serde::Deserialize;
 use quick_xml::de;
 
@@ -149,32 +150,69 @@ impl Module {
 
 //##########################################################################################################################
 
+// Make Tag Buffer
+fn tag_buffer<'a>(
+    env: Env<'a>
+) -> NifResult<(Term<'a>, Term<'a>)> {
+    Ok((
+        Term::map_new(env),
+        Term::map_new(env)
+    ))
+}
+
+//##########################################################################################################################
+
+// Map Tags in Signal List
+fn map_tags<'a>(
+    env: Env<'a>,
+    pfx: &str,
+    i: &usize
+    signal: &Signal
+) -> NifResult<(Term<'a>, Term<'a>)> {
+    let mut (tags, names) = tag_buffer(env)?;
+    // Apply Signal
+    if !signal.Name.trim().is_empty() {
+        tags = Term::map_put(tags,
+            i.encode(env),
+            signal.to_term(env)?
+        )?;
+        names = Term::map_put(names,
+            signal.Name.encode(env),
+            format!("{}{}", pfx, i).encode(env)
+        )?;
+    };
+    // Return Data
+    Ok((tags, names))
+}
+
+//##########################################################################################################################
+
+// Reduce Tags
+fn reduce_tags<'a>(
+    upstr: (Term<'a>, Term<'a>),
+    dnstr: (Term<'a>, Term<'a>)
+) -> NifResult<(Term<'a>, Term<'a>)> {
+    Ok((
+        map_merge(upstr.0, dnstr.0),
+        map_merge(upstr.1, dnstr.1)
+    ))
+}
+
+//##########################################################################################################################
+
 // Get Tags From Signal-List
 fn get_tags<'a>(
     env: Env<'a>,
     prefix: (&usize, &str),
     list: &Vec<Signal>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
-    // Set Buffer
-    let mut tags = Term::map_new(env);
-    let mut names = Term::map_new(env);
-    // Set Tag Prefix
     let pfx = format!("{}{}", prefix.0, prefix.1);
-    // Iterate over Tags
-    for (i, signal) in list.iter().enumerate() {
-        if !signal.Name.trim().is_empty() {
-            tags = Term::map_put(tags,
-                i.encode(env),
-                signal.to_term(env)?
-            )?;
-            names = Term::map_put(names,
-                signal.Name.encode(env),
-                format!("{}{}", pfx, i).encode(env)
-            )?;
-        };
-    };
-    // Return Ok
-    Ok((tags, names))
+    // Iterate over Signals
+    let reduced = list.iter().enumerate().par_bridge()
+        .map(|(i, signal)| map_tags(env, pfx, i, signal)?)
+        .reduce(|| tag_buffer(env)?, |u, d| reduce_tags(u, d)?);
+    // Return Data
+    Ok(reduced)
 }
 
 //##########################################################################################################################
