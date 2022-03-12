@@ -268,15 +268,15 @@ fn map_links<'a>(
     modnr: &usize,
     link: &Link
 ) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
-    let mut [
-        (analogs, names),
-        (digitals, _names)
-    ] = [
+    let options = [
         (modnr, ":", link.Analog),
         (modnr, ".", link.Digital)
     ].par_iter()
         .map(|x| option_link(env, x.0, x.1, x.2)?)
         .collect();
+    // Destructure Data
+    let mut (analogs, names) = options[0];
+    let (digitals, _names) = options[1];
     // Merge Name List
     names = map_merge(names, _names)?;
     // Return Data
