@@ -15,7 +15,7 @@ use quick_xml::de;
 //##########################################################################################################################
 
 mod atoms {
-    rustler::atoms! { tags, names, config }
+    rustler::atoms! { modules, names, config }
 }
 
 //##########################################################################################################################
@@ -295,7 +295,7 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Parse XML
     let doc: Document = de::from_str(xml).unwrap();
     // Set Buffer
-    let mut tags = Term::map_new(env);
+    let mut modules = Term::map_new(env);
     let mut names = Term::map_new(env);
     // Iterate over Modules
     for module in doc.Modules.list.iter() {
@@ -312,16 +312,16 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
             module.to_term(env)?
         )?;
         // Assign Names
-        names = map_merge(names, _names);
+        names = map_merge(names, _names)?;
         // Assign Module
-        tags = Term::map_put(tags,
+        modules = Term::map_put(modules,
             module.ModuleNr.encode(env),
             _mod
         )?;
     };
     // Assembly Data
     let mut io = Term::map_new(env);
-    io = Term::map_put(io, atoms::tags().to_term(env), tags)?;
+    io = Term::map_put(io, atoms::modules().to_term(env), modules)?;
     io = Term::map_put(io, atoms::names().to_term(env), names)?;
     // Return Ok
     Ok(io)
