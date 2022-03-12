@@ -14,12 +14,6 @@ use quick_xml::de;
 
 //##########################################################################################################################
 
-mod atoms {
-    rustler::atoms! { modules, names, config }
-}
-
-//##########################################################################################################################
-
 #[allow(non_snake_case)]
 #[derive(Debug, Deserialize, PartialEq)]
 struct Signal {
@@ -85,7 +79,7 @@ struct Document {
 //##########################################################################################################################
 
 fn map_put_atom<'a, T: Encoder>(
-    map: mut Term<'a>,
+    mut map: Term<'a>,
     atom: &str,
     value: &T
 ) -> NifResult<Term<'a>> {
@@ -102,7 +96,7 @@ fn map_put_atom<'a, T: Encoder>(
 //##########################################################################################################################
 
 fn map_merge<'a>(
-    map: mut Term<'a>,
+    mut map: Term<'a>,
     origin: Term<'a>
 ) -> NifResult<Term<'a>> {
     if let Some(iter) = MapIterator::new(origin) {
@@ -201,10 +195,10 @@ fn merge3<'a>(
 fn map_tags<'a>(
     env: Env<'a>,
     pfx: &str,
-    i: &usize
+    i: &usize,
     signal: &Signal
 ) -> NifResult<(Term<'a>, Term<'a>)> {
-    let mut (names, tags) = buffer2(env)?;
+    let (mut names, mut tags) = buffer2(env)?;
     // Apply Signal
     if !signal.Name.trim().is_empty() {
         tags = Term::map_put(tags,
@@ -245,7 +239,7 @@ fn option_link<'a>(
     sep: &str,
     option: &Option<SignalList>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
-    let mut (names, tags) = buffer2(env)?;
+    let (mut names, mut tags) = buffer2(env)?;
     // Check Option
     if let Some(signals) = option {
         let (_names, _tags) = get_tags(env,
@@ -274,7 +268,7 @@ fn map_links<'a>(
         .map(|x| option_link(env, x.0, x.1, x.2)?)
         .collect();
     // Destructure Data
-    let mut (analogs, names) = options[0];
+    let (analogs, mut names) = options[0];
     let (digitals, _names) = options[1];
     // Merge Name List
     names = map_merge(names, _names)?;
@@ -313,10 +307,7 @@ fn map_modules<'a>(
     let mut _mod = Term::map_new(env);
     _mod = Term::map_put(_mod, 0.encode(env), analogs)?;
     _mod = Term::map_put(_mod, 1.encode(env), digitals)?;
-    _mod = Term::map_put(_mod,
-        atoms::config().to_term(env),
-        module.to_term(env)?
-    )?;
+    _mod = map_put_atom(_mod, "config", module.to_term(env)?)?;
     // Set Modules Map
     let mut modules = Term::map_new(env);
     modules = Term::map_put(modules,
@@ -351,8 +342,8 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     let (names, modules) = get_modules(env, &doc.Modules.list)?;
     // Assembly IO Config
     let mut io = Term::map_new(env);
-    io = Term::map_put(io, atoms::modules().to_term(env), modules)?;
-    io = Term::map_put(io, atoms::names().to_term(env), names)?;
+    io = map_put_atom(io, "modules", modules)?;
+    io = map_put_atom(io, "names", names)?;
     // Return Ok
     Ok(io)
 }
