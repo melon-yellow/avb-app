@@ -149,7 +149,7 @@ impl Module {
 
 //##########################################################################################################################
 
-// Make Tag Buffer
+// Make Buffer
 fn tag_buffer<'a>(
     env: Env<'a>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
@@ -161,7 +161,7 @@ fn tag_buffer<'a>(
 
 //##########################################################################################################################
 
-// Map Tags in Signal List
+// Map Tags in Link
 fn map_tags<'a>(
     env: Env<'a>,
     pfx: &str,
@@ -186,20 +186,20 @@ fn map_tags<'a>(
 
 //##########################################################################################################################
 
-// Reduce Tags
+// Reduce Tags in Link
 fn reduce_tags<'a>(
     upstr: (Term<'a>, Term<'a>),
     dnstr: (Term<'a>, Term<'a>)
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     Ok((
-        map_merge(upstr.0, dnstr.0),
-        map_merge(upstr.1, dnstr.1)
+        map_merge(upstr.0, dnstr.0)?,
+        map_merge(upstr.1, dnstr.1)?
     ))
 }
 
 //##########################################################################################################################
 
-// Get Tags From Signal-List
+// Get Tags in Link
 fn get_tags<'a>(
     env: Env<'a>,
     prefix: (&usize, &str),
@@ -216,6 +216,65 @@ fn get_tags<'a>(
 
 //##########################################################################################################################
 
+// Map Links in Module
+fn map_links<'a>(
+    env: Env<'a>,
+    modnr: &usize,
+    link: &Link
+) -> NifResult<((Term<'a>, Term<'a>), Term<'a>)> {
+    let mut (analogs, digitals) = tag_buffer(env)?;
+    // Apply Link
+    if let Some(analog) = link.Analog {
+        let (_tags, _names) = get_tags(env,
+            (modnr, ":"), &analog.list
+       )?;
+        analogs = map_merge(analogs, _tags)?;
+        names = map_merge(names, _names)?;
+    };
+    if let Some(digital) = link.Digital {
+        let (_tags, _names) = get_tags(env,
+            (modnr, "."), &digital.list
+        )?;
+        digitals = map_merge(digitals, _tags)?;
+        names = map_merge(names, _names)?;
+    };
+    // Return Data
+    Ok(((analogs, digitals), names))
+}
+
+//##########################################################################################################################
+
+// Reduce Links in Module
+fn reduce_links<'a>(
+    upstr: ((Term<'a>, Term<'a>), Term<'a>),
+    dnstr: ((Term<'a>, Term<'a>), Term<'a>)
+) -> NifResult<((Term<'a>, Term<'a>), Term<'a>)> {
+    Ok((
+        (
+            map_merge(upstr.0.0, dnstr.0.0)?,
+            map_merge(upstr.0.1, dnstr.0.1)?
+        ),
+        map_merge(upstr.1, dnstr.1)?
+    ))
+}
+
+//##########################################################################################################################
+
+// Get Links in Module
+fn get_links<'a>(
+    env: Env<'a>,
+    modnr: &usize,
+    list: &Vec<Link>
+) -> NifResult<((Term<'a>, Term<'a>), Term<'a>)> {
+    let reduced = list.par_iter()
+        .map(|link| map_links(env, modnr, link)?)
+        .reduce(|| tag_buffer(env)?, |u, d| reduce_links(u, d)?);
+    // Return Data
+    Ok(reduced)
+}
+
+//##########################################################################################################################
+
 #[rustler::nif]
 fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     // Parse XML
@@ -225,29 +284,11 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
     let mut names = Term::map_new(env);
     // Iterate over Modules
     for module in doc.Modules.list.iter() {
-        // Set Buffer
-        let mut analogs = Term::map_new(env);
-        let mut digitals = Term::map_new(env);
-        // Iterate over Links
-        for link in module.Links.list.iter() {
-            if let Some(analog) = &link.Analog {
-                let (_tags, _names) = get_tags(env,
-                    (&module.ModuleNr, ":"),
-                    &analog.list
-                )?;
-                analogs = map_merge(analogs, _tags);
-                names = map_merge(names, _names);
-            };
-            if let Some(digital) = &link.Digital {
-                let (_tags, _names) = get_tags(env,
-                    (&module.ModuleNr, "."),
-                    &digital.list
-                )?;
-                digitals = map_merge(digitals, _tags);
-                names = map_merge(names, _names);
-            };
-        };
-        // Set Module Info
+        // Get Links in Module
+        let ((analogs, digitals), _names) = get_links(env,
+            &module.ModuleNr, &module.Links.list
+        )?;
+        // Assembly Module
         let mut _mod = Term::map_new(env);
         _mod = Term::map_put(_mod, 0.encode(env), analogs)?;
         _mod = Term::map_put(_mod, 1.encode(env), digitals)?;
@@ -255,7 +296,9 @@ fn parse<'a>(env: Env<'a>, xml: &str) -> NifResult<Term<'a>> {
             atoms::config().to_term(env),
             module.to_term(env)?
         )?;
-        // Index Module
+        // Assign Names
+        names = map_merge(names, _names);
+        // Assign Module
         tags = Term::map_put(tags,
             module.ModuleNr.encode(env),
             _mod
