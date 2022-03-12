@@ -216,14 +216,28 @@ fn get_tags<'a>(
 
 //##########################################################################################################################
 
+// Make Buffer
+fn link_buffer<'a>(
+    env: Env<'a>
+) -> NifResult<((Term<'a>, Term<'a>), Term<'a>)> {
+    Ok((
+        (
+            Term::map_new(env),
+            Term::map_new(env)
+        ),
+        Term::map_new(env)
+    ))
+}
+
+//##########################################################################################################################
+
 // Map Links in Module
 fn map_links<'a>(
     env: Env<'a>,
     modnr: &usize,
     link: &Link
 ) -> NifResult<((Term<'a>, Term<'a>), Term<'a>)> {
-    let mut (analogs, digitals) = tag_buffer(env)?;
-    let mut names = Term::map_new(env);
+    let mut ((analogs, digitals), names) = link_buffer(env)?;
     // Apply Link
     if let Some(analog) = link.Analog {
         let (_tags, _names) = get_tags(env,
@@ -269,7 +283,7 @@ fn get_links<'a>(
 ) -> NifResult<((Term<'a>, Term<'a>), Term<'a>)> {
     let reduced = list.par_iter()
         .map(|link| map_links(env, modnr, link)?)
-        .reduce(|| tag_buffer(env)?, |u, d| reduce_links(u, d)?);
+        .reduce(|| link_buffer(env)?, |u, d| reduce_links(u, d)?);
     // Return Data
     Ok(reduced)
 }
