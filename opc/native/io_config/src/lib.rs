@@ -9,7 +9,6 @@ use rustler::{
 };
 
 use rayon::prelude::*;
-use rayon::iter::ParallelBridge;
 use serde::Deserialize;
 use quick_xml::de;
 
@@ -208,7 +207,7 @@ fn get_tags<'a>(
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     let pfx = format!("{}{}", prefix.0, prefix.1);
     // Iterate over Signals
-    let reduced = list.iter().enumerate().par_bridge()
+    let reduced = list.par_iter().enumerate()
         .map(|(i, signal)| map_tags(env, pfx, i, signal)?)
         .reduce(|| tag_buffer(env)?, |u, d| reduce_tags(u, d)?);
     // Return Data
