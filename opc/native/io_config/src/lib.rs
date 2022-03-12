@@ -228,8 +228,6 @@ fn get_tags<'a>(
     prefix: (&usize, &str),
     list: &Vec<Signal>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
-    let pfx = format!("{}{}", prefix.0, prefix.1);
-    // Iterate over Signals
     let reduced = list.par_iter().enumerate()
         .map(|(i, signal)| map_tags(env, pfx, i, signal)?)
         .reduce(|| buffer2(env)?, |u, d| merge2(u, d)?);
@@ -251,7 +249,8 @@ fn option_link<'a>(
     // Check Option
     if let Some(signals) = option {
         let (_names, _tags) = get_tags(env,
-            (modnr, sep), &signals.list
+            format!("{}{}", modnr, sep),
+            &signals.list
         )?;
         names = _names;
         tags = _tags;
