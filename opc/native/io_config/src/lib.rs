@@ -172,8 +172,8 @@ fn buffer3<'a>(
 
 //##########################################################################################################################
 
-// Reduce 2 Map Buffer
-fn reduce2<'a>(
+// Merge 2 Map Buffers
+fn merge2<'a>(
     upstr: (Term<'a>, Term<'a>),
     dnstr: (Term<'a>, Term<'a>)
 ) -> NifResult<(Term<'a>, Term<'a>)> {
@@ -183,8 +183,8 @@ fn reduce2<'a>(
     ))
 }
 
-// Reduce 3 Map Buffer
-fn reduce3<'a>(
+// Merge 3 Map Buffers
+fn merge3<'a>(
     upstr: (Term<'a>, Term<'a>, Term<'a>),
     dnstr: (Term<'a>, Term<'a>, Term<'a>)
 ) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
@@ -232,7 +232,7 @@ fn get_tags<'a>(
     // Iterate over Signals
     let reduced = list.par_iter().enumerate()
         .map(|(i, signal)| map_tags(env, pfx, i, signal)?)
-        .reduce(|| buffer2(env)?, |u, d| reduce2(u, d)?);
+        .reduce(|| buffer2(env)?, |u, d| merge2(u, d)?);
     // Return Data
     Ok(reduced)
 }
@@ -293,7 +293,7 @@ fn get_links<'a>(
 ) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
     let reduced = list.par_iter()
         .map(|link| map_links(env, modnr, link)?)
-        .reduce(|| buffer3(env)?, |u, d| reduce3(u, d)?);
+        .reduce(|| buffer3(env)?, |u, d| merge3(u, d)?);
     // Return Data
     Ok(reduced)
 }
