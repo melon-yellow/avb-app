@@ -146,22 +146,22 @@ impl Module {
 // Make 2 Map Buffer
 fn buffer2<'a>(
     env: Env<'a>
-) -> NifResult<(Term<'a>, Term<'a>)> {
-    Ok((
+) -> (Term<'a>, Term<'a>) {
+    (
         Term::map_new(env),
         Term::map_new(env)
-    ))
+    )
 }
 
 // Make 3 Map Buffer
 fn buffer3<'a>(
     env: Env<'a>
-) -> NifResult<(Term<'a>, Term<'a>)> {
-    Ok((
+) -> (Term<'a>, Term<'a>, Term<'a>) {
+    (
         Term::map_new(env),
         Term::map_new(env),
         Term::map_new(env)
-    ))
+    )
 }
 
 //##########################################################################################################################
@@ -170,23 +170,23 @@ fn buffer3<'a>(
 fn merge2<'a>(
     upstr: (Term<'a>, Term<'a>),
     dnstr: (Term<'a>, Term<'a>)
-) -> NifResult<(Term<'a>, Term<'a>)> {
-    Ok((
-        map_merge(upstr.0, dnstr.0)?,
-        map_merge(upstr.1, dnstr.1)?
-    ))
+) -> (Term<'a>, Term<'a>) {
+    (
+        map_merge(upstr.0, dnstr.0).unwrap(),
+        map_merge(upstr.1, dnstr.1).unwrap()
+    )
 }
 
 // Merge 3 Map Buffers
 fn merge3<'a>(
     upstr: (Term<'a>, Term<'a>, Term<'a>),
     dnstr: (Term<'a>, Term<'a>, Term<'a>)
-) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
-    Ok((
-        map_merge(upstr.0, dnstr.0)?,
-        map_merge(upstr.1, dnstr.1)?,
-        map_merge(upstr.2, dnstr.2)?
-    ))
+) -> (Term<'a>, Term<'a>, Term<'a>) {
+    (
+        map_merge(upstr.0, dnstr.0).unwrap(),
+        map_merge(upstr.1, dnstr.1).unwrap(),
+        map_merge(upstr.2, dnstr.2).unwrap()
+    )
 }
 
 //##########################################################################################################################
@@ -198,7 +198,7 @@ fn map_tags<'a>(
     i: &usize,
     signal: &Signal
 ) -> NifResult<(Term<'a>, Term<'a>)> {
-    let (mut names, mut tags) = buffer2(env)?;
+    let (mut names, mut tags) = buffer2(env);
     // Apply Signal
     if !signal.Name.trim().is_empty() {
         tags = Term::map_put(tags,
@@ -223,8 +223,8 @@ fn get_tags<'a>(
     list: &Vec<Signal>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     let reduced = list.par_iter().enumerate()
-        .map(|(i, signal)| map_tags(env, pfx, &i, &signal)?)
-        .reduce(|| buffer2(env)?, |u, d| merge2(u, d)?);
+        .map(|(i, signal)| map_tags(env, pfx, &i, &signal).unwrap())
+        .reduce(|| buffer2(env), |u, d| merge2(u, d));
     // Return Data
     Ok(reduced)
 }
@@ -238,7 +238,7 @@ fn option_link<'a>(
     sep: &str,
     option: &Option<SignalList>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
-    let (mut names, mut tags) = buffer2(env)?;
+    let (mut names, mut tags) = buffer2(env);
     // Check Option
     if let Some(signals) = option {
         let (_names, _tags) = get_tags(env,
@@ -261,11 +261,9 @@ fn map_links<'a>(
     link: &Link
 ) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
     let options = [
-        (modnr, ":", link.Analog),
-        (modnr, ".", link.Digital)
-    ].par_iter()
-        .map(|x| option_link(env, x.0, x.1, x.2)?)
-        .collect();
+        || option_link(env, modnr, ":", link.Analog).unwrap(),
+        || option_link(env, modnr, ".", link.Digital).unwrap()
+    ].par_iter().map(|f| f()).collect();
     // Destructure Data
     let (analogs, mut names) = options[0];
     let (digitals, _names) = options[1];
@@ -284,8 +282,8 @@ fn get_links<'a>(
     list: &Vec<Link>
 ) -> NifResult<(Term<'a>, Term<'a>, Term<'a>)> {
     let reduced = list.par_iter()
-        .map(|link| map_links(env, modnr, &link)?)
-        .reduce(|| buffer3(env)?, |u, d| merge3(u, d)?);
+        .map(|link| map_links(env, modnr, &link).unwrap())
+        .reduce(|| buffer3(env), |u, d| merge3(u, d));
     // Return Data
     Ok(reduced)
 }
@@ -324,8 +322,8 @@ fn get_modules<'a>(
     list: &Vec<Module>
 ) -> NifResult<(Term<'a>, Term<'a>)> {
     let reduced = list.par_iter()
-        .map(|module| map_modules(env, &module)?)
-        .reduce(|| buffer2(env)?, |u, d| merge2(u, d)?);
+        .map(|module| map_modules(env, &module).unwrap())
+        .reduce(|| buffer2(env), |u, d| merge2(u, d));
     // Return Data
     Ok(reduced)
 }
